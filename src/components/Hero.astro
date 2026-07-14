@@ -1,14 +1,13 @@
 ---
 /**
- * Homepage hero (§4.8): 100svh field, poster beneath, simulation canvas over,
- * real-HTML overlay (name, identity line, scroll cue) always readable.
- * The poster is the permanent no-JS / reduced-motion / failure state.
+ * Homepage hero (§4.8 as amended 15-07-2026): the typographic page itself is
+ * the permanent state — no poster art. When the island runs, the simulation
+ * canvas fades in over the plain ground; no-JS, reduced motion, script
+ * failure, and lost GL contexts all simply keep the plain page.
  */
-import SuminagashiPoster from './SuminagashiPoster.astro';
 ---
 
 <section id="hero" class="hero">
-  <SuminagashiPoster />
   <div class="overlay">
     <h1>Michael Ritchot</h1>
     <p class="line">I lift, love music, and play with tech.</p>
