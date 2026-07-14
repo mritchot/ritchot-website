@@ -1,7 +1,48 @@
 ---
 import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import WritingList from '../components/WritingList.astro';
+import InkDivider from '../components/InkDivider.astro';
+import { sortedWriting } from '../lib/writing';
+
+const latest = (await sortedWriting()).slice(0, 4);
 ---
 
-<Base title="ritchot.me">
-  <h1>ritchot.me</h1>
+<Base title="Michael Ritchot" description="Writing by Michael Ritchot.">
+  <Hero />
+
+  <section id="latest" class="latest">
+    <h2>Latest writing</h2>
+    <WritingList entries={latest} />
+    <p class="all">
+      <a href="/writing/">All writing</a>
+    </p>
+  </section>
+
+  <!-- Phase 5: selected-projects section mounts here (2–3 case-study cards). -->
+
+  <InkDivider />
 </Base>
+
+<style>
+  .latest {
+    margin-block-start: 5rem;
+    max-width: var(--measure);
+  }
+
+  h2 {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    font-weight: 400;
+    color: var(--ink-soft);
+    border-block-end: 1px solid var(--line);
+    padding-block-end: 0.4rem;
+    margin-block-end: 1.6rem;
+  }
+
+  .all {
+    margin-block-start: 1.8rem;
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+  }
+</style>

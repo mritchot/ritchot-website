@@ -1,8 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
-import TypeBadge from '../../components/TypeBadge.astro';
-import { sortedWriting, urlOf, formatDate, type Writing } from '../../lib/writing';
-import { readingTime } from '../../lib/reading-time';
+import WritingList from '../../components/WritingList.astro';
+import { sortedWriting, type Writing } from '../../lib/writing';
 
 const entries = await sortedWriting();
 
@@ -22,22 +21,7 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
     years.map((year) => (
       <section>
         <h2 class="year">{year}</h2>
-        <ul class="stream">
-          {byYear.get(year)!.map((entry) => (
-            <li>
-              <a class="title" href={urlOf(entry)}>
-                {entry.data.title}
-              </a>
-              <p class="meta">
-                {formatDate(entry.data.date)}
-                <span aria-hidden="true">·</span>
-                <TypeBadge type={entry.data.type} />
-                <span aria-hidden="true">·</span>
-                {readingTime(entry.body ?? '')} min read
-              </p>
-            </li>
-          ))}
-        </ul>
+        <WritingList entries={byYear.get(year)!} />
       </section>
     ))
   }
@@ -59,37 +43,6 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
     color: var(--ink-soft);
     border-block-end: 1px solid var(--line);
     padding-block-end: 0.4rem;
-  }
-
-  .stream {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: 1.6rem;
-    margin-block-start: 1.4rem;
-  }
-
-  .title {
-    font-size: var(--text-1);
-    font-weight: 600;
-    color: var(--ink);
-    text-decoration: none;
-  }
-
-  .title:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-decoration-color: var(--signal);
-  }
-
-  .meta {
-    font-family: var(--font-mono);
-    font-size: var(--text--1);
-    color: var(--ink-soft);
-    margin-block-start: 0.35rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    margin-block-end: 1.4rem;
   }
 </style>
