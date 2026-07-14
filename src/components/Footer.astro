@@ -1,0 +1,61 @@
+---
+// Footer signature uses MarkA as the working placeholder; the final mark is
+// selected at the Phase 1 gate.
+import markA from './marks/MarkA.svg?raw';
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="inner">
+    <div class="sig" set:html={markA} />
+    <p class="honesty">No trackers, no ads, no third-party scripts.</p>
+    <nav aria-label="Feeds and subscription">
+      <a href="/feed.xml">RSS</a>
+      <span aria-hidden="true">·</span>
+      <a href="/atom.xml">Atom</a>
+      <span aria-hidden="true">·</span>
+      <a href="/subscribe">Subscribe</a>
+    </nav>
+    <p class="rights">© {year} Michael Ritchot. Writing all rights reserved; site code MIT.</p>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-block-start: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+  }
+
+  .inner {
+    max-width: 52rem;
+    margin-inline: auto;
+    padding: 2rem 1.25rem 2.5rem;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .sig {
+    color: var(--ink);
+    width: 1.75rem;
+  }
+
+  .sig :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+
+  nav a {
+    color: var(--ink-soft);
+  }
+
+  nav a:hover {
+    color: var(--ink);
+  }
+
+  .rights {
+    color: var(--ink-soft);
+  }
+</style>
