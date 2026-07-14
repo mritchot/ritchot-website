@@ -14,9 +14,10 @@
  * scheduler avoidance and the existing CSS scrim keeps the name readable.
  *
  * Kept from 4a (verified): client-idle mount, ≥400 ms crossfade over the
- * poster, DPR ≤ 2, pause on tab-hidden/off-view with recomputing wake(),
- * aria-hidden canvas, poster as no-JS/reduced-motion/failure state.
- * WebGL context loss or missing float-render support → poster.
+ * plain ground, DPR ≤ 2, pause on tab-hidden/off-view with recomputing wake(),
+ * aria-hidden canvas. There is no poster art (ruling 15-07-2026): no-JS,
+ * reduced motion, script failure, missing float-render support, and lost GL
+ * contexts all simply keep the typographic page.
  */
 
 interface Palette {
@@ -141,7 +142,7 @@ export function mountSuminagashi(host: HTMLElement): void {
     stencil: false,
     powerPreference: 'low-power',
   });
-  if (!gl || !gl.getExtension('EXT_color_buffer_float')) return; // poster remains
+  if (!gl || !gl.getExtension('EXT_color_buffer_float')) return; // the plain page remains
 
   // --- tiny GL toolkit ---
   const quad = gl.createVertexArray();
@@ -528,8 +529,9 @@ export function mountSuminagashi(host: HTMLElement): void {
         const dy = y - pointer.y;
         const speed = Math.hypot(dx, dy);
         if (speed > 0.001) {
-          splatD(x, y, [strokeInk[0] * 0.16, strokeInk[1] * 0.16, strokeInk[2] * 0.16], 0.00045);
-          splatV(x, y, dx * 2.2, dy * 2.2, 0.0028);
+          // brush width sits between a thin stream and a pour's core
+          splatD(x, y, [strokeInk[0] * 0.13, strokeInk[1] * 0.13, strokeInk[2] * 0.13], 0.0018);
+          splatV(x, y, dx * 2.2, dy * 2.2, 0.006);
           nextPourAt = Math.max(nextPourAt, now + 2600);
         }
       }
@@ -574,7 +576,7 @@ export function mountSuminagashi(host: HTMLElement): void {
   canvas.addEventListener('webglcontextlost', (e) => {
     e.preventDefault();
     sleep();
-    canvas.remove(); // the poster underneath is the failure state
+    canvas.remove(); // the plain page is the failure state
   });
 
   // --- go ---
