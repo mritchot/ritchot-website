@@ -1,0 +1,22 @@
+---
+interface Props {
+  type: 'essay' | 'analysis' | 'notes';
+}
+
+const { type } = Astro.props;
+---
+
+<span class="badge">{type}</span>
+
+<style>
+  .badge {
+    display: inline-block;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    padding: 0.1em 0.55em;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+</style>
