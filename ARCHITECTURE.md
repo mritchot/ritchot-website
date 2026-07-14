@@ -55,7 +55,7 @@ LCP < 1.5 s, CLS = 0, Lighthouse 100 on writing pages. Fonts: self-hosted subset
 - **Grounds:** light "washi" paper (`#F7F4EF`) / dark "sumi" (`#101014`), each with a full ink scale.
 - **Accents:** vermilion (seal mark, focus, scarce), signal teal-cyan (links), ember orange (hero/illustration only).
 - **Typography:** serif prose (Source Serif 4 proposed) + mono chrome (IBM Plex Mono proposed); base 19px, 65–70ch justified measure, hyphenation.
-- **Mark:** square ink monogram (SVG, currentColor) — favicon, OG images, footer signature; vermilion reserved for focus states and rare accents.
+- **Mark:** serif wordmark "Michael Ritchot" (Source Serif 4) — header and OG identity; favicon is a mode-aware serif "M" SVG; no graphic mark.
 - **Motion:** cross-document CSS View Transitions (160 ms fade, zero JS); all motion collapses under `prefers-reduced-motion`.
 
 ## Build Phases
