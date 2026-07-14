@@ -1,0 +1,139 @@
+---
+/**
+ * Homepage hero (§4.8): 100svh field, poster beneath, simulation canvas over,
+ * real-HTML overlay (name, identity line, scroll cue) always readable.
+ * The poster is the permanent no-JS / reduced-motion / failure state.
+ */
+import SuminagashiPoster from './SuminagashiPoster.astro';
+---
+
+<section id="hero" class="hero">
+  <SuminagashiPoster />
+  <div class="overlay">
+    <h1>Michael Ritchot</h1>
+    <p class="line">I lift, love music, and play with tech.</p>
+  </div>
+  <a class="cue" href="#latest" aria-label="Scroll to latest writing">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M5 9l7 7 7-7" />
+    </svg>
+  </a>
+</section>
+
+<style>
+  .hero {
+    /* full-bleed out of main's column; height leaves the header visible */
+    position: relative;
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    margin-block-start: -2.5rem;
+    height: calc(100svh - 3.65rem);
+    min-height: 30rem;
+    overflow: hidden;
+    color: var(--ink);
+
+    /* the hero is where ember lives (light); vermilion trace in dark */
+    --hero-accent: var(--ember);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .hero {
+      --hero-accent: var(--vermilion);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero {
+      height: calc(100svh - 5.9rem);
+    }
+  }
+
+  .hero :global(canvas.sumi) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 700ms ease;
+    pointer-events: none;
+  }
+
+  .hero :global(canvas.sumi.ready) {
+    opacity: 1;
+  }
+
+  .overlay {
+    position: absolute;
+    z-index: 2;
+    inset-inline-start: max(7vw, 1.25rem);
+    inset-block-end: 13%;
+    max-width: 34rem;
+  }
+
+  /* soft water behind the words at every crop — belt to the poster's braces */
+  .overlay::before {
+    content: '';
+    position: absolute;
+    inset: -3rem -4rem;
+    z-index: -1;
+    background: radial-gradient(ellipse 75% 70% at 40% 60%, var(--ground) 0%, transparent 68%);
+    opacity: 0.6;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6.5vw, 4.2rem);
+    font-weight: 600;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  .line {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+    margin-block-start: 0.7rem;
+  }
+
+  .cue {
+    position: absolute;
+    z-index: 2;
+    inset-inline: 0;
+    inset-block-end: 1.1rem;
+    display: grid;
+    place-items: center;
+    color: var(--ink-soft);
+  }
+
+  .cue:hover {
+    color: var(--ink);
+  }
+
+  .cue svg {
+    animation: cue-drift 2.6s ease-in-out infinite;
+  }
+
+  @keyframes cue-drift {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+</style>
+
+<script>
+  import { mountSuminagashi } from '../islands/suminagashi';
+
+  const hero = document.getElementById('hero');
+  if (hero && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const start = () => {
+      try {
+        mountSuminagashi(hero);
+      } catch {
+        /* island failure: the poster remains */
+      }
+    };
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(start, { timeout: 2500 });
+    } else {
+      setTimeout(start, 400);
+    }
+  }
+</script>
