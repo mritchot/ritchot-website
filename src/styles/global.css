@@ -1,6 +1,7 @@
 @import './tokens.css';
+@import './fonts.css';
 
-/* Minimal reset only — layout and the full design system arrive in Phase 1. */
+/* --- reset --- */
 
 *,
 *::before,
@@ -12,12 +13,17 @@
   margin: 0;
 }
 
+html {
+  font-size: var(--text-base);
+}
+
 body {
   background: var(--ground);
   color: var(--ink);
   font-family: var(--font-serif);
-  font-size: var(--text-base);
-  line-height: 1.6;
+  font-size: var(--text-0);
+  line-height: var(--leading-body);
+  -webkit-text-size-adjust: 100%;
 }
 
 img,
@@ -29,16 +35,89 @@ canvas {
   max-width: 100%;
 }
 
+/* --- typography defaults --- */
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--leading-tight);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--text-3); }
+h2 { font-size: var(--text-2); }
+h3 { font-size: var(--text-1); }
+h4 { font-size: var(--text-0); }
+
 a {
-  color: var(--accent-link);
+  color: var(--signal);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent-vermilion);
+  outline: 2px solid var(--vermilion);
   outline-offset: 2px;
 }
 
+/* justified long-form prose */
+.prose {
+  max-width: var(--measure);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  text-wrap: pretty;
+}
+
+.prose > * + * {
+  margin-block-start: 1em;
+}
+
+/* --- code (build-time Shiki, class-based: no inline styles under the CSP) --- */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+pre.code-block {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  line-height: 1.55;
+}
+
+pre.code-block code {
+  font-size: var(--text--1);
+}
+
+.tok-kw { color: var(--code-keyword); }
+.tok-str { color: var(--code-string); }
+.tok-const { color: var(--code-constant); }
+.tok-name { color: var(--code-name); }
+.tok-comment { color: var(--code-comment); font-style: italic; }
+
+/* --- cross-document view transitions (CSS only, zero JS) --- */
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--fade-duration);
+}
+
+/* --- reduced motion: collapse everything --- */
+
 @media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
   *,
   *::before,
   *::after {
@@ -46,5 +125,10 @@ a {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
   }
 }

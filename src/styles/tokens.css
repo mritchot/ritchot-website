@@ -1,8 +1,9 @@
 /* Design tokens — ritchot.me
- * Names are the stable API; values are provisional until the Phase 1
- * specimen gate (typography proposal: Source Serif 4 + IBM Plex Mono).
+ * Contrast verified programmatically 14-07-2026 (ratios on the specimen page):
+ * ink/ground 15.49 (light) 14.68 (dark) · ink-soft 6.98/7.19 · signal 5.66/9.06
+ * · vermilion 4.69/5.02 (≥3 accent floor) · code palette ≥4.68 on surface.
  * Two grounds: light "washi" paper and dark "sumi" ink. Modes follow
- * prefers-color-scheme only — no manual toggle. Both must hold WCAG 2.2 AA.
+ * prefers-color-scheme only — no manual toggle.
  */
 
 :root {
@@ -12,20 +13,38 @@
   --ground: #f7f4ef;
   --surface: #eeeae1;
   --ink: #1e1c19;
-  --ink-muted: #57534b;
-  --ink-faint: #7d786e;
+  --ink-soft: #57534b;
+  --ink-faint: #7d786e; /* decorative only (divider, hairline art) */
   --line: #d9d3c7;
 
   /* accents */
-  --accent-vermilion: #c73b27; /* seal mark and focus — scarce by design */
-  --accent-link: #0c6b76;      /* signal teal-cyan — links */
-  --accent-ember: #d95d1e;     /* ember orange — hero/illustration only */
+  --vermilion: #c73b27; /* focus states, nav current-page dot, ≤1 rare accent per viewport */
+  --signal: #0c6b76;    /* links */
+  --ember: #d95d1e;     /* hero/illustration only */
+
+  /* code palette (on --surface; all pairs ≥4.5:1) */
+  --code-keyword: #8d3423;
+  --code-string: #3d6647;
+  --code-constant: #0c6b76;
+  --code-name: #8a4d15;
+  --code-comment: #6d6759;
 
   /* typography */
-  --font-serif: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-serif: 'Source Serif 4', 'Source Serif 4 Fallback', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', 'IBM Plex Mono Fallback', ui-monospace, Menlo, monospace;
   --text-base: 19px;
-  --measure: 68ch; /* justified prose measure, 65–70ch band */
+
+  /* modular scale ≈ 1.25 (rem against 19px root) */
+  --text--1: 0.8rem;
+  --text-0: 1rem;
+  --text-1: 1.25rem;
+  --text-2: 1.5625rem;
+  --text-3: 1.9531rem;
+  --text-4: 2.4414rem;
+
+  --leading-body: 1.65;
+  --leading-tight: 1.3;
+  --measure: 42rem; /* justified prose measure */
 
   /* motion */
   --fade-duration: 160ms;
@@ -37,12 +56,18 @@
     --ground: #101014;
     --surface: #17171d;
     --ink: #e6e2d9;
-    --ink-muted: #a49f93;
+    --ink-soft: #a49f93;
     --ink-faint: #767268;
     --line: #2c2c34;
 
-    --accent-vermilion: #e05543;
-    --accent-link: #4cc3d0;
-    --accent-ember: #e8763a;
+    --vermilion: #e05543;
+    --signal: #4cc3d0;
+    --ember: #e8763a;
+
+    --code-keyword: #e57a68;
+    --code-string: #86b28d;
+    --code-constant: #4cc3d0;
+    --code-name: #d9a15e;
+    --code-comment: #8b8578;
   }
 }
