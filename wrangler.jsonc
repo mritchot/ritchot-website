@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ritchot-website",
+  // Newest date supported by the workerd bundled with the pinned wrangler.
+  "compatibility_date": "2026-07-08",
+  // Pure static site: no Worker script — Workers serves dist/ as assets.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

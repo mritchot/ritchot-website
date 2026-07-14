@@ -1,0 +1,24 @@
+# dependencies & build
+node_modules/
+dist/
+.astro/
+.wrangler/
+
+# environment & secrets
+.env
+.env.*
+*.local
+
+# local governance files — never in the tracked tree (repo goes public at launch)
+CLAUDE.md
+MEMORY.md
+MEMORYARCHIVE.md
+TODO.md
+TODOARCHIVE.md
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
