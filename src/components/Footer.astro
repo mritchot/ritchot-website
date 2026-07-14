@@ -1,14 +1,10 @@
 ---
-// Footer signature uses MarkA as the working placeholder; the final mark is
-// selected at the Phase 1 gate.
-import markA from './marks/MarkA.svg?raw';
-
 const year = new Date().getFullYear();
 ---
 
 <footer>
   <div class="inner">
-    <div class="sig" set:html={markA} />
+    <p class="sig">Michael Ritchot</p>
     <p class="honesty">No trackers, no ads, no third-party scripts.</p>
     <nav aria-label="Feeds and subscription">
       <a href="/feed.xml">RSS</a>
@@ -37,14 +33,12 @@ const year = new Date().getFullYear();
     gap: 0.8rem;
   }
 
+  /* typographic signature (D16 final): the name set small in the serif */
   .sig {
-    color: var(--ink);
-    width: 1.75rem;
-  }
-
-  .sig :global(svg) {
-    width: 100%;
-    height: auto;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: var(--text--1);
+    color: var(--ink-soft);
   }
 
   nav a {
