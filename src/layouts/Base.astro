@@ -7,10 +7,30 @@ interface Props {
   title: string;
   description?: string;
   noindex?: boolean;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>[];
 }
 
-const { title, description, noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  noindex = false,
+  ogType = 'website',
+  ogImage = '/og/default.png',
+  jsonLd = [],
+} = Astro.props;
+
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = new URL(ogImage, Astro.site);
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Michael Ritchot',
+  url: Astro.site?.href,
+};
+const structuredData = [personLd, ...jsonLd];
 ---
 
 <!doctype html>
@@ -23,6 +43,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical.href} />
     {noindex && <meta name="robots" content="noindex" />}
+    <link rel="alternate" type="application/rss+xml" title="ritchot.me" href="/feed.xml" />
+    <link rel="alternate" type="application/atom+xml" title="ritchot.me (Atom)" href="/atom.xml" />
+    <meta property="og:site_name" content="ritchot.me" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={ogImageUrl.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImageUrl.href} />
     <link
       rel="preload"
       href="/fonts/source-serif-4-latin-var.woff2"
@@ -30,6 +64,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       type="font/woff2"
       crossorigin
     />
+    {
+      structuredData.map((data) => (
+        <script type="application/ld+json" is:inline set:html={JSON.stringify(data)} />
+      ))
+    }
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

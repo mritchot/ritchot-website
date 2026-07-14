@@ -23,8 +23,8 @@ const projects = defineCollection({
     stack: z.array(z.string()),
     status: z.enum(['live', 'archived', 'in-progress']),
     links: z.object({
-      live: z.string().url().optional(),
-      repo: z.string().url().optional(),
+      live: z.url().optional(),
+      repo: z.url().optional(),
     }),
     weight: z.number(),
     summary: z.string(),
