@@ -21,6 +21,7 @@
   --vermilion: #c73b27; /* focus states, nav current-page dot, ≤1 rare accent per viewport */
   --signal: #0c6b76;    /* links */
   --ember: #d95d1e;     /* hero/illustration only */
+  --murasaki: #b23879;  /* hero pigment only — never UI (Maverick ruling, 15-07-2026) */
 
   /* code palette (on --surface; all pairs ≥4.5:1) */
   --code-keyword: #8d3423;
@@ -63,6 +64,7 @@
     --vermilion: #e05543;
     --signal: #4cc3d0;
     --ember: #e8763a;
+    --murasaki: #e061a6;
 
     --code-keyword: #e57a68;
     --code-string: #86b28d;
