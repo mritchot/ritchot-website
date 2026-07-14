@@ -22,7 +22,7 @@
 interface Palette {
   dark: boolean;
   ground: [number, number, number];
-  inks: Array<{ vec: [number, number, number]; weight: number }>;
+  inks: Array<{ vec: [number, number, number]; weight: number; css: string; name: string }>;
 }
 
 const VERT = `#version 300 es
@@ -234,21 +234,33 @@ export function mountSuminagashi(host: HTMLElement): void {
   const swapP = (): void => { const t = prs0; prs0 = prs1; prs1 = t; };
   const swapD = (): void => { const t = dye0; dye0 = dye1; dye1 = t; };
 
-  // --- palette from live tokens ---
+  // --- palette from live tokens: five pigments per mode, balanced weights ---
   function readPalette(): Palette {
     const cs = getComputedStyle(host);
     const dark = matchMedia('(prefers-color-scheme: dark)').matches;
-    const v = (name: string): [number, number, number] => cssColor(cs.getPropertyValue(name));
-    const ink = absorbance(v('--ink'), dark);
-    const accent = absorbance(v('--hero-accent'), dark);
-    const signal = absorbance(v('--signal'), dark);
+    const raw = (name: string): string => cs.getPropertyValue(name).trim();
+    const v = (name: string): [number, number, number] => cssColor(raw(name));
+    const pigment = (
+      token: string,
+      weight: number,
+      name: string,
+    ): Palette['inks'][number] => ({
+      vec: absorbance(v(token), dark),
+      weight,
+      css: raw(token),
+      name,
+    });
+    // the hero's accent flips with the mode; the opposite accent joins as the
+    // fourth pigment, and ink-soft is the diluted wash of the dominant ink
     return {
       dark,
       ground: v('--ground'),
       inks: [
-        { vec: ink, weight: 0.6 },
-        { vec: accent, weight: 0.24 },
-        { vec: signal, weight: 0.16 },
+        pigment('--ink', 0.26, 'ink'),
+        pigment('--hero-accent', 0.2, dark ? 'vermilion' : 'ember'),
+        pigment(dark ? '--ember' : '--vermilion', 0.2, dark ? 'ember' : 'vermilion'),
+        pigment('--signal', 0.18, 'signal'),
+        pigment('--ink-soft', 0.16, 'wash'),
       ],
     };
   }
@@ -261,6 +273,14 @@ export function mountSuminagashi(host: HTMLElement): void {
     }
     return palette.inks[0]!.vec;
   }
+
+  // --- user-adjustable field parameters (control panel) ---
+  const params = {
+    pours: 1, // scheduler rate multiplier
+    current: 1, // ambient stirrer strength multiplier
+    fade: 1, // dissolution exponent multiplier
+    brush: -1, // trace pigment index; -1 = auto (cycles per stroke)
+  };
 
   // --- state ---
   let width = 0;
@@ -338,7 +358,8 @@ export function mountSuminagashi(host: HTMLElement): void {
       const sx = 0.5 + 0.36 * Math.sin(t * 0.065 + ph) * Math.cos(t * 0.041 + ph * 1.7);
       const sy = 0.5 + 0.32 * Math.cos(t * 0.053 + ph * 0.6);
       const dir = t * (0.16 + i * 0.03) + ph;
-      splatV(sx, sy, Math.cos(dir) * 0.28 * dt, Math.sin(dir) * 0.28 * dt, 0.05);
+      const cur = 0.28 * params.current * dt;
+      splatV(sx, sy, Math.cos(dir) * cur, Math.sin(dir) * cur, 0.05);
     }
 
     // ramping pours: dye plus a billow — outward push and a slight swirl so
@@ -402,7 +423,7 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.uniform1i(U(P.advect, 'u_src'), 0);
     gl!.uniform1i(U(P.advect, 'u_vel'), 1);
     gl!.uniform1f(U(P.advect, 'u_dt'), dt);
-    gl!.uniform1f(U(P.advect, 'u_diss'), Math.pow(0.998, dt * 60));
+    gl!.uniform1f(U(P.advect, 'u_diss'), Math.pow(0.998, dt * 60 * params.fade));
     gl!.uniform4f(U(P.advect, 'u_clear'), clearZone[0], clearZone[1], clearZone[2], clearZone[3]);
     gl!.uniform1f(U(P.advect, 'u_clearK'), Math.pow(0.988, dt * 60));
     draw(dye1); swapD();
@@ -417,7 +438,13 @@ export function mountSuminagashi(host: HTMLElement): void {
   }
 
   // --- pour scheduler: the field is never still ---
+  let groundSeen = '';
   function schedulePour(now: number): void {
+    // belt to the media-listener's braces: some environments swap the color
+    // scheme without dispatching the change event
+    const g = getComputedStyle(host).getPropertyValue('--ground').trim();
+    if (groundSeen && g !== groundSeen) refreshPalette();
+    groundSeen = g;
     // biased away from the overlay zone (lower-left)
     let x = Math.random();
     let y = Math.random();
@@ -434,7 +461,7 @@ export function mountSuminagashi(host: HTMLElement): void {
       spin: Math.random() * Math.PI * 2,
       step: 1,
     });
-    nextPourAt = now + 1800 + Math.random() * 2800;
+    nextPourAt = now + (1800 + Math.random() * 2800) / params.pours;
   }
 
   // --- loop ---
@@ -494,19 +521,25 @@ export function mountSuminagashi(host: HTMLElement): void {
   }
 
   // --- interaction: trace pours ink and pushes the scheduler back ---
+  let strokeInk = palette.inks[0]!.vec;
   host.addEventListener(
     'pointermove',
     (e) => {
+      if ((e.target as Element | null)?.closest('.sumi-ui')) return; // panel, not water
       const rect = host.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1 - (e.clientY - rect.top) / rect.height;
       const now = performance.now();
+      if (pointer && now - pointer.t > 400) {
+        // a new stroke: auto brush picks the next pigment
+        strokeInk = params.brush >= 0 ? palette.inks[params.brush]!.vec : pickInk();
+      }
       if (pointer) {
         const dx = x - pointer.x;
         const dy = y - pointer.y;
         const speed = Math.hypot(dx, dy);
         if (speed > 0.001) {
-          const ink = palette.inks[0]!.vec;
+          const ink = params.brush >= 0 ? palette.inks[params.brush]!.vec : strokeInk;
           splatD(x, y, [ink[0] * 0.16, ink[1] * 0.16, ink[2] * 0.16], 0.00045);
           splatV(x, y, dx * 2.2, dy * 2.2, 0.0028);
           nextPourAt = Math.max(nextPourAt, now + 2600);
@@ -517,6 +550,114 @@ export function mountSuminagashi(host: HTMLElement): void {
     },
     { passive: true },
   );
+
+  // --- control panel: quiet mono chrome, exists only when the sim runs ---
+  function clearDye(): void {
+    for (const f of [dye0, dye1]) {
+      gl!.bindFramebuffer(gl!.FRAMEBUFFER, f.fbo);
+      gl!.clearColor(0, 0, 0, 1);
+      gl!.clear(gl!.COLOR_BUFFER_BIT);
+    }
+    wake();
+  }
+
+  const swatchEls: HTMLButtonElement[] = [];
+  function buildPanel(): void {
+    const ui = document.createElement('div');
+    ui.className = 'sumi-ui';
+
+    const panel = document.createElement('div');
+    panel.className = 'sumi-panel';
+    panel.id = 'sumi-panel';
+    panel.hidden = true;
+
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'sumi-toggle';
+    toggle.textContent = 'controls';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-controls', 'sumi-panel');
+    toggle.addEventListener('click', () => {
+      const open = panel.hidden;
+      panel.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+
+    // ink row: auto + one swatch per pigment
+    const inkRow = document.createElement('div');
+    inkRow.className = 'sumi-row';
+    const inkLabel = document.createElement('span');
+    inkLabel.className = 'sumi-label';
+    inkLabel.textContent = 'ink';
+    inkRow.appendChild(inkLabel);
+    const swatches = document.createElement('div');
+    swatches.className = 'sumi-swatches';
+    const setBrush = (idx: number): void => {
+      params.brush = idx;
+      swatchEls.forEach((s, i) =>
+        s.setAttribute('aria-pressed', String(i === idx + 1)),
+      );
+    };
+    const auto = document.createElement('button');
+    auto.type = 'button';
+    auto.className = 'sumi-swatch sumi-swatch-auto';
+    auto.setAttribute('aria-label', 'auto ink (the field chooses)');
+    auto.setAttribute('aria-pressed', 'true');
+    auto.textContent = 'a';
+    auto.addEventListener('click', () => setBrush(-1));
+    swatches.appendChild(auto);
+    swatchEls.push(auto);
+    palette.inks.forEach((ink, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sumi-swatch';
+      b.setAttribute('aria-label', `${ink.name} ink`);
+      b.setAttribute('aria-pressed', 'false');
+      b.style.background = ink.css;
+      b.addEventListener('click', () => setBrush(i));
+      swatches.appendChild(b);
+      swatchEls.push(b);
+    });
+    inkRow.appendChild(swatches);
+    panel.appendChild(inkRow);
+
+    // sliders
+    const slider = (
+      label: string,
+      min: number,
+      max: number,
+      value: number,
+      apply: (v: number) => void,
+    ): void => {
+      const row = document.createElement('label');
+      row.className = 'sumi-row';
+      const span = document.createElement('span');
+      span.className = 'sumi-label';
+      span.textContent = label;
+      const input = document.createElement('input');
+      input.type = 'range';
+      input.min = String(min);
+      input.max = String(max);
+      input.step = '0.05';
+      input.value = String(value);
+      input.addEventListener('input', () => apply(parseFloat(input.value)));
+      row.append(span, input);
+      panel.appendChild(row);
+    };
+    slider('pours', 0.4, 2.4, params.pours, (v) => { params.pours = v; });
+    slider('current', 0, 2.2, params.current, (v) => { params.current = v; });
+    slider('fade', 0.5, 2, params.fade, (v) => { params.fade = v; });
+
+    const clear = document.createElement('button');
+    clear.type = 'button';
+    clear.className = 'sumi-clear';
+    clear.textContent = 'clear the water';
+    clear.addEventListener('click', clearDye);
+    panel.appendChild(clear);
+
+    ui.append(panel, toggle);
+    host.appendChild(ui);
+  }
 
   // --- lifecycle ---
   document.addEventListener('visibilitychange', () => {
@@ -532,15 +673,20 @@ export function mountSuminagashi(host: HTMLElement): void {
 
   new ResizeObserver(() => resize()).observe(host);
 
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  function refreshPalette(): void {
     palette = readPalette();
-    // fresh water on mode flip: clear both dye buffers
-    for (const f of [dye0, dye1]) {
-      gl!.bindFramebuffer(gl!.FRAMEBUFFER, f.fbo);
-      gl!.clearColor(0, 0, 0, 1);
-      gl!.clear(gl!.COLOR_BUFFER_BIT);
-    }
-  });
+    strokeInk = palette.inks[0]!.vec;
+    // fresh water on mode flip, and the swatches take the new tokens
+    clearDye();
+    palette.inks.forEach((ink, i) => {
+      const el = swatchEls[i + 1];
+      if (el) {
+        el.style.background = ink.css;
+        el.setAttribute('aria-label', `${ink.name} ink`);
+      }
+    });
+  }
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshPalette);
 
   canvas.addEventListener('webglcontextlost', (e) => {
     e.preventDefault();
@@ -551,6 +697,7 @@ export function mountSuminagashi(host: HTMLElement): void {
   // --- go ---
   resize();
   host.appendChild(canvas);
+  buildPanel();
   const t0 = performance.now();
   nextPourAt = t0 + 350; // first pour almost immediately; crossfade begins on it
   // seed the field with two quick pours so the reveal is already alive
