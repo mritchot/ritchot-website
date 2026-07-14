@@ -5,5 +5,9 @@
 /feed /feed.xml 301
 /feed/ /feed.xml 301
 
+# Legacy Bear blog index (tag-query URLs are accepted losses)
+/blog /writing/ 301
+/blog/ /writing/ 301
+
 # --- Phase 3 slug map: migrated Bear URLs that change shape land here. ---
 # Identity mappings (slug preserved) need no entry.

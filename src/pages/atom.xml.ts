@@ -33,7 +33,7 @@ export async function GET(context: APIContext): Promise<Response> {
   const xml = `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>ritchot.me</title>
-  <subtitle>Long-form writing by Michael Ritchot.</subtitle>
+  <subtitle>Writing by Michael Ritchot.</subtitle>
   <link href="${site}"/>
   <link rel="self" type="application/atom+xml" href="${new URL('/atom.xml', site).href}"/>
   <id>${site}</id>
