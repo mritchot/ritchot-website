@@ -7,7 +7,7 @@
 import Base from '../layouts/Base.astro';
 import InkDivider from '../components/InkDivider.astro';
 import { contrastRatio } from '../lib/contrast';
-import { highlight } from '../lib/code';
+import { highlightHtml } from '../lib/highlight';
 import faviconRaw from '../../public/favicon.svg?raw';
 
 // Chips pin each ground's fill so both render side by side in either mode;
@@ -75,7 +75,7 @@ const scale = [
   { token: '--text--1', cls: 'size-m1', rem: '0.8rem', px: '15.2px' },
 ];
 
-const codeHtml = highlight(
+const codeHtml = await highlightHtml(
   `
 // WCAG 2.x relative luminance, per channel
 const channel = (v: number): number => {
