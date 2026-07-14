@@ -1,0 +1,12 @@
+The font files in this directory are redistributed under the SIL Open Font
+License, Version 1.1 (https://openfontlicense.org).
+
+- Source Serif 4 — © Adobe, designed by Frank Grießhammer.
+  https://github.com/adobe-fonts/source-serif
+  Latin subset, variable weight instanced to 400–700.
+
+- IBM Plex Mono — © IBM Corp., designed by Mike Abbink and Bold Monday.
+  https://github.com/IBM/plex
+  Latin subset, weights 400 and 500.
+
+Subsets sourced from the Fontsource project (https://fontsource.org).
