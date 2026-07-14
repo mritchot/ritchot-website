@@ -1,0 +1,4 @@
+# Redirects served by Cloudflare Workers static assets.
+# Format: one rule per line — <source> <destination> <status>
+#   e.g.  /old-path  /new-path  301
+# Populated in Phase 3 (migrated Bear slugs, legacy feed path). Empty until then.

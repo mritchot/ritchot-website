@@ -1,0 +1,50 @@
+@import './tokens.css';
+
+/* Minimal reset only — layout and the full design system arrive in Phase 1. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+
+img,
+picture,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--accent-link);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-vermilion);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

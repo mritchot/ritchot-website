@@ -1,0 +1,48 @@
+/* Design tokens — ritchot.me
+ * Names are the stable API; values are provisional until the Phase 1
+ * specimen gate (typography proposal: Source Serif 4 + IBM Plex Mono).
+ * Two grounds: light "washi" paper and dark "sumi" ink. Modes follow
+ * prefers-color-scheme only — no manual toggle. Both must hold WCAG 2.2 AA.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* ground and ink scale — washi (light) */
+  --ground: #f7f4ef;
+  --surface: #eeeae1;
+  --ink: #1e1c19;
+  --ink-muted: #57534b;
+  --ink-faint: #7d786e;
+  --line: #d9d3c7;
+
+  /* accents */
+  --accent-vermilion: #c73b27; /* seal mark and focus — scarce by design */
+  --accent-link: #0c6b76;      /* signal teal-cyan — links */
+  --accent-ember: #d95d1e;     /* ember orange — hero/illustration only */
+
+  /* typography */
+  --font-serif: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --text-base: 19px;
+  --measure: 68ch; /* justified prose measure, 65–70ch band */
+
+  /* motion */
+  --fade-duration: 160ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* ground and ink scale — sumi (dark) */
+    --ground: #101014;
+    --surface: #17171d;
+    --ink: #e6e2d9;
+    --ink-muted: #a49f93;
+    --ink-faint: #767268;
+    --line: #2c2c34;
+
+    --accent-vermilion: #e05543;
+    --accent-link: #4cc3d0;
+    --accent-ember: #e8763a;
+  }
+}

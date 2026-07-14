@@ -1,0 +1,9 @@
+# resume.yaml — single source of truth for the resume page, its print
+# stylesheet, and public/resume.pdf (`npm run resume:pdf`, added in Phase 5).
+# Placeholder: section keys only until Phase 5.
+
+profile: {}
+experience: []
+education: []
+certifications: []
+skills: []
