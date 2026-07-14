@@ -1,0 +1,128 @@
+---
+/**
+ * /ai-courses/ — standalone hub recreated from the Bear page (Phase 3).
+ * Unlisted: not in the nav; a real indexable page; outside the writing
+ * collection so it never enters the stream or feeds.
+ */
+import Base from '../layouts/Base.astro';
+import InkDivider from '../components/InkDivider.astro';
+---
+
+<Base
+  title="AI Courses · ritchot.me"
+  description="The AI courses I build: each entry links to the course, its source, and any related writing."
+>
+  <h1>AI Courses</h1>
+  <div class="hub">
+    <p>
+      This page collects the AI courses I build. Each entry links to the
+      course, its source, and any related writing. Right now there is one.
+    </p>
+
+    <InkDivider />
+
+    <article>
+      <h2>AI Literacy for the Modern Workforce</h2>
+      <p class="updated"><em>Last updated: July 2026</em></p>
+      <p>
+        A four-module interactive program that teaches AI literacy through
+        mechanism rather than tool familiarity. It makes a case as to why AI
+        literacy matters now in a corporate setting, and covers how language
+        models actually tokenize text, predict the next token, and generate
+        language, then builds the judgment to evaluate what those systems
+        produce. It is aimed at mid-career knowledge workers and incorporates
+        Anthropic's 4D AI Fluency framework (Delegation, Description,
+        Discernment, Diligence). The platform is custom-coded rather than
+        built in an off-the-shelf authoring tool, with a Kirkpatrick
+        evaluation architecture and xAPI-aligned event tracking designed in
+        from the start.
+      </p>
+
+      <p class="label"><strong>Links</strong></p>
+      <ul>
+        <li><a href="https://ai-literacy.ritchot.me/">Course</a></li>
+        <li><a href="https://github.com/mritchot/ai-literacy-platform">Source on GitHub</a></li>
+      </ul>
+
+      <p class="label"><strong>Writing</strong></p>
+      <ul>
+        <li><a href="/writing/i-built-an-ai-literacy-course/">I built an AI Literacy Course</a></li>
+      </ul>
+
+      <p class="label"><strong>Documents</strong></p>
+
+      <p class="sublabel"><em>Needs Analysis</em></p>
+      <ul>
+        <li><a href="https://ai-literacy.ritchot.me/needs-analysis/executive-problem-statement.pdf">Executive Problem Statement (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/needs-analysis/capability-gap-analysis.pdf">Capability Gap Analysis (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/needs-analysis/learner-persona.pdf">Learner Persona (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/needs-analysis/action-map.pdf">Action Map (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/#/needs-analysis">Interactive versions in the course</a></li>
+      </ul>
+
+      <p class="sublabel"><em>Evaluation Framework</em></p>
+      <ul>
+        <li><a href="https://ai-literacy.ritchot.me/evaluation/level-1-reaction.pdf">Level 1: Reaction (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/evaluation/level-2-learning.pdf">Level 2: Learning (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/evaluation/level-3-behavior.pdf">Level 3: Behavior (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/evaluation/level-4-results.pdf">Level 4: Results (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/#/evaluation">Interactive versions in the course</a></li>
+      </ul>
+
+      <p class="sublabel"><em>Behind the Build</em></p>
+      <ul>
+        <li><a href="https://ai-literacy.ritchot.me/build/learning-architecture.pdf">Learning Architecture (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/build/architecture.pdf">Technical Architecture (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/build/timeline.pdf">Project Timeline (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/build/raci.pdf">Responsibility Matrix / RACI (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/build/resources.pdf">Resource &amp; Budget Plan (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/build/communications.pdf">Stakeholder Communications (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/build/quality.pdf">QA Documentation (PDF)</a></li>
+        <li><a href="https://ai-literacy.ritchot.me/#/build">Interactive versions in the course</a></li>
+      </ul>
+    </article>
+  </div>
+</Base>
+
+<style>
+  h1 {
+    margin-block-end: 1.25rem;
+  }
+
+  .hub {
+    max-width: var(--measure);
+  }
+
+  .hub p + p,
+  .hub ul {
+    margin-block-start: 0.9em;
+  }
+
+  .hub h2 {
+    margin-block: 0.5rem 0.4rem;
+  }
+
+  .updated {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+  }
+
+  .label {
+    margin-block-start: 1.6em;
+  }
+
+  .sublabel {
+    color: var(--ink-soft);
+    margin-block-start: 1.1em;
+  }
+
+  .hub ul {
+    padding-inline-start: 1.4rem;
+    margin-block-start: 0.45em;
+  }
+
+  .hub li + li {
+    margin-block-start: 0.3em;
+  }
+</style>
