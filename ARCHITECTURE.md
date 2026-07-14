@@ -1,6 +1,6 @@
 # Architecture
 
-Condensed summary of the decisions governing this codebase. The full architecture and production document is maintained outside the repository ("ritchot.me Redesign — Architecture & Production Document").
+Condensed summary of the decisions governing this codebase. The full architecture and production document ("ritchot.me Redesign — Architecture & Production Document") is maintained locally, outside the tracked tree.
 
 ## Purpose
 
