@@ -1,12 +1,31 @@
 /**
- * Build-time syntax highlighting: Shiki tokenizes, output is class-based.
+ * Build-time syntax highlighting core: Shiki tokenizes, output is class-based.
  * The CSP (style-src 'self') forbids the inline style attributes Shiki's HTML
- * renderer emits, so tokens are mapped to semantic classes colored by the
- * --code-* design tokens (dual-mode via prefers-color-scheme, zero runtime JS).
+ * renderer emits, so tokens map to semantic classes colored by the --code-*
+ * design tokens (dual-mode via prefers-color-scheme, zero runtime JS).
+ * Consumed by the rehype plugin (markdown code fences) and .astro pages.
  */
-import { createHighlighter, type BundledLanguage } from 'shiki';
+import { createHighlighter, type Highlighter } from 'shiki';
 
-// TextMate scope prefix → token class (first match on the most specific scope wins)
+const LANGS = [
+  'typescript',
+  'javascript',
+  'css',
+  'html',
+  'json',
+  'yaml',
+  'bash',
+  'markdown',
+];
+
+let highlighterPromise: Promise<Highlighter> | null = null;
+const getHighlighter = (): Promise<Highlighter> =>
+  (highlighterPromise ??= createHighlighter({
+    themes: ['github-light'], // tokenization only; colors come from CSS tokens
+    langs: LANGS,
+  }));
+
+// TextMate scope prefix → token class (most specific scope wins)
 const SCOPE_CLASSES: ReadonlyArray<readonly [string, string]> = [
   ['comment', 'tok-comment'],
   ['punctuation.definition.comment', 'tok-comment'],
@@ -31,21 +50,23 @@ function classFor(scopes: readonly string[]): string | null {
   return null;
 }
 
-function escapeHtml(s: string): string {
+export function escapeHtml(s: string): string {
   return s
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;');
 }
 
-const highlighter = await createHighlighter({
-  themes: ['github-light'], // tokenization only; colors come from CSS tokens
-  langs: ['typescript', 'css'],
-});
+export async function highlightHtml(code: string, lang: string): Promise<string> {
+  const source = code.replace(/\n$/, '');
+  const highlighter = await getHighlighter();
 
-export function highlight(code: string, lang: BundledLanguage): string {
-  const { tokens } = highlighter.codeToTokens(code.trim(), {
-    lang,
+  if (!(highlighter.getLoadedLanguages() as string[]).includes(lang)) {
+    return `<pre class="code-block"><code>${escapeHtml(source)}</code></pre>`;
+  }
+
+  const { tokens } = highlighter.codeToTokens(source, {
+    lang: lang as Parameters<Highlighter['codeToTokens']>[1]['lang'],
     theme: 'github-light',
     includeExplanation: 'scopeName',
   });
