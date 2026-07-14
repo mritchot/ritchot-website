@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+import TypeBadge from '../../components/TypeBadge.astro';
+import { sortedWriting, urlOf, formatDate, type Writing } from '../../lib/writing';
+import { readingTime } from '../../lib/reading-time';
+
+const entries = await sortedWriting();
+
+const byYear = new Map<number, Writing[]>();
+for (const entry of entries) {
+  const year = entry.data.date.getUTCFullYear();
+  const group = byYear.get(year);
+  if (group) group.push(entry);
+  else byYear.set(year, [entry]);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<Base title="Writing · ritchot.me" description="Essays, analyses, and notes by Michael Ritchot.">
+  <h1>Writing</h1>
+  {
+    years.map((year) => (
+      <section>
+        <h2 class="year">{year}</h2>
+        <ul class="stream">
+          {byYear.get(year)!.map((entry) => (
+            <li>
+              <a class="title" href={urlOf(entry)}>
+                {entry.data.title}
+              </a>
+              <p class="meta">
+                {formatDate(entry.data.date)}
+                <span aria-hidden="true">·</span>
+                <TypeBadge type={entry.data.type} />
+                <span aria-hidden="true">·</span>
+                {readingTime(entry.body ?? '')} min read
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  h1 {
+    margin-block-end: 1.5rem;
+  }
+
+  section {
+    margin-block-start: 2.5rem;
+  }
+
+  .year {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    font-weight: 400;
+    color: var(--ink-soft);
+    border-block-end: 1px solid var(--line);
+    padding-block-end: 0.4rem;
+  }
+
+  .stream {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1.6rem;
+    margin-block-start: 1.4rem;
+  }
+
+  .title {
+    font-size: var(--text-1);
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .title:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--signal);
+  }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+    margin-block-start: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+</style>

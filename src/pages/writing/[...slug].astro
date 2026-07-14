@@ -1,0 +1,204 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import TypeBadge from '../../components/TypeBadge.astro';
+import { sortedWriting, slugOf, urlOf, formatDate, type Writing } from '../../lib/writing';
+import { readingTime, wordCount } from '../../lib/reading-time';
+
+export async function getStaticPaths() {
+  const entries = await sortedWriting();
+  return entries.map((entry) => ({
+    params: { slug: slugOf(entry) },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: Writing;
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+
+const all = await sortedWriting();
+const index = all.findIndex((e) => e.id === entry.id);
+const newer = index > 0 ? all[index - 1] : undefined;
+const older = index < all.length - 1 ? all[index + 1] : undefined;
+
+const words = wordCount(entry.body ?? '');
+const minutes = readingTime(entry.body ?? '');
+const tocHeadings = headings.filter(
+  (h) => h.depth >= 2 && h.depth <= 3 && h.slug !== 'footnote-label',
+);
+const showToc = words > 1500 && tocHeadings.length >= 2;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: entry.data.title,
+  description: entry.data.summary,
+  datePublished: entry.data.date.toISOString(),
+  dateModified: (entry.data.updated ?? entry.data.date).toISOString(),
+  author: { '@type': 'Person', name: 'Michael Ritchot', url: Astro.site?.href },
+  mainEntityOfPage: canonical.href,
+};
+---
+
+<Base
+  title={`${entry.data.title} · ritchot.me`}
+  description={entry.data.summary}
+  ogType="article"
+  ogImage={`/og/writing/${slugOf(entry)}.png`}
+  jsonLd={[articleLd]}
+>
+  <article>
+    <p class="kicker">
+      <TypeBadge type={entry.data.type} />
+      <span aria-hidden="true">·</span>
+      {formatDate(entry.data.date)}
+      <span aria-hidden="true">·</span>
+      {minutes} min read
+    </p>
+    <h1>{entry.data.title}</h1>
+    <p class="lede">{entry.data.summary}</p>
+    {
+      entry.data.updated && (
+        <p class="updated">updated {formatDate(entry.data.updated)}</p>
+      )
+    }
+    {
+      showToc && (
+        <details class="toc">
+          <summary>Contents</summary>
+          <ol>
+            {tocHeadings.map((h) => (
+              <li class={`depth-${h.depth}`}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </details>
+      )
+    }
+    <div class="prose">
+      <Content />
+    </div>
+    <nav class="prevnext" aria-label="Adjacent pieces">
+      <span>
+        {older && (
+          <a href={urlOf(older)} rel="prev">
+            ← {older.data.title}
+          </a>
+        )}
+      </span>
+      <span>
+        {newer && (
+          <a href={urlOf(newer)} rel="next">
+            {newer.data.title} →
+          </a>
+        )}
+      </span>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  article {
+    max-width: var(--measure);
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  h1 {
+    font-size: var(--text-3);
+    margin-block: 0.6rem 0.9rem;
+  }
+
+  .lede {
+    font-size: var(--text-1);
+    line-height: 1.45;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+
+  .updated {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-block-start: 0.5rem;
+  }
+
+  .toc {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    border: 1px solid var(--line);
+    padding: 0.7rem 1rem;
+    margin-block-start: 1.75rem;
+  }
+
+  .toc summary {
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .toc ol {
+    list-style: none;
+    padding: 0.5rem 0 0.1rem;
+    margin: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .toc a:hover {
+    color: var(--signal);
+    text-decoration: underline;
+  }
+
+  .toc .depth-3 {
+    padding-inline-start: 1.25rem;
+  }
+
+  .prose {
+    margin-block-start: 2.25rem;
+  }
+
+  .prevnext {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-block-start: 3.5rem;
+    border-block-start: 1px solid var(--line);
+    padding-block-start: 1.1rem;
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+  }
+
+  .prevnext a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  .prevnext a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  .prevnext span:last-child {
+    text-align: end;
+  }
+</style>
