@@ -8,9 +8,11 @@ import Base from '../layouts/Base.astro';
 import InkDivider from '../components/InkDivider.astro';
 import { contrastRatio } from '../lib/contrast';
 import { highlight } from '../lib/code';
-import markA from '../components/marks/MarkA.svg?raw';
-import markB from '../components/marks/MarkB.svg?raw';
-import markC from '../components/marks/MarkC.svg?raw';
+import faviconRaw from '../../public/favicon.svg?raw';
+
+// Chips pin each ground's fill so both render side by side in either mode;
+// the shipped favicon.svg swaps fills itself via prefers-color-scheme.
+const faviconBare = faviconRaw.replace(/<style>.*?<\/style>/, '');
 
 // Mirrors tokens.css (the source of truth). This page dies before launch;
 // the duplication is accepted so ratios can be computed and printed at build.
@@ -92,17 +94,12 @@ console.log(\`text floor: \${FLOOR}:1\`);
   'typescript',
 );
 
-const marks = [
-  { id: 'A', svg: markA, approach: 'positive carve — letters cut from the die' },
-  { id: 'B', svg: markB, approach: 'negative carve — solid letters in a cut border' },
-  { id: 'C', svg: markC, approach: 'broken border — leg pierces the edge, notched cut' },
-];
 ---
 
 <Base title="Specimen · ritchot.me" description="Design-system specimen." noindex>
   <h1>Specimen</h1>
   <p class="note">
-    Phase 1 review surface: tokens, type, chrome, code, marks. Not linked, not
+    Phase 1 review surface: tokens, type, chrome, code, wordmark. Not linked, not
     indexed, not in the sitemap; deleted before launch. Review in both color
     modes (system preference switches them).
   </p>
@@ -242,23 +239,26 @@ const marks = [
   </section>
 
   <section>
-    <h2>Monogram candidates</h2>
-    <p class="note">Ink monogram (D16 revision): currentColor, square seal geometry, hand-cut edge. 16 / 32 / 64 px.</p>
-    <div class="marks">
-      {
-        marks.map((m) => (
-          <figure>
-            <div class="mark-sizes">
-              <span class="m16" set:html={m.svg} />
-              <span class="m32" set:html={m.svg} />
-              <span class="m64" set:html={m.svg} />
-            </div>
-            <figcaption>
-              <code>Mark{m.id}</code> — {m.approach}
-            </figcaption>
-          </figure>
-        ))
-      }
+    <h2>Wordmark · favicon</h2>
+    <p class="note">
+      D16 final: purely typographic identity. Header scale and footer scale
+      below; favicon is the Source Serif 4 "M" (wght 500) as a path-only SVG,
+      shown at 16 / 32 / 64 on both grounds (chips pin each ground's fill —
+      the shipped file swaps by system mode).
+    </p>
+    <p class="wordmark-header">Michael Ritchot</p>
+    <p class="wordmark-footer">Michael Ritchot</p>
+    <div class="fav-row">
+      <span class="fav-chip chip-light">
+        <span class="f16" set:html={faviconBare} />
+        <span class="f32" set:html={faviconBare} />
+        <span class="f64" set:html={faviconBare} />
+      </span>
+      <span class="fav-chip chip-dark">
+        <span class="f16" set:html={faviconBare} />
+        <span class="f32" set:html={faviconBare} />
+        <span class="f64" set:html={faviconBare} />
+      </span>
     </div>
   </section>
 </Base>
@@ -422,35 +422,41 @@ const marks = [
     letter-spacing: 0.08em;
   }
 
-  /* marks */
-  .marks {
-    display: grid;
-    gap: 1.75rem;
+  /* wordmark + favicon */
+  .wordmark-header {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-block: 0.9rem 0.3rem;
   }
 
-  .mark-sizes {
+  .wordmark-footer {
+    font-size: var(--text--1);
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  .fav-row {
+    display: flex;
+    gap: 1rem;
+    margin-block-start: 1.1rem;
+  }
+
+  .fav-chip {
     display: flex;
     align-items: flex-end;
-    gap: 1.5rem;
-    color: var(--ink);
+    gap: 1.25rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--line);
   }
 
-  .mark-sizes span {
-    display: block;
-  }
+  /* chips pin both grounds simultaneously, independent of the active mode */
+  .chip-light { background: #f7f4ef; }
+  .chip-light :global(path) { fill: #1c1b1a; }
+  .chip-dark { background: #101014; }
+  .chip-dark :global(path) { fill: #e6e2d8; }
 
-  .m16 :global(svg) { width: 16px; height: 16px; display: block; }
-  .m32 :global(svg) { width: 32px; height: 32px; display: block; }
-  .m64 :global(svg) { width: 64px; height: 64px; display: block; }
-
-  figure {
-    margin: 0;
-  }
-
-  figcaption {
-    font-family: var(--font-mono);
-    font-size: var(--text--1);
-    color: var(--ink-soft);
-    margin-block-start: 0.5rem;
-  }
+  .fav-chip > span { display: block; }
+  .f16 :global(svg) { width: 16px; height: 16px; display: block; }
+  .f32 :global(svg) { width: 32px; height: 32px; display: block; }
+  .f64 :global(svg) { width: 64px; height: 64px; display: block; }
 </style>
