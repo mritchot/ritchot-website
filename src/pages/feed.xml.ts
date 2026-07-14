@@ -6,7 +6,7 @@ export async function GET(context: APIContext): Promise<Response> {
   const entries = await sortedWriting();
   return rss({
     title: 'ritchot.me',
-    description: 'Long-form writing by Michael Ritchot.',
+    description: 'Writing by Michael Ritchot.',
     site: context.site!,
     customData: '<language>en</language>',
     items: entries.map((entry) => ({
