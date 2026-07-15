@@ -1,0 +1,132 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { sortedProjects, slugOf, type Project } from '../../lib/projects';
+
+export async function getStaticPaths() {
+  const entries = await sortedProjects();
+  return entries.map((entry) => ({
+    params: { slug: slugOf(entry) },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: Project;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, role, period, status, summary, links, stack } = entry.data;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const projectLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: title,
+  description: summary,
+  author: { '@type': 'Person', name: 'Michael Ritchot', url: Astro.site?.href },
+  ...(links.live ? { url: links.live } : {}),
+  mainEntityOfPage: canonical.href,
+};
+---
+
+<Base
+  title={`${title} · ritchot.me`}
+  description={summary}
+  jsonLd={[projectLd]}
+>
+  <article>
+    <p class="kicker">
+      <span class="status" data-status={status}>{status}</span>
+      <span aria-hidden="true">·</span>
+      {role}
+      <span aria-hidden="true">·</span>
+      {period}
+    </p>
+    <h1>{title}</h1>
+    <p class="lede">{summary}</p>
+    <p class="quicklinks">
+      {links.live && <a href={links.live}>Visit the live project ↗</a>}
+      {links.repo && <a href={links.repo}>Source ↗</a>}
+    </p>
+    <div class="prose">
+      <Content />
+    </div>
+    <p class="back">
+      <a href="/projects/">← All projects</a>
+    </p>
+  </article>
+</Base>
+
+<style>
+  article {
+    max-width: var(--measure);
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .status {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.7rem;
+    border: 1px solid var(--line);
+    padding: 0.1rem 0.45rem;
+  }
+
+  .status[data-status='live'] {
+    color: var(--signal);
+    border-color: currentColor;
+  }
+
+  h1 {
+    font-size: var(--text-3);
+    margin-block: 0.6rem 0.9rem;
+  }
+
+  .lede {
+    font-size: var(--text-1);
+    line-height: 1.45;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+
+  .quicklinks {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    margin-block-start: 1.1rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .prose {
+    margin-block-start: 2.25rem;
+  }
+
+  .back {
+    margin-block-start: 3rem;
+    border-block-start: 1px solid var(--line);
+    padding-block-start: 1.1rem;
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+  }
+
+  .back a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  .back a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+</style>

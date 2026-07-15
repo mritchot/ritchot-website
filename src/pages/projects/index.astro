@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { sortedProjects } from '../../lib/projects';
+
+const projects = await sortedProjects();
+---
+
+<Base
+  title="Projects · ritchot.me"
+  description="Selected work: learning products and the systems behind them."
+>
+  <h1>Projects</h1>
+  <!-- Copy flagged for gate approval (Phase 5 Part B). -->
+  <p class="framing">
+    Selected work — learning products and the systems behind them, each with
+    the design record to show how it was made. This page grows slowly; only
+    shipped work lands here.
+  </p>
+  <div class="cards">
+    {projects.map((project) => <ProjectCard project={project} />)}
+  </div>
+</Base>
+
+<style>
+  h1 {
+    margin-block-end: 1.5rem;
+  }
+
+  .framing {
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+
+  .cards {
+    margin-block-start: 2.5rem;
+    max-width: var(--measure);
+    display: grid;
+    gap: 1.5rem;
+  }
+</style>

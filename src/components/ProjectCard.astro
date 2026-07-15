@@ -1,0 +1,82 @@
+---
+import { urlOf, type Project } from '../lib/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { title, summary, period, status, stack } = project.data;
+---
+
+<article class="card">
+  <p class="meta">
+    <span class="status" data-status={status}>{status}</span>
+    <span aria-hidden="true">·</span>
+    {period}
+  </p>
+  <h3 class="title">
+    <a href={urlOf(project)}>{title}</a>
+  </h3>
+  <p class="summary">{summary}</p>
+  <p class="stack">{stack.join(' · ')}</p>
+</article>
+
+<style>
+  .card {
+    border: 1px solid var(--line);
+    padding: 1.4rem 1.5rem 1.3rem;
+  }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .status {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.7rem;
+    border: 1px solid var(--line);
+    padding: 0.1rem 0.45rem;
+  }
+
+  .status[data-status='live'] {
+    color: var(--signal);
+    border-color: currentColor;
+  }
+
+  .title {
+    font-size: var(--text-1);
+    margin-block-start: 0.55rem;
+  }
+
+  .title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--signal);
+  }
+
+  .summary {
+    margin-block-start: 0.55rem;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+
+  .stack {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+    margin-block-start: 0.8rem;
+  }
+</style>
