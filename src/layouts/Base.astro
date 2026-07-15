@@ -39,6 +39,9 @@ const structuredData = [personLd, ...jsonLd];
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <!-- D23: sets data-theme from localStorage before first paint (no FOUC).
+         Synchronous by design; ~0.4 KB. External file per the CSP. -->
+    <script src="/theme.js" is:inline></script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical.href} />
@@ -77,6 +80,10 @@ const structuredData = [personLd, ...jsonLd];
       <slot />
     </main>
     <Footer />
+    <script>
+      // D24 site-wide motion (scroll reveals, divider draw-in, hero parallax)
+      import '../scripts/motion';
+    </script>
   </body>
 </html>
 

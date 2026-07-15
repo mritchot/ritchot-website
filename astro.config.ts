@@ -26,4 +26,11 @@ export default defineConfig({
     // so stylesheets must always be emitted as external files.
     inlineStylesheets: 'never',
   },
+  vite: {
+    build: {
+      // script-src 'self' likewise blocks inline scripts: small bundled
+      // scripts (the D24 motion script) must never be inlined into HTML.
+      assetsInlineLimit: 0,
+    },
+  },
 });

@@ -207,6 +207,80 @@ section.footnotes li + li {
   }
 }
 
+/* --- theme toggle (D23) — element is built by /theme.js, so styles live
+       here rather than in the scoped header component --- */
+
+.theme-toggle {
+  font-family: var(--font-mono);
+  font-size: var(--text--1);
+  line-height: 1;
+  color: var(--ink-soft);
+  background: none;
+  border: none;
+  padding: 0.1em 0.2em;
+  cursor: pointer;
+  /* space is reserved statically; /theme.js flips visibility on */
+  visibility: hidden;
+  inline-size: 1.6em;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+}
+
+/* --- D24 expressive motion: states applied only by script (JS-off =
+       everything visible). Hidden instantly, revealed with a rise; the
+       divider draws in with a clip wipe. Reduced-motion collapses these
+       via the global override below. --- */
+
+.mo {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.mo.in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 440ms ease,
+    transform 440ms cubic-bezier(0.22, 0.7, 0.25, 1);
+}
+
+.ink-divider.mo {
+  opacity: 1;
+  transform: none;
+  /* not a full 100% clip: a fully-clipped element has an empty
+     intersection rect and the observer would never fire */
+  clip-path: inset(-20% 99.9% -20% 0);
+}
+
+.ink-divider.mo.in {
+  clip-path: inset(-20% -2% -20% 0);
+  transition: clip-path 720ms cubic-bezier(0.3, 0.6, 0.2, 1);
+}
+
+/* --- print: strip site chrome on every page --- */
+
+@media print {
+  body > header,
+  body > footer,
+  .skip-link {
+    display: none;
+  }
+
+  body {
+    background: #fff;
+    color: #111;
+  }
+
+  /* the layout's scoped main styles carry higher specificity */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+}
+
 /* --- cross-document view transitions (CSS only, zero JS) --- */
 
 @view-transition {
