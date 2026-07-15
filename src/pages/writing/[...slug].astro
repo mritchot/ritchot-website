@@ -103,6 +103,26 @@ const articleLd = {
   </article>
 </Base>
 
+<script>
+  // Knuth–Plass justification enhancement (D22). Gated so the ~15KB chunk
+  // is fetched only where it can run: Intl.Segmenter for pretext, pre-line
+  // for the forced breaks, and never on metered connections. The CSS
+  // baseline is the permanent state everywhere else.
+  const boot = () => {
+    if (!('Segmenter' in Intl)) return;
+    if (!CSS.supports('white-space', 'pre-line')) return;
+    const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
+    if (nav.connection?.saveData) return;
+    import('../../islands/pretext-justify/index')
+      .then((m) => m.default(document))
+      .catch(() => {
+        // enhancement only: the justified CSS baseline remains
+      });
+  };
+  if ('requestIdleCallback' in window) requestIdleCallback(boot);
+  else setTimeout(boot, 1);
+</script>
+
 <style>
   article {
     max-width: var(--measure);

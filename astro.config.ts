@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import rehypeCodeClasses from './src/lib/rehype-code-classes';
 import rehypeSidenotes from './src/lib/rehype-sidenotes';
+import rehypeShy from './src/lib/rehype-shy';
 
 export default defineConfig({
   site: 'https://ritchot.me',
@@ -10,7 +11,9 @@ export default defineConfig({
     // Built-in Shiki emits inline style attributes; the CSP forbids them.
     // rehypeCodeClasses re-highlights fences with class-based output.
     syntaxHighlight: false,
-    rehypePlugins: [rehypeCodeClasses, rehypeSidenotes],
+    // rehypeShy runs last so the sidenote copies exist (and are skipped)
+    // before soft hyphens are baked into the remaining prose text.
+    rehypePlugins: [rehypeCodeClasses, rehypeSidenotes, rehypeShy],
   },
   integrations: [
     sitemap({

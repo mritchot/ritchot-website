@@ -18,7 +18,7 @@ function entryXml(entry: Writing, site: string): string {
     <updated>${(entry.data.updated ?? entry.data.date).toISOString()}</updated>
     <summary>${esc(entry.data.summary)}</summary>
     <category term="${esc(entry.data.type)}"/>
-    <content type="html">${esc(entry.rendered?.html ?? '')}</content>
+    <content type="html">${esc((entry.rendered?.html ?? '').replaceAll('\u00ad', ''))}</content>
   </entry>`;
 }
 
