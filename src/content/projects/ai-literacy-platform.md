@@ -14,6 +14,7 @@ links:
   live: "https://ai-literacy.ritchot.me/"
   repo: "https://github.com/mritchot/ai-literacy-platform"
 weight: 1
+hub: ai-literacy
 summary: "A four-module, research-grounded AI literacy program for mid-career professionals — designed, built, and shipped solo in roughly 150 hours on a custom learning platform, with the full needs analysis, evaluation framework, and project records published alongside it."
 ---
 ## Problem
