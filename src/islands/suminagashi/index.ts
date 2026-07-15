@@ -37,17 +37,23 @@ precision highp float;
 in vec2 uv; out vec4 o;
 uniform sampler2D u_src; uniform sampler2D u_vel;
 uniform float u_dt; uniform float u_diss;
-uniform vec4 u_clear; // ellipse cx, cy, rx, ry (rx<=0 disables)
+uniform vec4 u_clear;  // ellipse cx, cy, rx, ry (rx<=0 disables)
+uniform vec4 u_clear2; // second clearing zone, same encoding
 uniform float u_clearK;
 void main(){
   vec2 back = uv - u_dt * texture(u_vel, uv).xy;
   vec4 s = texture(u_src, back);
   float diss = u_diss;
+  float e = 0.0;
   if (u_clear.z > 0.0) {
     vec2 d = (uv - u_clear.xy) / u_clear.zw;
-    float e = exp(-dot(d, d));
-    diss = mix(diss, diss * u_clearK, e);
+    e = exp(-dot(d, d));
   }
+  if (u_clear2.z > 0.0) {
+    vec2 d2 = (uv - u_clear2.xy) / u_clear2.zw;
+    e = max(e, exp(-dot(d2, d2)));
+  }
+  diss = mix(diss, diss * u_clearK, e);
   o = s * diss;
 }`,
   splat: `#version 300 es
@@ -112,6 +118,13 @@ void main(){
   col += (hash(gl_FragCoord.xy * 0.7) - 0.5) * 0.012; // paper grain, matte
   o = vec4(col, 1.0);
 }`,
+  retint: `#version 300 es
+precision highp float;
+in vec2 uv; out vec4 o;
+uniform sampler2D u_dye; uniform mat3 u_m;
+void main(){
+  o = vec4(max(u_m * texture(u_dye, uv).rgb, 0.0), 1.0);
+}`,
 };
 
 const clamp01 = (v: number): number => Math.min(1, Math.max(0, v));
@@ -129,6 +142,56 @@ function absorbance(c: [number, number, number], dark: boolean): [number, number
     dark ? -Math.log(1 - clamp01(x) * 0.92) : -Math.log(Math.max(x, 0.03));
   // in light mode a channel the ink reflects fully should not absorb at all
   return dark ? [f(c[0]), f(c[1]), f(c[2])] : [f(c[0]), f(c[1]), f(c[2])];
+}
+
+type Vec3 = [number, number, number];
+
+/**
+ * Least-squares 3×3 matrix mapping the old palette's five pigment density
+ * vectors onto the new palette's. Dye mixes additively in density space,
+ * so the same matrix retints any mixture consistently — the field can
+ * change modes in a single frame without losing its composition.
+ * Returns a column-major mat3, or null if the fit is degenerate.
+ */
+function retintMatrix(from: Vec3[], to: Vec3[]): Float32Array | null {
+  const G: number[][] = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+  ];
+  const B: number[][] = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+  ];
+  for (let i = 0; i < from.length; i++) {
+    const f = from[i]!;
+    const t = to[i]!;
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) G[r]![c] += f[r]! * f[c]!;
+      B[r]![0] += f[r]! * t[0]!;
+      B[r]![1] += f[r]! * t[1]!;
+      B[r]![2] += f[r]! * t[2]!;
+    }
+  }
+  const det = (m: number[][]): number =>
+    m[0]![0]! * (m[1]![1]! * m[2]![2]! - m[1]![2]! * m[2]![1]!) -
+    m[0]![1]! * (m[1]![0]! * m[2]![2]! - m[1]![2]! * m[2]![0]!) +
+    m[0]![2]! * (m[1]![0]! * m[2]![1]! - m[1]![1]! * m[2]![0]!);
+  const d = det(G);
+  if (Math.abs(d) < 1e-9) return null;
+
+  // solve G·w = b per output channel via Cramer's rule; rows of M are the w's
+  const m = new Float32Array(9);
+  for (let ch = 0; ch < 3; ch++) {
+    const b = [B[0]![ch]!, B[1]![ch]!, B[2]![ch]!];
+    for (let k = 0; k < 3; k++) {
+      const Gk = G.map((row, r) => row.map((v, c) => (c === k ? b[r]! : v)));
+      // column-major: element (row=ch, col=k) lands at k*3 + ch
+      m[k * 3 + ch] = det(Gk) / d;
+    }
+  }
+  return m;
 }
 
 export function mountSuminagashi(host: HTMLElement): void {
@@ -199,6 +262,7 @@ export function mountSuminagashi(host: HTMLElement): void {
     pressure: program(FRAG.pressure),
     gradient: program(FRAG.gradient),
     composite: program(FRAG.composite),
+    retint: program(FRAG.retint),
   };
   const U = (p: WebGLProgram, n: string): WebGLUniformLocation | null => gl!.getUniformLocation(p, n);
 
@@ -219,6 +283,7 @@ export function mountSuminagashi(host: HTMLElement): void {
   }
 
   // --- fields (sim resolution independent of display resolution) ---
+  let jacobiN = 20;
   let simW = 176;
   let simH = 104;
   let dyeW = 416;
@@ -289,7 +354,11 @@ export function mountSuminagashi(host: HTMLElement): void {
   let frameEma = 16;
   let degraded = 0;
   let ready = false;
-  const clearZone: [number, number, number, number] = [0.28, 0.22, 0.34, 0.2]; // uv ellipse (y from bottom→gl)
+  // 5b homepage: content columns sit low across the full width and the
+  // identity line top-left; ink thins softly under both (panels carry the
+  // guaranteed contrast, the clearing keeps them airy). uv, y-up.
+  const clearZone: [number, number, number, number] = [0.5, 0.16, 0.6, 0.3];
+  const clearZone2: [number, number, number, number] = [0.16, 0.9, 0.24, 0.08];
   let pointer: { x: number; y: number; t: number } | null = null;
   let nextPourAt = 0;
 
@@ -385,6 +454,7 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.uniform1f(U(P.advect, 'u_dt'), dt);
     gl!.uniform1f(U(P.advect, 'u_diss'), Math.pow(0.997, dt * 60));
     gl!.uniform4f(U(P.advect, 'u_clear'), 0, 0, 0, 0);
+    gl!.uniform4f(U(P.advect, 'u_clear2'), 0, 0, 0, 0);
     gl!.uniform1f(U(P.advect, 'u_clearK'), 1);
     draw(vel1); swapV();
 
@@ -399,7 +469,7 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.clearColor(0, 0, 0, 1); gl!.clear(gl!.COLOR_BUFFER_BIT);
     gl!.useProgram(P.pressure);
     gl!.uniform2f(U(P.pressure, 'u_texel'), 1 / simW, 1 / simH);
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < jacobiN; i++) {
       bind(0, prs0.tex); bind(1, div.tex);
       gl!.uniform1i(U(P.pressure, 'u_prs'), 0);
       gl!.uniform1i(U(P.pressure, 'u_div'), 1);
@@ -421,10 +491,17 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.uniform1f(U(P.advect, 'u_dt'), dt);
     gl!.uniform1f(U(P.advect, 'u_diss'), Math.pow(0.998, dt * 60));
     gl!.uniform4f(U(P.advect, 'u_clear'), clearZone[0], clearZone[1], clearZone[2], clearZone[3]);
-    gl!.uniform1f(U(P.advect, 'u_clearK'), Math.pow(0.988, dt * 60));
+    gl!.uniform4f(U(P.advect, 'u_clear2'), clearZone2[0], clearZone2[1], clearZone2[2], clearZone2[3]);
+    gl!.uniform1f(U(P.advect, 'u_clearK'), Math.pow(0.992, dt * 60));
     draw(dye1); swapD();
 
-    // composite to screen
+    compositeNow();
+  }
+
+  // composite to screen; also called directly on a theme flip so the field
+  // changes clothes in the same frame as the page, even between rAF ticks
+  function compositeNow(): void {
+    if (canvas.width === 0 || canvas.height === 0) return;
     gl!.useProgram(P.composite);
     bind(0, dye0.tex);
     gl!.uniform1i(U(P.composite, 'u_dye'), 0);
@@ -441,10 +518,12 @@ export function mountSuminagashi(host: HTMLElement): void {
     const g = getComputedStyle(host).getPropertyValue('--ground').trim();
     if (groundSeen && g !== groundSeen) refreshPalette();
     groundSeen = g;
-    // biased away from the overlay zone (lower-left)
+    // pour cores stay in the upper field, clear of the content band;
+    // advection still carries ink everywhere (gl y-up: low y = bottom)
     let x = Math.random();
     let y = Math.random();
-    if (x < 0.45 && y < 0.45) y = 0.45 + Math.random() * 0.5; // gl y-up: low y = bottom
+    if (y < 0.52) y = 0.52 + Math.random() * 0.42;
+    if (y > 0.82 && x < 0.4) x = 0.4 + Math.random() * 0.55; // identity line corner
     const strength = (1 + Math.random()) * 0.065;
     const vec = pickInk();
     const life = 1100 + Math.random() * 1100;
@@ -469,7 +548,7 @@ export function mountSuminagashi(host: HTMLElement): void {
 
     frameEma = frameEma * 0.95 + Math.min(now - (loopPrev || now), 50) * 0.05;
     loopPrev = now;
-    if (frameEma > 24 && degraded < 2) degrade();
+    if (frameEma > 24 && degraded < 3) degrade();
 
     if (now >= nextPourAt) schedulePour(now);
     step(dt, now);
@@ -483,10 +562,14 @@ export function mountSuminagashi(host: HTMLElement): void {
   let loopPrev = 0;
 
   function degrade(): void {
+    // step the WHOLE pipeline down, not just the dye: software renderers
+    // (no real GPU) must reach sub-50ms frames quickly or the page pays
+    // for the art in main-thread time
     degraded++;
     frameEma = 16;
-    dyeW = Math.max(208, dyeW >> 1);
-    dyeH = Math.max(124, dyeH >> 1);
+    jacobiN = degraded >= 2 ? 8 : 12;
+    dyeW = Math.max(104, dyeW >> 1);
+    dyeH = Math.max(62, dyeH >> 1);
     const nd0 = field(dyeW, dyeH, gl!.RGBA16F, gl!.RGBA);
     const nd1 = field(dyeW, dyeH, gl!.RGBA16F, gl!.RGBA);
     // carry the current dye across
@@ -499,6 +582,16 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.uniform1f(U(P.splat, 'u_aspect'), 1);
     draw(nd0);
     dye0 = nd0; dye1 = nd1;
+    if (degraded >= 2) {
+      // velocity re-establishes from the stirrers within a couple of pours
+      simW = Math.max(88, simW >> 1);
+      simH = Math.max(52, simH >> 1);
+      vel0 = field(simW, simH, gl!.RG16F, gl!.RG);
+      vel1 = field(simW, simH, gl!.RG16F, gl!.RG);
+      prs0 = field(simW, simH, gl!.R16F, gl!.RED);
+      prs1 = field(simW, simH, gl!.R16F, gl!.RED);
+      div = field(simW, simH, gl!.R16F, gl!.RED);
+    }
   }
 
   function wake(): void {
@@ -570,12 +663,44 @@ export function mountSuminagashi(host: HTMLElement): void {
   new ResizeObserver(() => resize()).observe(host);
 
   function refreshPalette(): void {
+    const prev = palette;
     palette = readPalette();
     strokeInk = palette.inks[0]!.vec;
     bag = [];
-    clearDye(); // fresh water on mode flip
+    groundSeen = getComputedStyle(host).getPropertyValue('--ground').trim();
+
+    // instant flip (5b finding 1): remap the existing dye into the new
+    // palette's density space — the composition survives, recolored, in the
+    // same frame the page flips. clearDye stays only as a degenerate-fit
+    // fallback.
+    const changed = prev.inks.some((ink, i) =>
+      ink.vec.some((v, c) => Math.abs(v - palette.inks[i]!.vec[c]!) > 1e-4),
+    );
+    if (changed) {
+      const m = retintMatrix(
+        prev.inks.map((ink) => ink.vec),
+        palette.inks.map((ink) => ink.vec),
+      );
+      if (m) {
+        gl!.useProgram(P.retint);
+        bind(0, dye0.tex);
+        gl!.uniform1i(U(P.retint, 'u_dye'), 0);
+        gl!.uniformMatrix3fv(U(P.retint, 'u_m'), false, m);
+        draw(dye1);
+        swapD();
+      } else {
+        clearDye();
+      }
+      compositeNow();
+    }
+    wake();
   }
+  // both flip paths, immediately: the system preference and the D23 toggle
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshPalette);
+  new MutationObserver(() => refreshPalette()).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
 
   canvas.addEventListener('webglcontextlost', (e) => {
     e.preventDefault();
