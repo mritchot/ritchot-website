@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Michael Ritchot',
+  email: 'mailto:michael@ritchot.me',
+  url: new URL('/about/', Astro.site).href,
+  sameAs: [
+    'https://www.linkedin.com/in/mritchot',
+    'https://github.com/mritchot',
+    'https://x.com/MichaelRitchot',
+  ],
+};
+---
+
+<Base
+  title="About · ritchot.me"
+  description="About Michael Ritchot — AI literacy and learning design, and what this site is."
+  jsonLd={[personLd]}
+>
+  <article class="about prose">
+    <h1>About</h1>
+    <!-- All copy below flagged for gate approval (Phase 5 Part D). -->
+    <p>
+      I'm Mike — I lift, love music, and play with tech. I've spent a decade
+      teaching and building learning programs across four countries, and
+      somewhere along the way the teaching turned into designing learning
+      systems and the playing-with-tech turned into a career: I now work in
+      AI literacy and enablement, designing programs that build real judgment
+      about these tools and, when the design calls for it, the platforms they
+      run on.
+    </p>
+    <p>
+      This site is my writing and my work in one place.
+      The <a href="/writing/">writing</a> is occasional and long-form — life,
+      learning, research, and technology, with a running thread about what AI
+      is doing to education and to the craft of building learning.
+      The <a href="/projects/">projects</a> are case studies of shipped work.
+      The views here are my own.
+    </p>
+    <h2>Contact</h2>
+    <p>
+      The best way to reach me is
+      email: <a href="mailto:michael@ritchot.me">michael@ritchot.me</a>. I'm
+      also on <a href="https://github.com/mritchot">GitHub</a>, <a
+        href="https://www.linkedin.com/in/mritchot"
+      >LinkedIn</a>, and <a href="https://x.com/MichaelRitchot">X</a>. If
+      you'd rather subscribe than remember to come back,
+      see <a href="/subscribe/">subscribe</a>.
+    </p>
+    <h2>Colophon</h2>
+    <p>
+      This site is static HTML built with Astro and served from Cloudflare
+      Workers. The text is set in Source Serif 4 with IBM Plex Mono for the
+      chrome, both self-hosted. There are no trackers, no ads, and no
+      third-party scripts; no cookies either — one localStorage key remembers
+      your theme choice if you set one. The two flourishes — the ink
+      simulation on the homepage and the justification engine on writing
+      pages — are small, self-contained, and degrade to plain HTML. The
+      site's source will be public after launch.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .about {
+    max-width: var(--measure);
+  }
+
+  h1 {
+    margin-block-end: 1.5rem;
+  }
+
+  .about h2 {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    font-weight: 400;
+    color: var(--ink-soft);
+    border-block-end: 1px solid var(--line);
+    padding-block-end: 0.4rem;
+    margin-block-start: 2.4rem;
+  }
+</style>

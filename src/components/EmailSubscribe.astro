@@ -1,0 +1,111 @@
+---
+/**
+ * Dormant email-subscription partial (§3.6). Renders NOTHING until
+ * ENDPOINT is set — activation is one constant, zero markup changes:
+ *  - Buttondown: form action = their API endpoint, enable RSS-to-email
+ *    against /feed.xml, disable tracking pixels (option A);
+ *  - self-built: point at a Worker POST /api/subscribe route (option B).
+ * Success/error styling is ready via .msg.ok / .msg.err; how those states
+ * are surfaced (redirect page or query flag) is the activation's call.
+ */
+const ENDPOINT = '';
+---
+
+{
+  ENDPOINT && (
+    <section class="email-sub" aria-labelledby="email-sub-h">
+      <h2 id="email-sub-h">Email</h2>
+      <p>New posts straight to your inbox. No tracking, unsubscribe any time.</p>
+      <form method="post" action={ENDPOINT}>
+        <label for="email-sub-input">Email address</label>
+        <input
+          id="email-sub-input"
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder="you@example.com"
+        />
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="msg ok" hidden>
+        Almost there — check your inbox for a confirmation email.
+      </p>
+      <p class="msg err" hidden>
+        That didn't go through. Try again, or just use the feed below.
+      </p>
+    </section>
+  )
+}
+
+<style>
+  .email-sub {
+    border: 1px solid var(--line);
+    padding: 1.3rem 1.5rem 1.4rem;
+    margin-block-start: 2.5rem;
+  }
+
+  h2 {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  form {
+    margin-block-start: 0.9rem;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  input {
+    flex: 1;
+    min-width: 14rem;
+    font: inherit;
+    color: var(--ink);
+    background: var(--ground);
+    border: 1px solid var(--line);
+    padding: 0.45rem 0.7rem;
+  }
+
+  input:focus-visible {
+    outline: 2px solid var(--vermilion);
+    outline-offset: 2px;
+  }
+
+  button {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+  }
+
+  button:hover {
+    border-color: var(--signal);
+  }
+
+  .msg {
+    margin-block-start: 0.8rem;
+    font-size: var(--text--1);
+  }
+
+  .msg.ok {
+    color: var(--signal);
+  }
+
+  .msg.err {
+    color: var(--vermilion);
+  }
+</style>
