@@ -28,6 +28,7 @@
     "@fontsource/source-serif-4": "^5.2.9",
     "@resvg/resvg-js": "^2.6.2",
     "hyphen": "^1.14.1",
+    "pdf-lib": "^1.17.1",
     "playwright": "^1.61.1",
     "satori": "^0.26.0",
     "typescript": "^6.0.3",

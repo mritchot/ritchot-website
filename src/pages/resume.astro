@@ -27,7 +27,7 @@ interface CertGroup {
 }
 interface Resume {
   name: string;
-  contact: { email: string; linkedin: string; github: string; course: string };
+  contact: { email: string; linkedin: string; github: string; website: string };
   summary: string;
   competencies: string[];
   featured: { title: string; links: Link[]; bullets: string[] };
@@ -56,15 +56,14 @@ const personLd = {
 >
   <article class="resume">
     <header class="head">
-      <h1>{name}</h1>
+      <!-- name is print-only on the web view: the site header carries it -->
+      <h1 class="name">{name}</h1>
       <p class="contact">
-        <a href={`mailto:${contact.email}`}>{contact.email}</a>
-        <span aria-hidden="true">·</span>
         <a href={contact.linkedin}>LinkedIn</a>
         <span aria-hidden="true">·</span>
         <a href={contact.github}>GitHub</a>
         <span aria-hidden="true">·</span>
-        <a href={contact.course}>AI Literacy Course</a>
+        <a href={contact.website}>Website</a>
       </p>
       <p class="download">
         <a href="/resume.pdf">Download PDF ↓</a>
@@ -166,15 +165,21 @@ const personLd = {
     max-width: var(--measure);
   }
 
-  .head h1 {
-    font-size: var(--text-3);
+  /* print-only name (5b finding 15): the site header already carries it
+     on the web; screen readers still get it */
+  .name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .contact {
     font-family: var(--font-mono);
     font-size: var(--text--1);
     color: var(--ink-soft);
-    margin-block-start: 0.7rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -289,7 +294,7 @@ const personLd = {
     font-size: var(--text--1);
   }
 
-  /* --- print: a clean document (§5) --- */
+  /* --- print: a clean document, hard two-page maximum (§5, 5b G4) --- */
   @media print {
     .resume {
       max-width: none;
@@ -299,12 +304,23 @@ const personLd = {
       display: none;
     }
 
-    :global(html) {
-      font-size: 10.5pt;
+    /* the name returns in print */
+    .name {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+      white-space: normal;
+      font-size: 15pt;
     }
 
-    .head h1 {
-      font-size: 17pt;
+    :global(html) {
+      font-size: 8.5pt;
+    }
+
+    :global(body) {
+      line-height: 1.35;
     }
 
     .contact,
@@ -321,23 +337,61 @@ const personLd = {
       text-decoration: none;
     }
 
+    .contact {
+      margin-block-start: 0.35rem;
+    }
+
     section {
-      margin-block-start: 1.1rem;
+      margin-block-start: 0.5rem;
     }
 
     h2 {
-      margin-block-end: 0.6rem;
+      margin-block-end: 0.4rem;
+      padding-block-end: 0.2rem;
       border-color: #bbb;
+    }
+
+    h3 {
+      font-size: 0.95rem;
+    }
+
+    .meta {
+      margin-block-start: 0.15rem;
+    }
+
+    /* nothing starts on one page and continues on the next */
+    .head,
+    .entry,
+    .certgroup,
+    section[aria-labelledby='rs-summary'],
+    section[aria-labelledby='rs-competencies'],
+    section[aria-labelledby='rs-featured'] {
+      break-inside: avoid;
     }
 
     .entry,
     .certgroup {
-      break-inside: avoid;
-      margin-block-start: 0.8rem;
+      margin-block-start: 0.4rem;
     }
 
     .bullets {
-      gap: 0.25rem;
+      margin-block-start: 0.3rem;
+      gap: 0.1rem;
+      padding-inline-start: 0.95rem;
+    }
+
+    .competencies {
+      line-height: 1.5;
+    }
+
+    .certs {
+      margin-block-start: 0.25rem;
+      gap: 0.1rem;
+      font-size: 0.76rem;
+    }
+
+    .featured-links {
+      margin-block-start: 0.5rem;
     }
   }
 </style>
