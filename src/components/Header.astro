@@ -24,6 +24,11 @@ const isCurrent = (href: string) =>
           </li>
         ))
       }
+      <li>
+        <!-- D23 toggle: statically reserved (no layout shift), invisible
+             until /theme.js wires it; with JS off it never appears. -->
+        <button class="theme-toggle" type="button" aria-label="Theme">◐</button>
+      </li>
     </ul>
   </nav>
 </header>

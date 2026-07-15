@@ -35,10 +35,16 @@
     --hero-accent: var(--ember);
   }
 
+  /* dual-path with the D23 toggle: system dark unless forced light,
+     plus forced dark */
   @media (prefers-color-scheme: dark) {
-    .hero {
+    :global(:root:not([data-theme='light'])) .hero {
       --hero-accent: var(--vermilion);
     }
+  }
+
+  :global(:root[data-theme='dark']) .hero {
+    --hero-accent: var(--vermilion);
   }
 
   @media (max-width: 480px) {
