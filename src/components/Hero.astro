@@ -38,19 +38,29 @@
 
 <style>
   .hero {
-    /* full-bleed out of main's column; height leaves the header visible and
-       puts the footer just past the fold */
+    /* fills main's track exactly: on desktop the body is pinned to the
+       viewport (5c finding 1) so header + hero + footer are one screen */
     position: relative;
-    width: 100vw;
-    margin-inline: calc(50% - 50vw);
-    margin-block-start: -2.5rem;
-    min-height: calc(100svh - 3.65rem);
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     color: var(--ink);
     display: flex;
 
     /* the hero is where ember lives (light); vermilion trace in dark */
     --hero-accent: var(--ember);
+  }
+
+  /* mobile scrolls naturally: full-bleed out of main's padded column,
+     full-viewport field, natural growth */
+  @media (max-width: 760px) {
+    .hero {
+      width: 100vw;
+      margin-inline: calc(50% - 50vw);
+      margin-block-start: -2.5rem;
+      min-height: calc(100svh - 3.65rem);
+      height: auto;
+    }
   }
 
   /* dual-path with the D23 toggle: system dark unless forced light,
@@ -68,6 +78,7 @@
   @media (max-width: 480px) {
     .hero {
       min-height: calc(100svh - 5.9rem);
+      height: auto;
     }
   }
 
@@ -93,9 +104,10 @@
     width: 100%;
     max-width: 52rem;
     margin-inline: auto;
-    padding: 2.2rem 1.25rem 2.6rem;
+    padding: 1.9rem 1.25rem 2rem;
     display: flex;
     flex-direction: column;
+    min-height: 0;
   }
 
   .sr-only {
@@ -107,6 +119,8 @@
     white-space: nowrap;
   }
 
+  /* every panel bleeds by exactly its own inline padding, so panel TEXT
+     sits on the identity line's x-grid at every width (5c finding 3) */
   .line {
     align-self: flex-start;
     font-family: var(--font-mono);
@@ -114,16 +128,17 @@
     color: var(--ink-soft);
     background: color-mix(in srgb, var(--ground) 82%, transparent);
     box-shadow: 0 0 0.9rem 0.55rem color-mix(in srgb, var(--ground) 82%, transparent);
-    padding: 0.35rem 0.6rem;
-    margin-inline-start: -0.6rem;
+    padding: 0.35rem 0.75rem;
+    margin-inline-start: -0.75rem;
   }
 
+  /* top-aligned, higher in the field (5c finding 2) */
   .columns {
-    margin-block-start: auto;
+    margin-block-start: clamp(1.75rem, 8svh, 4.25rem);
     display: grid;
     grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
-    gap: 1.5rem;
-    align-items: end;
+    gap: 2.5rem;
+    align-items: start;
   }
 
   .col {
@@ -131,7 +146,8 @@
        against a dense pour */
     background: color-mix(in srgb, var(--ground) 86%, transparent);
     box-shadow: 0 0 1.2rem 0.8rem color-mix(in srgb, var(--ground) 86%, transparent);
-    padding: 1.1rem 1.25rem 1.15rem;
+    padding: 1rem 0.75rem 1.05rem;
+    margin-inline: -0.75rem;
   }
 
   .col h2 {

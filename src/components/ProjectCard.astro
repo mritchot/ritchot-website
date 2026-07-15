@@ -8,15 +8,11 @@ interface Props {
 }
 
 const { project, compact = false } = Astro.props;
-const { title, summary, period, status, stack } = project.data;
+const { title, summary, period, stack } = project.data;
 ---
 
 <article class:list={['card', { compact }]}>
-  <p class="meta">
-    <span class="status" data-status={status}>{status}</span>
-    <span aria-hidden="true">·</span>
-    {period}
-  </p>
+  <p class="meta">{period}</p>
   <h3 class="title">
     <a href={urlOf(project)}>{title}</a>
   </h3>
@@ -40,18 +36,6 @@ const { title, summary, period, status, stack } = project.data;
     flex-wrap: wrap;
   }
 
-  .status {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.7rem;
-    border: 1px solid var(--line);
-    padding: 0.1rem 0.45rem;
-  }
-
-  .status[data-status='live'] {
-    color: var(--signal);
-    border-color: currentColor;
-  }
 
   .title {
     font-size: var(--text-1);
