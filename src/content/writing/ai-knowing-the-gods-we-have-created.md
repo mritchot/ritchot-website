@@ -4,7 +4,7 @@ date: 2024-11-24
 type: essay
 summary: "From Deus Ex's Morpheus to AlphaGo, OpenAI Five, and ChatGPT: how AI moved from fiction to household fixture, and what it means to create gods we may end up following."
 ---
-![](../../assets/writing/prometheus_ai_god.webp)
+![](/images/writing/prometheus_ai_god.png)
 
 In the ancient myth of Prometheus, humanity was gifted fire, a source of light and knowledge, a means to forge tools, but one that came at a high cost. Prometheus, the titan who dared to give mortals a god-like power, was punished for his gift, a reminder that some creations carry unintended consequences. Today, we are once again playing with fire, in the form of artificial intelligence. AI is our modern flame—a technology that can do real good but may outrun our ability to control it. In crafting AI, we are creating something closer to a new pantheon of digital deities—and like any gods, they may not serve the purposes we intended.
 
@@ -20,7 +20,7 @@ AlphaGo may have introduced a god of strategy, but OpenAI Five showed us somethi
 
 Having played Dota 2 religiously, I found OpenAI Five’s transformation over a single year staggering. OpenAI achieved this by massively scaling compute and training time—from 10,000 years of accelerated simulated gameplay to 45,000 years, all within ten months. While AI's reaction speeds compared to humans allowed for a clear edge, [the system demonstrated remarkable strategic depth, including unconventional tactics like aggressive buyback strategies that puzzled even professional players](https://www.twitch.tv/videos/410533063?t=0h44m51s). This was the first time AI had demonstrated real-time decision-making under genuine uncertainty—a leap beyond chess and Go, where all information is visible. The techniques behind it suggested AI development was accelerating faster than I had assumed.
 
-![](../../assets/writing/game_comparison.webp)
+![](/images/writing/game_comparison.png)
 *Why games such as Starcraft and Dota 2 are far more challenging than traditional game problems faced by AI. [Source](https://forums.spacebattles.com/threads/deepmind-ai-starcraft-ii-demonstration-alphastar-livestream.720202/)*
 
 If OpenAI Five’s strategic mastery hinted at AI’s potential in complex tasks, the [release of ChatGPT 3.5 on November 30th, 2022](https://openai.com/index/chatgpt/) showed that AI was now ready to engage with us in conversation. Unlike its predecessors, ChatGPT entered daily life, available to individuals for everything from casual questions to professional guidance. [ChatGPT reached 100 million users faster than any previous product in history](https://www.reuters.com/technology/chatgpt-sets-record-fastest-growing-user-base-analyst-note-2023-02-01/), because it was free, immediately useful, and conversational. With ChatGPT, AI went from a distant, elite technology to a household fixture—something we summon on command, like a digital deity that lives in our browsers instead of temples. ChatGPT made AI central to workplace conversations, news, and conferences.
@@ -35,7 +35,7 @@ AI is changing other industries too. In healthcare, diagnostic tools like IBM Wa
 
 For productivity, tools like [Clockwise](https://www.getclockwise.com/) automate calendar management so that people can focus on work that actually matters. In creative fields, generative art programs like [DALL-E](https://openai.com/index/dall-e-3/) and [Midjourney](https://www.midjourney.com/) produce original visual works, while OpenAI’s [MuseNet](https://creativitywith.ai/musenet/) and Google’s [TextFX](https://textfx.withgoogle.com/) compose music that blurs the line between human and machine creativity. These are early examples. The ethical questions they raise are real, but they are separate from the question of whether AI can do the work.
 
-![](../../assets/writing/lupe_fiasco_llm.webp)
+![](/images/writing/lupe_fiasco_llm.png)
 *Lupe Fiasco, [an artist known for his lyrical vocabulary](https://pudding.cool/projects/vocabulary/index.html), embracing LLMs for song creation*
 
 When I created this website, my ideas on what to write about first were scattered. ChatGPT helped me organize these thoughts into cohesive themes, which says something about how much AI has taken over my attention. AI had claimed a significant share of my own mental bandwidth (I suspect it has done the same to most people reading this). When I began sketching the ideas for topics to learn more about and to discuss, I realized that the complexity of AI’s potential far exceeded my expectations. Each advancement prompted new questions, and each new question demanded perspectives beyond my own experience in education. The field is advancing and evolving so fast that it is difficult to tell exactly what pathway this will all take. A new model could drop at any moment and upend what we thought we knew.
