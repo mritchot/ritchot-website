@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import EmailSubscribe from '../components/EmailSubscribe.astro';
+---
+
+<Base
+  title="Subscribe · ritchot.me"
+  description="Follow new writing by feed reader — full-text RSS and Atom."
+>
+  <article class="subscribe prose">
+    <h1>Subscribe</h1>
+    <!-- All copy below flagged for gate approval (Phase 5 Part D). -->
+    <p>
+      Everything I publish lands in the site's feed, full text included — no
+      truncation, no teaser paragraphs. Point a feed reader at either URL and
+      new pieces arrive as I post them:
+    </p>
+    <ul class="feeds">
+      <li><a href="/feed.xml">ritchot.me/feed.xml</a> — RSS</li>
+      <li><a href="/atom.xml">ritchot.me/atom.xml</a> — Atom</li>
+    </ul>
+    <p>
+      If you don't have a feed
+      reader, <a href="https://netnewswire.com/">NetNewsWire</a> is free and
+      excellent on Mac and iOS, <a href="https://feedbin.com/">Feedbin</a> is
+      a polished web reader that works everywhere,
+      and <a href="https://miniflux.app/">Miniflux</a> is the minimalist
+      option if you like hosting things yourself. Paste either URL above into
+      any of them and you're done.
+    </p>
+    <p class="email-note">
+      Email delivery is coming later; when it exists, it will be the same
+      full-text posts with no tracking attached.
+    </p>
+    <EmailSubscribe />
+  </article>
+</Base>
+
+<style>
+  .subscribe {
+    max-width: var(--measure);
+  }
+
+  h1 {
+    margin-block-end: 1.5rem;
+  }
+
+  .feeds {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+    border: 1px solid var(--line);
+    padding: 1rem 1.25rem;
+  }
+
+  .email-note {
+    color: var(--ink-soft);
+  }
+</style>
