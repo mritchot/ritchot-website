@@ -3,7 +3,6 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import WritingList from '../components/WritingList.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import InkDivider from '../components/InkDivider.astro';
 import { sortedWriting } from '../lib/writing';
 import { sortedProjects } from '../lib/projects';
 
@@ -16,6 +15,23 @@ const selected = (await sortedProjects())[0];
     <WritingList entries={latest} compact slot="latest" />
     {selected && <ProjectCard project={selected} compact slot="project" />}
   </Hero>
-
-  <InkDivider />
 </Base>
+
+<style is:global>
+  /* 5c finding 1 — the homepage is one true screen on desktop: header,
+     hero, and footer all inside the viewport, no scrolling. The body is
+     already a flex column; pin its height and let the hero fill the
+     remaining track. Mobile scrolls naturally. */
+  @media (min-width: 761px) {
+    body {
+      height: 100svh;
+      overflow: clip;
+    }
+
+    main#main {
+      min-height: 0;
+      padding: 0;
+      max-width: none;
+    }
+  }
+</style>

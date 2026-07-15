@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import HubCollections from '../../components/HubCollections.astro';
 import { sortedProjects, slugOf, type Project } from '../../lib/projects';
 
 export async function getStaticPaths() {
@@ -17,7 +18,7 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, role, period, status, summary, links, stack } = entry.data;
+const { title, period, status, summary, links } = entry.data;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const projectLd = {
@@ -40,8 +41,6 @@ const projectLd = {
     <p class="kicker">
       <span class="status" data-status={status}>{status}</span>
       <span aria-hidden="true">·</span>
-      {role}
-      <span aria-hidden="true">·</span>
       {period}
     </p>
     <h1>{title}</h1>
@@ -53,6 +52,11 @@ const projectLd = {
     <div class="prose">
       <Content />
     </div>
+    {entry.data.hub === 'ai-literacy' && (
+      <div class="prose hub">
+        <HubCollections />
+      </div>
+    )}
     <p class="back">
       <a href="/projects/">← All projects</a>
     </p>
