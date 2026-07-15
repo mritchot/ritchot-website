@@ -195,7 +195,5 @@ Last year, I ended by telling my students that they still had to do the heavy li
 
 If we do not teach that, someone else, or something else, will.
 
-*If you want to chat, shoot me an [email](mailto:michael@ritchot.me). If you would like to get updates, subscribe to my blog via [email](/subscribe/) or [RSS feed](/feed/). You can also follow me at [LinkedIn](https://www.linkedin.com/in/mritchot/), and [X](https://x.com/MichaelRitchot).*
-
 [^1]: You can find an archive of the questions I used at the [CEMC website](https://cemc.uwaterloo.ca/resources/potw). It is the first 10 questions for each level set from 2025/2026. I also have an archive, which you can contact me to obtain.
 [^2]: You can [download a recording of my results as an XLSX file](/docs/potw-gpt5-thinking-test-results.xlsx).

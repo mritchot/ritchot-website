@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import PostFooter from '../../components/PostFooter.astro';
 import TypeBadge from '../../components/TypeBadge.astro';
 import { sortedWriting, slugOf, urlOf, formatDate, type Writing } from '../../lib/writing';
 import { readingTime, wordCount } from '../../lib/reading-time';
@@ -27,10 +28,12 @@ const older = index < all.length - 1 ? all[index + 1] : undefined;
 
 const words = wordCount(entry.body ?? '');
 const minutes = readingTime(entry.body ?? '');
+// 5b finding 10: the TOC renders whenever a piece has three or more
+// headings — no word-count threshold.
 const tocHeadings = headings.filter(
   (h) => h.depth >= 2 && h.depth <= 3 && h.slug !== 'footnote-label',
 );
-const showToc = words > 1500 && tocHeadings.length >= 2;
+const showToc = tocHeadings.length >= 3;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const articleLd = {
@@ -84,6 +87,7 @@ const articleLd = {
     <div class="prose">
       <Content />
     </div>
+    <PostFooter />
     <nav class="prevnext" aria-label="Adjacent pieces">
       <span>
         {older && (

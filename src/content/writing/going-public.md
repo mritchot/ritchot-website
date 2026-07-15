@@ -23,6 +23,4 @@ The part of this I am still excited about is the public accountability. Thinking
 
 The hardest part of getting here was my own perfectionism. I kept stalling because nothing felt finished. Every draft had something wrong with it, and “something wrong” was enough to keep it in the drawer. But nothing was going to improve sitting in a notebook. So I am writing in the open instead — putting work out before it feels ready, and seeing what happens when other people can actually respond to it.
 
-*If you want to chat, shoot me an [email](mailto:michael@ritchot.me). If you would like to get updates, subscribe to my blog via [email](/subscribe/) or [RSS feed](/feed/). You can also follow me at [LinkedIn](https://www.linkedin.com/in/mritchot/), and [X](https://x.com/MichaelRitchot).*
-
 I have no idea whether anyone will read this, and I think that might be the point.
