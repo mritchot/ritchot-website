@@ -28,6 +28,8 @@ const projects = defineCollection({
     }),
     weight: z.number(),
     summary: z.string(),
+    // renders the shared AI-literacy hub collections on the case study
+    hub: z.enum(['ai-literacy']).optional(),
   }),
 });
 

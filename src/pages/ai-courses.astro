@@ -5,6 +5,7 @@
  * collection so it never enters the stream or feeds.
  */
 import Base from '../layouts/Base.astro';
+import HubCollections from '../components/HubCollections.astro';
 import InkDivider from '../components/InkDivider.astro';
 ---
 
@@ -38,48 +39,7 @@ import InkDivider from '../components/InkDivider.astro';
         from the start.
       </p>
 
-      <p class="label"><strong>Links</strong></p>
-      <ul>
-        <li><a href="https://ai-literacy.ritchot.me/">Course</a></li>
-        <li><a href="https://github.com/mritchot/ai-literacy-platform">Source on GitHub</a></li>
-      </ul>
-
-      <p class="label"><strong>Writing</strong></p>
-      <ul>
-        <li><a href="/writing/i-built-an-ai-literacy-course/">I built an AI Literacy Course</a></li>
-      </ul>
-
-      <p class="label"><strong>Documents</strong></p>
-
-      <p class="sublabel"><em>Needs Analysis</em></p>
-      <ul>
-        <li><a href="https://ai-literacy.ritchot.me/needs-analysis/executive-problem-statement.pdf">Executive Problem Statement (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/needs-analysis/capability-gap-analysis.pdf">Capability Gap Analysis (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/needs-analysis/learner-persona.pdf">Learner Persona (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/needs-analysis/action-map.pdf">Action Map (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/#/needs-analysis">Interactive versions in the course</a></li>
-      </ul>
-
-      <p class="sublabel"><em>Evaluation Framework</em></p>
-      <ul>
-        <li><a href="https://ai-literacy.ritchot.me/evaluation/level-1-reaction.pdf">Level 1: Reaction (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/evaluation/level-2-learning.pdf">Level 2: Learning (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/evaluation/level-3-behavior.pdf">Level 3: Behavior (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/evaluation/level-4-results.pdf">Level 4: Results (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/#/evaluation">Interactive versions in the course</a></li>
-      </ul>
-
-      <p class="sublabel"><em>Behind the Build</em></p>
-      <ul>
-        <li><a href="https://ai-literacy.ritchot.me/build/learning-architecture.pdf">Learning Architecture (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/build/architecture.pdf">Technical Architecture (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/build/timeline.pdf">Project Timeline (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/build/raci.pdf">Responsibility Matrix / RACI (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/build/resources.pdf">Resource &amp; Budget Plan (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/build/communications.pdf">Stakeholder Communications (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/build/quality.pdf">QA Documentation (PDF)</a></li>
-        <li><a href="https://ai-literacy.ritchot.me/#/build">Interactive versions in the course</a></li>
-      </ul>
+      <HubCollections />
     </article>
   </div>
 </Base>
@@ -108,21 +68,7 @@ import InkDivider from '../components/InkDivider.astro';
     color: var(--ink-soft);
   }
 
-  .label {
-    margin-block-start: 1.6em;
-  }
 
-  .sublabel {
-    color: var(--ink-soft);
-    margin-block-start: 1.1em;
-  }
 
-  .hub ul {
-    padding-inline-start: 1.4rem;
-    margin-block-start: 0.45em;
-  }
 
-  .hub li + li {
-    margin-block-start: 0.3em;
-  }
 </style>
