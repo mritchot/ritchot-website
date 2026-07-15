@@ -132,6 +132,30 @@ pre.code-block code {
   margin-block-start: 2.1em;
 }
 
+/* headings never justify: a wrapped, balanced heading inside justified
+   prose stretches its short lines across the full measure (5b finding 11) */
+.prose :is(h1, h2, h3, h4) {
+  text-align: start;
+}
+
+/* figures from the caption transform (5b finding 9): caption centered,
+   smaller, constrained to the image width */
+.prose figure {
+  width: fit-content;
+  margin-inline: auto;
+  margin-block: 1.9em;
+}
+
+.prose figcaption {
+  font-size: var(--text--1);
+  color: var(--ink-soft);
+  text-align: center;
+  line-height: 1.5;
+  margin-block-start: 0.55em;
+  hyphens: none;
+  text-wrap: pretty;
+}
+
 .prose sup a[data-footnote-ref] {
   text-decoration: none;
   padding-inline: 0.1em;

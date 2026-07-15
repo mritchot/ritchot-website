@@ -65,8 +65,6 @@ My goal for 2026/2027 is to build. Not sure how that will look exactly, but I’
 
 The "Gods we created" are here. They can navigate a Game Boy game I beat at nine, but they still confuse a car with a plane because both have smooth surfaces. But they are the most capable coworkers I have ever had, and I would rather spend the next year building with them than writing about them.
 
-*If you want to chat, shoot me an [email](mailto:michael@ritchot.me). If you would like to get updates, subscribe to my blog via [email](/subscribe/) or [RSS feed](/feed/). You can also follow me at [LinkedIn](https://www.linkedin.com/in/mritchot/), and [X](https://x.com/MichaelRitchot).*
-
 [^1]: This may seem like a contradiction, as I write earlier that I think agents have a long way to go before doing meaningful work in my field. That is because my work is made up of many different tasks, and while it may excel at some of them, the field of education has a lot of complexity to it and context that generative AI tools still struggle to handle.
 
 **Other Pieces of Interest**
