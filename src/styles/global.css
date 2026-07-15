@@ -62,13 +62,37 @@ a {
   outline-offset: 2px;
 }
 
-/* justified long-form prose */
+/* justified long-form prose. Soft hyphens are baked in at build time
+   (rehype-shy), so `manual` gives the browser the same break points the
+   pretext-justify island optimizes over. */
 .prose {
   max-width: var(--measure);
   text-align: justify;
-  hyphens: auto;
-  -webkit-hyphens: auto;
+  hyphens: manual;
+  -webkit-hyphens: manual;
   text-wrap: pretty;
+}
+
+/* Knuth–Plass enhanced paragraphs (pretext-justify island, D22).
+   The island chooses the line breaks and forces them with newline
+   characters under pre-line; per-line spacing rides on .kp-s spans set
+   via CSSOM (the CSP blocks style attributes, not CSSOM). hyphens:none
+   stops the browser from re-breaking at the remaining soft hyphens;
+   .kp-h renders the break hyphen as CSS content so copied text stays
+   clean. */
+.prose p.kp {
+  text-align: start;
+  white-space: pre-line;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+
+.kp-h::after {
+  content: '-';
+}
+
+.kp .sidenote {
+  white-space: normal;
 }
 
 .prose > * + * {

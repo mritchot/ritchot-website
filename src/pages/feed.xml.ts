@@ -15,7 +15,8 @@ export async function GET(context: APIContext): Promise<Response> {
       pubDate: entry.data.date,
       link: urlOf(entry),
       // Full content (rendered at build by the content layer), per D2/§3.5.
-      content: entry.rendered?.html,
+      // Baked soft hyphens are a page-rendering concern; feeds get clean text.
+      content: entry.rendered?.html?.replaceAll('\u00ad', ''),
       categories: [entry.data.type],
     })),
   });
