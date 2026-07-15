@@ -6,7 +6,7 @@ summary: "Emerging technologies will restructure labor faster than schools are a
 ---
 We often envision the future of technology by projecting today’s society forward, rather than considering how fundamentally different it might become. This tendency can lead to amusing images of hoverboards, like those seen in *Back to the Future*, or depictions of futuristic settings with outdated technology at the core, as in early *Star Trek*.
 
-![Star Trek: The Next Generation](../../assets/writing/tablet-computers.webp)
+![Star Trek: The Next Generation](/images/writing/tablet-computers.png)
 *Are you a rich enough dude to own seven iPads?*
 
 We're at the edge of another one of these shifts, and I worry we're making the same mistake — not being bold enough about how different things might actually get. My upbringing was marked by the internet revolutionizing communication and information distribution, and my generation had to learn a fundamentally new technology unlike anything before it, along with advances in computing, that reshaped the world. The next generation is going to have to learn how to interact and use emerging technologies, such as AI, robotics, automation, energy generation, and, I would add, VR and AR, in much the same way. These emerging technologies are expected to drive a [structural labor market churn of 22% by 2030](https://reports.weforum.org/docs/WEF_Future_of_Jobs_Report_2025.pdf), meaning nearly a quarter of the labor market will look nothing like it does now — and that's by 2030.
