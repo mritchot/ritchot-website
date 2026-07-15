@@ -1,35 +1,53 @@
 ---
 /**
- * Homepage hero (§4.8 as amended 15-07-2026): the typographic page itself is
- * the permanent state — no poster art. When the island runs, the simulation
- * canvas fades in over the plain ground; no-JS, reduced motion, script
- * failure, and lost GL contexts all simply keep the plain page.
+ * Homepage hero (§4.8 as amended; restructured per the 5b desktop review,
+ * 15-07-2026): fills the viewport under the header, and the page's content
+ * lives ON the field — identity line top-left (x-aligned with the header
+ * wordmark), latest writing left column, selected project right column.
+ * No name in the hero (the wordmark is the identity), no scroll cue; the
+ * footer sits one small scroll below the fold.
+ *
+ * Legibility over live ink (craft call, flagged): soft ground-tint panels
+ * under each content zone, plus widened-but-softened sim clearing bands
+ * behind them — the panels guarantee contrast, the clearing keeps them
+ * airy, and the ink still flows through.
+ *
+ * The typographic page remains the permanent state: no-JS, reduced motion,
+ * island failure, and lost GL contexts keep the plain panels on the ground.
  */
 ---
 
 <section id="hero" class="hero">
-  <div class="overlay">
-    <h1>Michael Ritchot</h1>
+  <div class="inner">
+    <h1 class="sr-only">Michael Ritchot</h1>
     <p class="line">I lift, love music, and play with tech.</p>
+    <div class="columns">
+      <div class="col">
+        <h2>Latest writing</h2>
+        <slot name="latest" />
+        <p class="more"><a href="/writing/">All writing</a></p>
+      </div>
+      <div class="col">
+        <h2>Selected project</h2>
+        <slot name="project" />
+        <p class="more"><a href="/projects/">All projects</a></p>
+      </div>
+    </div>
   </div>
-  <a class="cue" href="#latest" aria-label="Scroll to latest writing">
-    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
-      <path d="M5 9l7 7 7-7" />
-    </svg>
-  </a>
 </section>
 
 <style>
   .hero {
-    /* full-bleed out of main's column; height leaves the header visible */
+    /* full-bleed out of main's column; height leaves the header visible and
+       puts the footer just past the fold */
     position: relative;
     width: 100vw;
     margin-inline: calc(50% - 50vw);
     margin-block-start: -2.5rem;
-    height: calc(100svh - 3.65rem);
-    min-height: 30rem;
+    min-height: calc(100svh - 3.65rem);
     overflow: hidden;
     color: var(--ink);
+    display: flex;
 
     /* the hero is where ember lives (light); vermilion trace in dark */
     --hero-accent: var(--ember);
@@ -49,7 +67,7 @@
 
   @media (max-width: 480px) {
     .hero {
-      height: calc(100svh - 5.9rem);
+      min-height: calc(100svh - 5.9rem);
     }
   }
 
@@ -67,79 +85,99 @@
     opacity: 1;
   }
 
-  .overlay {
-    position: absolute;
+  /* the content column matches the header's, so the identity line
+     x-aligns with the wordmark */
+  .inner {
+    position: relative;
     z-index: 2;
-    inset-inline-start: max(7vw, 1.25rem);
-    inset-block-end: 13%;
-    max-width: 34rem;
+    width: 100%;
+    max-width: 52rem;
+    margin-inline: auto;
+    padding: 2.2rem 1.25rem 2.6rem;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* soft water behind the words at every crop — belt to the poster's braces */
-  .overlay::before {
-    content: '';
+  .sr-only {
     position: absolute;
-    inset: -3rem -4rem;
-    z-index: -1;
-    background: radial-gradient(ellipse 75% 70% at 40% 60%, var(--ground) 0%, transparent 68%);
-    opacity: 0.6;
-  }
-
-  h1 {
-    font-size: clamp(2.5rem, 6.5vw, 4.2rem);
-    font-weight: 600;
-    line-height: 1.08;
-    text-wrap: balance;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .line {
+    align-self: flex-start;
     font-family: var(--font-mono);
     font-size: var(--text--1);
     color: var(--ink-soft);
-    margin-block-start: 0.7rem;
+    background: color-mix(in srgb, var(--ground) 82%, transparent);
+    box-shadow: 0 0 0.9rem 0.55rem color-mix(in srgb, var(--ground) 82%, transparent);
+    padding: 0.35rem 0.6rem;
+    margin-inline-start: -0.6rem;
   }
 
-  .cue {
-    position: absolute;
-    z-index: 2;
-    inset-inline: 0;
-    inset-block-end: 1.1rem;
+  .columns {
+    margin-block-start: auto;
     display: grid;
-    place-items: center;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: end;
+  }
+
+  .col {
+    /* feathered ground panel: guaranteed contrast with no hard edge
+       against a dense pour */
+    background: color-mix(in srgb, var(--ground) 86%, transparent);
+    box-shadow: 0 0 1.2rem 0.8rem color-mix(in srgb, var(--ground) 86%, transparent);
+    padding: 1.1rem 1.25rem 1.15rem;
+  }
+
+  .col h2 {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    font-weight: 400;
     color: var(--ink-soft);
+    border-block-end: 1px solid var(--line);
+    padding-block-end: 0.4rem;
+    margin-block-end: 1.1rem;
   }
 
-  .cue:hover {
-    color: var(--ink);
+  .more {
+    margin-block-start: 1.1rem;
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
   }
 
-  .cue svg {
-    animation: cue-drift 2.6s ease-in-out infinite;
+  @media (max-width: 760px) {
+    .columns {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
   }
-
-  @keyframes cue-drift {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(6px); }
-  }
-
 </style>
 
 <script>
-  import { mountSuminagashi } from '../islands/suminagashi';
-
-  const hero = document.getElementById('hero');
-  if (hero && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const start = () => {
-      try {
-        mountSuminagashi(hero);
-      } catch {
-        /* island failure: the poster remains */
-      }
-    };
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(start, { timeout: 2500 });
-    } else {
-      setTimeout(start, 400);
-    }
-  }
+  // island: dissolving ink over the plain page. Mounts only once the page
+  // is fully loaded AND idle — the reader settles in first, then the ink
+  // arrives through its crossfade. Every failure path simply leaves the
+  // typographic page.
+  const start = () => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    import('../islands/suminagashi/index')
+      .then((m) => {
+        const host = document.getElementById('hero');
+        if (host) m.mountSuminagashi(host);
+      })
+      .catch(() => {
+        /* the plain page remains */
+      });
+  };
+  const idle = () => {
+    if ('requestIdleCallback' in window) requestIdleCallback(start);
+    else setTimeout(start, 350);
+  };
+  if (document.readyState === 'complete') idle();
+  else window.addEventListener('load', idle, { once: true });
 </script>

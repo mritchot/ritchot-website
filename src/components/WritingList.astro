@@ -5,12 +5,14 @@ import { readingTime } from '../lib/reading-time';
 
 interface Props {
   entries: Writing[];
+  /** tighter type and rhythm for the homepage hero column */
+  compact?: boolean;
 }
 
-const { entries } = Astro.props;
+const { entries, compact = false } = Astro.props;
 ---
 
-<ul class="stream">
+<ul class:list={['stream', { compact }]}>
   {
     entries.map((entry) => (
       <li>
@@ -59,5 +61,18 @@ const { entries } = Astro.props;
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
+  }
+
+  .compact {
+    gap: 0.95rem;
+  }
+
+  .compact .title {
+    font-size: var(--text-0);
+  }
+
+  .compact .meta {
+    margin-block-start: 0.2rem;
+    font-size: 0.7rem;
   }
 </style>

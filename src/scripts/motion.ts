@@ -58,22 +58,20 @@ function setup(): void {
     for (const el of hidden) io.observe(el);
   }
 
-  // hero: field and overlay drift up and fade as the page scrolls out
+  // hero: field and content drift up and fade as the page scrolls out
   const hero = document.getElementById('hero');
   if (hero) {
-    const overlay = hero.querySelector<HTMLElement>('.overlay');
-    const cue = hero.querySelector<HTMLElement>('.cue');
+    const inner = hero.querySelector<HTMLElement>('.inner');
     let ticking = false;
     const tick = (): void => {
       ticking = false;
       const height = hero.offsetHeight;
       const y = Math.min(window.scrollY, height);
       const fade = String(Math.max(0, 1 - (y / height) * 1.35));
-      if (overlay) {
-        overlay.style.transform = `translateY(${(y * 0.22).toFixed(1)}px)`;
-        overlay.style.opacity = fade;
+      if (inner) {
+        inner.style.transform = `translateY(${(y * 0.22).toFixed(1)}px)`;
+        inner.style.opacity = fade;
       }
-      if (cue) cue.style.opacity = fade;
       const canvas = hero.querySelector<HTMLElement>('canvas.sumi');
       if (canvas) canvas.style.transform = `translateY(${(y * 0.12).toFixed(1)}px)`;
     };
