@@ -1,0 +1,343 @@
+---
+import { parse } from 'yaml';
+import Base from '../layouts/Base.astro';
+import raw from '../data/resume.yaml?raw';
+
+interface Link {
+  label: string;
+  url: string;
+}
+interface Experience {
+  title: string;
+  org: string;
+  location: string;
+  period: string;
+  bullets: string[];
+}
+interface Education {
+  degree: string;
+  school: string;
+  location: string;
+  year: string;
+  notes: string[];
+}
+interface CertGroup {
+  group: string;
+  items: { name: string; issuer: string; year: string }[];
+}
+interface Resume {
+  name: string;
+  contact: { email: string; linkedin: string; github: string; course: string };
+  summary: string;
+  competencies: string[];
+  featured: { title: string; links: Link[]; bullets: string[] };
+  experience: Experience[];
+  education: Education[];
+  certifications: CertGroup[];
+}
+
+const resume = parse(raw) as Resume;
+const { name, contact, summary, competencies, featured, experience, education, certifications } = resume;
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name,
+  email: `mailto:${contact.email}`,
+  url: new URL('/resume/', Astro.site).href,
+  sameAs: [contact.linkedin, contact.github],
+};
+---
+
+<Base
+  title="Resume · Michael Ritchot"
+  description="Resume of Michael Ritchot — AI enablement and learning & development professional."
+  jsonLd={[personLd]}
+>
+  <article class="resume">
+    <header class="head">
+      <h1>{name}</h1>
+      <p class="contact">
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        <span aria-hidden="true">·</span>
+        <a href={contact.linkedin}>LinkedIn</a>
+        <span aria-hidden="true">·</span>
+        <a href={contact.github}>GitHub</a>
+        <span aria-hidden="true">·</span>
+        <a href={contact.course}>AI Literacy Course</a>
+      </p>
+      <p class="download">
+        <a href="/resume.pdf">Download PDF ↓</a>
+      </p>
+    </header>
+
+    <section aria-labelledby="rs-summary">
+      <h2 id="rs-summary">Summary</h2>
+      <p class="summary">{summary}</p>
+    </section>
+
+    <section aria-labelledby="rs-competencies">
+      <h2 id="rs-competencies">Core competencies</h2>
+      <p class="competencies">{competencies.join(' · ')}</p>
+    </section>
+
+    <section aria-labelledby="rs-featured">
+      <h2 id="rs-featured">Featured project — {featured.title}</h2>
+      <ul class="bullets">
+        {featured.bullets.map((b) => <li>{b}</li>)}
+      </ul>
+      <p class="featured-links">
+        {featured.links.map((l) => <a href={l.url}>{l.label} ↗</a>)}
+      </p>
+    </section>
+
+    <section aria-labelledby="rs-experience">
+      <h2 id="rs-experience">Experience</h2>
+      {
+        experience.map((job) => (
+          <div class="entry">
+            <h3>{job.title}</h3>
+            <p class="meta">
+              <strong>{job.org}</strong>
+              <span aria-hidden="true">·</span>
+              {job.location}
+              <span aria-hidden="true">·</span>
+              <span class="period">{job.period}</span>
+            </p>
+            {job.bullets.length > 0 && (
+              <ul class="bullets">
+                {job.bullets.map((b) => (
+                  <li>{b}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))
+      }
+    </section>
+
+    <section aria-labelledby="rs-education">
+      <h2 id="rs-education">Education</h2>
+      {
+        education.map((ed) => (
+          <div class="entry">
+            <h3>{ed.degree}</h3>
+            <p class="meta">
+              <strong>{ed.school}</strong>
+              <span aria-hidden="true">·</span>
+              {ed.location}
+              <span aria-hidden="true">·</span>
+              <span class="period">{ed.year}</span>
+            </p>
+            {ed.notes.length > 0 && (
+              <ul class="bullets">
+                {ed.notes.map((n) => (
+                  <li>{n}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))
+      }
+    </section>
+
+    <section aria-labelledby="rs-certifications">
+      <h2 id="rs-certifications">Certifications</h2>
+      {
+        certifications.map((group) => (
+          <div class="certgroup">
+            <h3>{group.group}</h3>
+            <ul class="certs">
+              {group.items.map((c) => (
+                <li>
+                  {c.name} — {c.issuer} · {c.year}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </section>
+  </article>
+</Base>
+
+<style>
+  .resume {
+    max-width: var(--measure);
+  }
+
+  .head h1 {
+    font-size: var(--text-3);
+  }
+
+  .contact {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+    margin-block-start: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .download {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    margin-block-start: 1.1rem;
+  }
+
+  .download a {
+    border: 1px solid var(--line);
+    padding: 0.4rem 0.8rem;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .download a:hover {
+    border-color: var(--signal);
+  }
+
+  section {
+    margin-block-start: 2.6rem;
+  }
+
+  h2 {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    border-block-end: 1px solid var(--line);
+    padding-block-end: 0.4rem;
+    margin-block-end: 1.2rem;
+  }
+
+  .summary,
+  .competencies {
+    text-wrap: pretty;
+  }
+
+  .competencies {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+    line-height: 1.8;
+  }
+
+  .entry {
+    margin-block-start: 1.5rem;
+  }
+
+  .entry:first-of-type {
+    margin-block-start: 0;
+  }
+
+  h3 {
+    font-size: var(--text-0);
+    font-weight: 600;
+  }
+
+  .meta {
+    font-size: var(--text--1);
+    color: var(--ink-soft);
+    margin-block-start: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .period {
+    font-family: var(--font-mono);
+  }
+
+  .bullets {
+    margin-block-start: 0.6rem;
+    padding-inline-start: 1.15rem;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .bullets li {
+    text-wrap: pretty;
+  }
+
+  .featured-links {
+    font-family: var(--font-mono);
+    font-size: var(--text--1);
+    margin-block-start: 0.9rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .certgroup {
+    margin-block-start: 1.2rem;
+  }
+
+  .certgroup:first-of-type {
+    margin-block-start: 0;
+  }
+
+  .certs {
+    margin-block-start: 0.5rem;
+    padding-inline-start: 1.15rem;
+    display: grid;
+    gap: 0.3rem;
+    font-size: var(--text--1);
+  }
+
+  /* --- print: a clean document (§5) --- */
+  @media print {
+    .resume {
+      max-width: none;
+    }
+
+    .download {
+      display: none;
+    }
+
+    :global(html) {
+      font-size: 10.5pt;
+    }
+
+    .head h1 {
+      font-size: 17pt;
+    }
+
+    .contact,
+    .meta,
+    .competencies,
+    .featured-links,
+    .certs,
+    h2 {
+      color: #333;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    section {
+      margin-block-start: 1.1rem;
+    }
+
+    h2 {
+      margin-block-end: 0.6rem;
+      border-color: #bbb;
+    }
+
+    .entry,
+    .certgroup {
+      break-inside: avoid;
+      margin-block-start: 0.8rem;
+    }
+
+    .bullets {
+      gap: 0.25rem;
+    }
+  }
+</style>
