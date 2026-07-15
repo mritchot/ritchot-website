@@ -8,58 +8,14 @@ import { sortedWriting } from '../lib/writing';
 import { sortedProjects } from '../lib/projects';
 
 const latest = (await sortedWriting()).slice(0, 4);
-const selected = (await sortedProjects()).slice(0, 3);
+const selected = (await sortedProjects())[0];
 ---
 
 <Base title="Michael Ritchot" description="Writing by Michael Ritchot.">
-  <Hero />
-
-  <section id="latest" class="latest">
-    <h2>Latest writing</h2>
-    <WritingList entries={latest} />
-    <p class="all">
-      <a href="/writing/">All writing</a>
-    </p>
-  </section>
-
-  <section class="projects">
-    <h2>Selected projects</h2>
-    <div class="cards">
-      {selected.map((project) => <ProjectCard project={project} />)}
-    </div>
-    <p class="all">
-      <a href="/projects/">All projects</a>
-    </p>
-  </section>
+  <Hero>
+    <WritingList entries={latest} compact slot="latest" />
+    {selected && <ProjectCard project={selected} compact slot="project" />}
+  </Hero>
 
   <InkDivider />
 </Base>
-
-<style>
-  .latest,
-  .projects {
-    margin-block-start: 5rem;
-    max-width: var(--measure);
-  }
-
-  h2 {
-    font-family: var(--font-mono);
-    font-size: var(--text--1);
-    font-weight: 400;
-    color: var(--ink-soft);
-    border-block-end: 1px solid var(--line);
-    padding-block-end: 0.4rem;
-    margin-block-end: 1.6rem;
-  }
-
-  .cards {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .all {
-    margin-block-start: 1.8rem;
-    font-family: var(--font-mono);
-    font-size: var(--text--1);
-  }
-</style>
