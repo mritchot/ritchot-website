@@ -1,9 +1,275 @@
 # resume.yaml — single source of truth for the resume page, its print
-# stylesheet, and public/resume.pdf (`npm run resume:pdf`, added in Phase 5).
-# Placeholder: section keys only until Phase 5.
+# stylesheet, and public/resume.pdf (`npm run resume:pdf`).
+# Scope defined by the live ritchot.me/resume/ page, cross-checked against
+# the master resume (02_professional) 15-07-2026. Contact policy: email
+# only — no phone, no address.
+name: Michael Ritchot
+contact:
+  email: michael@ritchot.me
+  linkedin: https://www.linkedin.com/in/mritchot
+  github: https://github.com/mritchot
+  course: https://ai-literacy.ritchot.me
 
-profile: {}
-experience: []
-education: []
-certifications: []
-skills: []
+summary: >-
+  AI enablement and learning & development professional with 10+ years
+  designing and delivering learning programs across four countries.
+  Translates complex AI and emerging technology concepts into accessible,
+  high-impact capability building initiatives for diverse professional
+  audiences. Designed, developed, and independently deployed a four-module
+  AI literacy enablement program grounded in 10 peer-reviewed studies,
+  achieving 28% learner performance uplift through evidence-based
+  instructional design and a Kirkpatrick Levels 1–4 evaluation framework.
+  Combines instructional design expertise, hands-on generative AI fluency,
+  and change management experience with a track record of driving
+  technology adoption, building scalable learning solutions, and embedding
+  AI tools into organizational workflows.
+
+competencies:
+  - AI Enablement & Adoption
+  - Instructional Design (ADDIE)
+  - Change Management
+  - Learning & Development
+  - Stakeholder Management
+  - Program Management
+  - Generative AI / LLMs
+  - Learning Needs Analysis
+  - Learning Analytics
+  - Capability Building
+  - Blended Learning Design
+  - Kirkpatrick Evaluation
+  - Adult Learning Principles
+  - Cross-Functional Facilitation
+  - E-Learning Design
+
+featured:
+  title: AI Literacy for the Modern Workforce
+  links:
+    - label: View the full program
+      url: https://ai-literacy.ritchot.me/
+    - label: View the source code
+      url: https://github.com/mritchot/ai-literacy-platform
+  bullets:
+    - >-
+      Conducted a structured needs analysis using action mapping and learner
+      persona development, grounded in 10 peer-reviewed studies including
+      Anthropic Economic Index workforce research and WEF Future of Jobs 2025
+      data, to define capability gaps and performance objectives for a
+      mid-career professional audience.
+    - >-
+      Designed a four-module, 37-section learning program with 12 practice
+      activities, pre/post competency assessments, and adaptive sequencing —
+      applying ADDIE methodology and Anthropic's 4D competency framework
+      (Delegation, Description, Discernment, Diligence) as an organizing
+      taxonomy.
+    - >-
+      Built a Kirkpatrick Levels 1–4 evaluation framework including reaction
+      surveys, knowledge assessments with 28% pre-to-post performance uplift,
+      behavioral transfer indicators, and organizational impact metrics.
+    - >-
+      Engineered and deployed a custom learning platform (React, TypeScript,
+      Tailwind CSS) featuring client-side BPE tokenization, real
+      softmax-with-temperature probability demonstrations, xAPI-aligned event
+      tracking, active reading time analytics, and an admin dashboard with
+      live learner data — deployed on Cloudflare Pages.
+    - >-
+      Delivered the complete program in approximately 150–160 hours solo
+      across the full development cycle, a 4.6–4.9x compression (78–80%
+      reduction in development time) against the Chapman Alliance industry
+      baseline of ~735 hours for comparable Level-3 e-learning, demonstrating
+      AI-augmented L&D development methodology.
+
+experience:
+  - title: Learning Design & AI Enablement | MYP Design Teacher
+    org: Stamford American International School Singapore
+    location: Singapore
+    period: July 2025 – Present
+    bullets:
+      - >-
+        Designed a cross-functional AI literacy enablement program for a
+        non-technical department, drawing on original M.Ed. research on AI
+        literacy instruction through large language model mechanics to
+        develop a four-activity learning sequence and a standalone
+        facilitator guide — enabling independent, scalable delivery by
+        practitioners without AI expertise.
+      - >-
+        Embedded generative AI tools (NotebookLM, Gemini Custom Gems, Flint)
+        into operational documentation workflows, redesigning systems to
+        support ethical AI prototyping and structured scaffolding. Learner
+        feedback indicated measurable increases in self-directed engagement
+        and resource accessibility.
+      - >-
+        Built a data-driven program evaluation system using structured
+        competency assessments and post-program surveys to measure learning
+        effectiveness and guide iterative design revision. Achieved a 95%
+        favorable score on engagement and perseverance metrics.
+      - >-
+        Designed and deployed a scalable reporting framework adopted across
+        the department, reducing administrative overhead during reporting
+        cycles and endorsed by senior leadership as a model for operational
+        efficiency.
+      - >-
+        Consulted on organizational AI literacy program design for senior
+        leadership, developing curriculum architecture and instructional
+        sequencing grounded in independent graduate research on AI literacy
+        pedagogy.
+  - title: Emergent Technology Coach | Mathematics and Computer Science Teacher
+    org: TIS Macao
+    location: Macao SAR, China
+    period: August 2020 – July 2025
+    bullets:
+      - >-
+        Designed and delivered professional development programs on
+        generative AI, Google Workspace productivity, and VR/AR for
+        cross-functional staff across the entire secondary division over
+        five years, driving technology adoption that expanded authentic
+        technology integration into daily workflows and resulted in
+        self-reported efficiency gains among participants.
+      - >-
+        Built and scaled an organization-wide knowledge management system
+        from a single-department pilot to a mandated platform across the
+        entire secondary division, improving cross-team collaboration,
+        operational transparency, and institutional knowledge retention.
+      - >-
+        Designed competency-based assessment frameworks and evaluation
+        instruments, applying data analytics to validate
+        internal-to-external benchmark alignment — achieving consistency
+        within 5% of external standards.
+      - >-
+        Developed 13 interdisciplinary program designs incorporating
+        generative AI tools for assessment creation, producing reusable
+        templates adopted by colleagues across multiple departments and
+        training non-technical staff on AI-assisted workflow integration.
+      - >-
+        Drove a 35% increase in program participation over two years by
+        expanding program offerings and redesigning engagement strategies.
+  - title: Technology Coordinator & Coach | Sciences and Literary Studies Teacher
+    org: Shanghai Nanyang Model Private High School (CINEC)
+    location: Shanghai, China
+    period: August 2018 – July 2020
+    bullets:
+      - >-
+        Led the evaluation, selection, and full-scale implementation of an
+        enterprise LMS (Schoology), centralizing academic reporting, course
+        delivery, and stakeholder communication across the organization.
+      - >-
+        Designed and delivered professional development programs on emerging
+        educational technology tools, translating research into practical
+        integration strategies for non-technical staff.
+  - title: STEM Program Designer | Mathematics, Computer Science, Sciences, and Physical Education Teacher
+    org: SIS Canada
+    location: Sokcho, South Korea
+    period: August 2016 – July 2018
+    bullets:
+      - >-
+        Designed cross-disciplinary STEM curriculum for multiple program
+        levels, integrating technology-focused project-based learning.
+      - >-
+        Established student-led digital media initiatives including a video
+        production program and a social media marketing committee, building
+        early-stage digital literacy capabilities.
+  - title: Mathematics Teacher
+    org: Canadian International Academy Shanghai
+    location: Shanghai, China
+    period: August 2015 – July 2016
+    bullets: []
+  - title: Operations Admin
+    org: TForce Integrated Solutions
+    location: Edmonton, Alberta, Canada
+    period: September 2010 – February 2015
+    bullets:
+      - >-
+        Developed financial reporting and cost analysis systems adopted
+        nationwide across the organization, standardizing branch-level
+        financial tracking and delivering measurable cost savings through
+        improved data accuracy and transferability.
+      - >-
+        Managed cross-branch stakeholder coordination to resolve operational
+        and payment disputes, serving as a liaison between internal teams
+        and external partners.
+  - title: Office Clerk
+    org: Department of National Defence
+    location: Edmonton, Alberta, Canada
+    period: June 2009 – August 2010
+    bullets:
+      - >-
+        Administered contract implementation and client services for a
+        national program, including dispute mediation, stakeholder
+        briefings, and payroll processing.
+
+education:
+  - degree: M.Ed. in Education Technology & Instructional Design
+    school: Western Governors University
+    location: Salt Lake City, UT, United States
+    year: "2025"
+    notes:
+      - >-
+        Excellence Award in Learning Experience Design — distinction granted
+        to the top 1–2% of graduate students for outstanding academic and
+        project performance.
+      - >-
+        Designed, developed, and evaluated a four-module AI literacy
+        enablement program grounded in original research on tokenization
+        mechanics in large language models, achieving 28% learner
+        performance uplift through iterative, data-informed design
+        methodology.
+  - degree: Bachelor of Education
+    school: University of Alberta
+    location: Edmonton, Alberta, Canada
+    year: "2015"
+    notes: []
+
+certifications:
+  - group: AI & Emerging Technology
+    items:
+      - name: "AI Fluency: Framework & Foundations"
+        issuer: Anthropic
+        year: "2025"
+      - name: Teaching the AI Fluency Framework
+        issuer: Anthropic
+        year: "2025"
+      - name: AI Capabilities and Limitations
+        issuer: Anthropic
+        year: "2026"
+      - name: AI Fluency for Educators
+        issuer: Anthropic
+        year: "2025"
+      - name: AI Fluency for Nonprofits
+        issuer: Anthropic
+        year: "2025"
+      - name: Claude 101
+        issuer: Anthropic
+        year: "2026"
+      - name: Introduction to Claude Cowork
+        issuer: Anthropic
+        year: "2026"
+      - name: Foundations for Teachers
+        issuer: OpenAI
+        year: "2025"
+      - name: AI Literacy Certified Level 1, Level 2, and Level 3
+        issuer: Flint
+        year: "2026"
+      - name: Google AI Essentials
+        issuer: Google
+        year: "2024"
+      - name: Gemini Certified Educator
+        issuer: Google
+        year: "2025"
+  - group: Data Analytics & Project Management
+    items:
+      - name: Google Data Analytics Professional Certificate
+        issuer: Coursera/Google
+        year: "2024"
+      - name: Google Project Management Certificate
+        issuer: Coursera/Google
+        year: "2024"
+  - group: Professional Credentials
+    items:
+      - name: Alberta Ministry of Education Professional Certificate
+        issuer: Alberta, Canada
+        year: "2023"
+      - name: British Columbia Ministry of Education Professional Certificate of Qualification
+        issuer: British Columbia, Canada
+        year: "2016"
+      - name: Human Subjects Research SBE Comprehensive
+        issuer: CITI Program
+        year: "2025"
