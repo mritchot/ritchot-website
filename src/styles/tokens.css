@@ -2,8 +2,14 @@
  * Contrast verified programmatically 14-07-2026 (ratios on the specimen page):
  * ink/ground 15.49 (light) 14.68 (dark) · ink-soft 6.98/7.19 · signal 5.66/9.06
  * · vermilion 4.69/5.02 (≥3 accent floor) · code palette ≥4.68 on surface.
- * Two grounds: light "washi" paper and dark "sumi" ink. Modes follow
- * prefers-color-scheme only — no manual toggle.
+ * Two grounds: light "washi" paper and dark "sumi" ink.
+ *
+ * Mode resolution (D23, manual toggle): dark applies via
+ * prefers-color-scheme when no explicit choice, or via
+ * :root[data-theme="dark"] when chosen; data-theme="light" forces light.
+ * /theme.js sets the attribute from one localStorage key before first
+ * paint. THE TWO DARK BLOCKS BELOW MUST STAY IDENTICAL — one covers
+ * system-dark, the other the forced override.
  */
 
 :root {
@@ -51,8 +57,15 @@
   --fade-duration: 160ms;
 }
 
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+/* dark tokens, system path — MUST MATCH the forced block below */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
     /* ground and ink scale — sumi (dark) */
     --ground: #101014;
     --surface: #17171d;
@@ -72,4 +85,28 @@
     --code-name: #d9a15e;
     --code-comment: #8b8578;
   }
+}
+
+/* dark tokens, forced path — MUST MATCH the system block above */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* ground and ink scale — sumi (dark) */
+  --ground: #101014;
+  --surface: #17171d;
+  --ink: #e6e2d9;
+  --ink-soft: #a49f93;
+  --ink-faint: #767268;
+  --line: #2c2c34;
+
+  --vermilion: #e05543;
+  --signal: #4cc3d0;
+  --ember: #e8763a;
+  --murasaki: #e061a6;
+
+  --code-keyword: #e57a68;
+  --code-string: #86b28d;
+  --code-constant: #4cc3d0;
+  --code-name: #d9a15e;
+  --code-comment: #8b8578;
 }

@@ -21,7 +21,7 @@ Personal site for ritchot.me: long-form writing, project case studies, and a res
 - **Plain CSS** with custom-property design tokens (`src/styles/tokens.css`); light/dark via `prefers-color-scheme` (no toggle).
 - **Shiki** build-time highlighting; **astro:assets** for images (AVIF/WebP, explicit dimensions).
 - **Cloudflare Workers (static assets)** via Workers Builds; `main` = production, branch previews for review.
-- Security: strict CSP, no cookies, no storage, no third-party requests. Analytics are edge-side only (host request metrics); zero bytes added to pages.
+- Security: strict CSP, no cookies, no third-party requests; one localStorage key stores the theme override (D23). Analytics are edge-side only (host request metrics); zero bytes added to pages.
 
 ## Content Model
 

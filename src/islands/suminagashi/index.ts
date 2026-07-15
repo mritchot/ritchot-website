@@ -238,7 +238,11 @@ export function mountSuminagashi(host: HTMLElement): void {
   // --- palette from live tokens: five pigments per mode, drawn evenly ---
   function readPalette(): Palette {
     const cs = getComputedStyle(host);
-    const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+    // D23: a forced theme overrides the system preference
+    const forced = document.documentElement.dataset.theme;
+    const dark = forced
+      ? forced === 'dark'
+      : matchMedia('(prefers-color-scheme: dark)').matches;
     const v = (name: string): [number, number, number] =>
       cssColor(cs.getPropertyValue(name).trim());
     const pigment = (token: string): Palette['inks'][number] => ({
