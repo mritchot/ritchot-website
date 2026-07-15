@@ -1,0 +1,58 @@
+---
+/**
+ * The AI-literacy hub's Links / Writing / Documents collections, rendered
+ * identically on /ai-courses/ and the case study (5c finding 17). Data
+ * lives in src/data/ai-literacy-hub.ts.
+ */
+import { links, writing, documents } from '../data/ai-literacy-hub';
+---
+
+<div class="hub-collections">
+  <p class="label"><strong>Links</strong></p>
+  <ul>
+    {links.map((l) => <li><a href={l.url}>{l.label}</a></li>)}
+  </ul>
+
+  <p class="label"><strong>Writing</strong></p>
+  <ul>
+    {writing.map((l) => <li><a href={l.url}>{l.label}</a></li>)}
+  </ul>
+
+  <p class="label"><strong>Documents</strong></p>
+  {
+    documents.map((group) => (
+      <>
+        <p class="sublabel">
+          <em>{group.title}</em>
+        </p>
+        <ul>
+          {group.items.map((l) => (
+            <li>
+              <a href={l.url}>{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      </>
+    ))
+  }
+</div>
+
+<style>
+  .label {
+    margin-block-start: 1.6em;
+  }
+
+  .sublabel {
+    color: var(--ink-soft);
+    margin-block-start: 1.1em;
+  }
+
+  ul {
+    padding-inline-start: 1.4rem;
+    margin-block-start: 0.45em;
+  }
+
+  li + li {
+    margin-block-start: 0.3em;
+  }
+</style>
