@@ -20,11 +20,11 @@ const { entries, compact = false } = Astro.props;
           {entry.data.title}
         </a>
         <p class="meta">
-          {formatDate(entry.data.date)}
+          <span>{formatDate(entry.data.date)}</span>
           <span aria-hidden="true">·</span>
           <TypeBadge type={entry.data.type} />
           <span aria-hidden="true">·</span>
-          {readingTime(entry.body ?? '')} min read
+          <span>{readingTime(entry.body ?? '')} min read</span>
         </p>
       </li>
     ))
@@ -61,6 +61,19 @@ const { entries, compact = false } = Astro.props;
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
+  }
+
+  /* mobile: date / type / reading time on three lines (5c finding 12) */
+  @media (max-width: 480px) {
+    .meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3rem;
+    }
+
+    .meta > [aria-hidden] {
+      display: none;
+    }
   }
 
   .compact {

@@ -59,9 +59,9 @@ const articleLd = {
     <p class="kicker">
       <TypeBadge type={entry.data.type} />
       <span aria-hidden="true">·</span>
-      {formatDate(entry.data.date)}
+      <span>{formatDate(entry.data.date)}</span>
       <span aria-hidden="true">·</span>
-      {minutes} min read
+      <span>{minutes} min read</span>
     </p>
     <h1>{entry.data.title}</h1>
     <p class="lede">{entry.data.summary}</p>
@@ -142,6 +142,19 @@ const articleLd = {
     flex-wrap: wrap;
   }
 
+  /* mobile: the trio stacks onto three lines (5c finding 12) */
+  @media (max-width: 480px) {
+    .kicker {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3rem;
+    }
+
+    .kicker > [aria-hidden] {
+      display: none;
+    }
+  }
+
   h1 {
     font-size: var(--text-3);
     margin-block: 0.6rem 0.9rem;
@@ -201,15 +214,17 @@ const articleLd = {
     margin-block-start: 2.25rem;
   }
 
+  /* equal weight, split down the center, rows aligned (5c finding 11) */
   .prevnext {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
-    margin-block-start: 3.5rem;
+    margin-block-start: 2.25rem;
     border-block-start: 1px solid var(--line);
-    padding-block-start: 1.1rem;
+    padding-block-start: 1rem;
     font-family: var(--font-mono);
     font-size: var(--text--1);
+    align-items: start;
   }
 
   .prevnext a {

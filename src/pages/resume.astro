@@ -99,7 +99,7 @@ const personLd = {
             <p class="meta">
               <strong>{job.org}</strong>
               <span aria-hidden="true">·</span>
-              {job.location}
+              <span>{job.location}</span>
               <span aria-hidden="true">·</span>
               <span class="period">{job.period}</span>
             </p>
@@ -124,7 +124,7 @@ const personLd = {
             <p class="meta">
               <strong>{ed.school}</strong>
               <span aria-hidden="true">·</span>
-              {ed.location}
+              <span>{ed.location}</span>
               <span aria-hidden="true">·</span>
               <span class="period">{ed.year}</span>
             </p>
@@ -254,6 +254,19 @@ const personLd = {
     flex-wrap: wrap;
   }
 
+  /* mobile: org / location / period stack cleanly (5c finding 13) */
+  @media (max-width: 480px) {
+    .meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+
+    .meta > [aria-hidden] {
+      display: none;
+    }
+  }
+
   .period {
     font-family: var(--font-mono);
   }
@@ -375,9 +388,21 @@ const personLd = {
     }
 
     .bullets {
+      display: block;
       margin-block-start: 0.3rem;
-      gap: 0.1rem;
-      padding-inline-start: 0.95rem;
+      padding-inline-start: 1.05rem;
+    }
+
+    .bullets li {
+      display: list-item;
+      list-style: disc outside;
+      margin-block-start: 0.1rem;
+    }
+
+    /* the subset webfont has no U+2022; markers borrow a full system
+       serif so the disc actually renders in the PDF */
+    .bullets li::marker {
+      font-family: Georgia, 'Times New Roman', serif;
     }
 
     .competencies {
