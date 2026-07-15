@@ -2,10 +2,13 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import WritingList from '../components/WritingList.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 import InkDivider from '../components/InkDivider.astro';
 import { sortedWriting } from '../lib/writing';
+import { sortedProjects } from '../lib/projects';
 
 const latest = (await sortedWriting()).slice(0, 4);
+const selected = (await sortedProjects()).slice(0, 3);
 ---
 
 <Base title="Michael Ritchot" description="Writing by Michael Ritchot.">
@@ -19,13 +22,22 @@ const latest = (await sortedWriting()).slice(0, 4);
     </p>
   </section>
 
-  <!-- Phase 5: selected-projects section mounts here (2–3 case-study cards). -->
+  <section class="projects">
+    <h2>Selected projects</h2>
+    <div class="cards">
+      {selected.map((project) => <ProjectCard project={project} />)}
+    </div>
+    <p class="all">
+      <a href="/projects/">All projects</a>
+    </p>
+  </section>
 
   <InkDivider />
 </Base>
 
 <style>
-  .latest {
+  .latest,
+  .projects {
     margin-block-start: 5rem;
     max-width: var(--measure);
   }
@@ -38,6 +50,11 @@ const latest = (await sortedWriting()).slice(0, 4);
     border-block-end: 1px solid var(--line);
     padding-block-end: 0.4rem;
     margin-block-end: 1.6rem;
+  }
+
+  .cards {
+    display: grid;
+    gap: 1.5rem;
   }
 
   .all {
