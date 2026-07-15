@@ -1,7 +1,7 @@
 ---
 title: "AI Literacy for the Modern Workforce"
 role: "Instructional designer and developer"
-period: "2026 · eight-week build"
+period: "2026"
 stack:
   - React
   - TypeScript
