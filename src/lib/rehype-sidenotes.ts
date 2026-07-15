@@ -42,6 +42,24 @@ export default function rehypeSidenotes() {
     const section = findSection(tree);
     if (!section) return;
 
+    // iOS renders the bare return arrow (U+21A9) as emoji; the variation
+    // selector U+FE0E forces text presentation everywhere (5c finding 8)
+    const fixBackrefs = (node: Parent): void => {
+      for (const child of node.children as RootContent[]) {
+        if (!isElement(child)) continue;
+        if (child.properties?.dataFootnoteBackref !== undefined) {
+          for (const c of child.children) {
+            if (c.type === 'text' && c.value.includes('\u21A9') && !c.value.includes('\uFE0E')) {
+              c.value = c.value.replaceAll('\u21A9', '\u21A9\uFE0E');
+            }
+          }
+        } else {
+          fixBackrefs(child);
+        }
+      }
+    };
+    fixBackrefs(section);
+
     const collectLis = (node: Parent): void => {
       for (const child of node.children as RootContent[]) {
         if (!isElement(child)) continue;
