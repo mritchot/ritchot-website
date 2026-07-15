@@ -42,6 +42,4 @@ When I created this website, my ideas on what to write about first were scattere
 
 We are the creators of these digital gods, but increasingly, we are their subjects too. Each leap in AI makes the question sharper: are we directing this, or have we already started following? Prometheus stole fire and was chained to a rock for it. We built the fire ourselves. I am not yet sure whether that makes us freer or more exposed.
 
-*If you want to chat, shoot me an [email](mailto:michael@ritchot.me). If you would like to get updates, subscribe to my blog via [email](/subscribe/) or [RSS feed](/feed/). You can also follow me at [LinkedIn](https://www.linkedin.com/in/mritchot/), and [X](https://x.com/MichaelRitchot).*
-
 [^1]: Check out the documentary called [AlphaGo - The Movie](https://www.youtube.com/watch?v=WXuK6gekU1Y)

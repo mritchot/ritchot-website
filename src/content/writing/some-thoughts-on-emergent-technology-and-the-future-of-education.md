@@ -43,7 +43,5 @@ The same principle applies to education. Schools and institutions that proactive
 
 While I have met a few individual educators who understand the urgency of these shifts, I have yet to see a shift across the industry that recognizes how much has to change. I worry my field is moving too slowly. Whether it catches up — and what "catching up" even looks like — is something I keep turning over without a clean answer.
 
-*If you want to chat, shoot me an [email](mailto:michael@ritchot.me). If you would like to get updates, subscribe to my blog via [email](/subscribe/) or [RSS feed](/feed/). You can also follow me at [LinkedIn](https://www.linkedin.com/in/mritchot/), and [X](https://x.com/MichaelRitchot).*
-
 [^1]: I am being intentionally strong armed with my usage of the word “wasted” here, because I do believe there are discussions to be had. One thing I always ask people is what actual measurable value does something like an AI policy bring? What problem does it actually **solve?**
 [^2]: Shortly after publishing this piece I decided to set OpenAI's Deep Research to the job of taking a look at the efficacy of technology policy in schools. I haven't gone into a deep look at it's sources yet, but it [claims at the top that hardware policy is effective, while software policy generally doesn't seem to do much](https://chatgpt.com/share/67b4852b-98ec-8000-bdb3-5ab2c7b51032) (and guess what category AI would fall under).

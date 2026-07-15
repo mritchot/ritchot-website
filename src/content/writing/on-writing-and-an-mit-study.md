@@ -46,7 +46,7 @@ Several things jumped out at me from this study as odd:
 3. The strength of the claims around memory and authorship, particularly given the impersonal nature of the writing task.
 4. The lack of clarity around the human scoring process, especially in light of recent findings that suggest people often cannot distinguish between human- and AI-generated writing.
 
-**Purpose vs. Real-World Relevance of EEG Use to Measure Brain Activity**
+## Purpose vs. Real-World Relevance of EEG Use to Measure Brain Activity
 
 Using EEG (electroencephalography) to measure brain activity during writing tasks does not straightforwardly map high activation to better thinking or better writing. 
 
@@ -54,7 +54,7 @@ Also, in everyday contexts, most deep thinking happens before and after writing,
 
 While I have no evidence, I also could not shake the feeling that the author's wanted to do a cool looking EEG study, and then fit a piece of research to that, rather than actually thinking if EEG's would be important to the outcomes that are actually important to essay writing.
 
-**Task Suitability as Standardized Essays Emphasize External Revision**
+## Task Suitability as Standardized Essays Emphasize External Revision
 
 The SAT-style prompts in this study emphasized constrained, impromptu writing, a format that trains students to perform under pressure, not to develop rich, internally revised ideas over time.
 
@@ -67,7 +67,7 @@ Would the findings hold for more authentic writing tasks: long-form essays, pers
 
 Very simply, our cognitive systems aren't built to retain unmeaningful content, which is how I would categorize most of the writing prompts used in the study.
 
-**Reported Ownership and Memory**
+## Reported Ownership and Memory
 
 The study does show that in interviews, many LLM participants couldn’t quote or summarize their own essays shortly after writing, while brain-only participants did so more effectively. But we should interpret this cautiously:
 
@@ -77,7 +77,7 @@ The study does show that in interviews, many LLM participants couldn’t quote o
 
 Also, the idea of “ownership” is slippery. What does it mean to “own” an idea generated under time pressure in a lab setting? Would those same participants feel differently about an essay, a poem, or a story co-written with AI over days or weeks? Quite possibly.
 
-**Human Consistency and Bias in Essay Scoring**
+## Human Consistency and Bias in Essay Scoring
 
 The study says that human teachers “consistently scored brain-only essays higher,” but it’s unclear:
 
@@ -91,7 +91,7 @@ Other research has found similar patterns. Unless the writing contains obvious g
 
 Expert reviewers, such as professors, do outperform general audiences but still commonly fall prey to false positives. And both human and algorithmic detectors are easily thrown off by paraphrasing tools or minor stylistic tweaks, which suggests that the boundary between human and machine writing is porous. I find it incredibly suspect that a blind assessor would be able to consistently tell the difference between AI and human writing.
 
-**What I Would Like To See**
+## What I Would Like To See
 
 I'm not going to argue that copying and pasting from an LLM like ChatGPT leads to memory retention. But I also don’t think this study evaluated the right thing, because copying and pasting from **any** source in tight timeline constraints isn’t going to result in meaningful memory retention. If you gave me twenty minutes and access to any tool, I’d do exactly what most people would: copy, paraphrase, and move on, just to complete the task and score well. They, knowingly or not, gave the different groups different tasks. The LLM group would likely view the task as "generate an essay," while the other groups would view it as "write an essay" due to the time constraints involved.
 
@@ -107,9 +107,7 @@ So, does this study prove that ChatGPT atrophies your brain or makes you less in
 
 I don’t think their results are invalid, but I am concerned about how it was overgeneralized from this sample to broader claims about the atrophy of critical thinking. [We have been saying for decades about how technology is going to make people dumber](https://x.com/emollick/status/1936463923865072004), when really we need to raise the bar as the technology advances. How to do so in such an industrial machine as education in the current era is a story for another day.
 
-*If you want to chat, shoot me an [email](mailto:michael@ritchot.me). If you would like to get updates, subscribe to my blog via [email](/subscribe/) or [RSS feed](/feed/). You can also follow me at [LinkedIn](https://www.linkedin.com/in/mritchot/), and [X](https://x.com/MichaelRitchot).*
-
-**Other Pieces of Interest**
+## Other Pieces of Interest
 
 Here are some other links that people may find interesting, but didn’t find their way into the main body of this piece:
 

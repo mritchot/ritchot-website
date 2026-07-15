@@ -56,8 +56,6 @@ I wish I had more time to test a wider variety of questions, run more trials, an
 
 For now, my students still need to do the heavy lifting when it comes to solving problems. But if the bottleneck is the vision model, and vision capabilities are improving with each release cycle, how many iterations are we away from a model that passes these tests reliably? And when it does, what does secondary mathematics assessment actually look like?
 
-*If you want to chat, shoot me an [email](mailto:michael@ritchot.me). If you would like to get updates, subscribe to my blog via [email](/subscribe/) or [RSS feed](/feed/). You can also follow me at [LinkedIn](https://www.linkedin.com/in/mritchot/), and [X](https://x.com/MichaelRitchot).*
-
 [^1]: You can find an archive of the questions I used at the [CEMC website](https://cemc.uwaterloo.ca/resources/potw). It is the first 12 questions for each level set from 2024/2025. I also have an archive, which you can contact me to obtain.
 [^2]: You can [download a recording of my results as an XLSX file](/docs/potw-o1-pro-mode-test-results.xlsx).
 [^3]: Here are images from three ([1](/docs/potwe3-01.webp), [2](/docs/potwe3-02.webp), [3](/docs/potwe3-03.webp)) of the trials mentioned, where it incorrectly identifies the wrong pathways between cities.
