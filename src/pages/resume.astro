@@ -14,16 +14,28 @@ interface Experience {
   period: string;
   bullets: string[];
 }
+interface EducationNote {
+  text: string;
+  url?: string;
+}
 interface Education {
   degree: string;
   school: string;
   location: string;
   year: string;
-  notes: string[];
+  url?: string;
+  notes: EducationNote[];
+}
+interface CertItem {
+  name: string;
+  issuer: string;
+  year: string;
+  url?: string;
+  sublinks?: { label: string; url: string }[];
 }
 interface CertGroup {
   group: string;
-  items: { name: string; issuer: string; year: string }[];
+  items: CertItem[];
 }
 interface Resume {
   name: string;
@@ -77,11 +89,16 @@ const personLd = {
 
     <section aria-labelledby="rs-competencies">
       <h2 id="rs-competencies">Core competencies</h2>
-      <p class="competencies">{competencies.join(' · ')}</p>
+      <ul class="competencies">
+        {competencies.map((c) => <li>{c}</li>)}
+      </ul>
     </section>
 
     <section aria-labelledby="rs-featured">
-      <h2 id="rs-featured">Featured project — {featured.title}</h2>
+      <h2 id="rs-featured">
+        Featured project<span class="fdash" aria-hidden="true"> — </span>
+        <span class="ftitle">{featured.title}</span>
+      </h2>
       <ul class="bullets">
         {featured.bullets.map((b) => <li>{b}</li>)}
       </ul>
@@ -120,7 +137,7 @@ const personLd = {
       {
         education.map((ed) => (
           <div class="entry">
-            <h3>{ed.degree}</h3>
+            <h3>{ed.url ? <a class="doc" href={ed.url}>{ed.degree}</a> : ed.degree}</h3>
             <p class="meta">
               <strong>{ed.school}</strong>
               <span aria-hidden="true">·</span>
@@ -131,7 +148,7 @@ const personLd = {
             {ed.notes.length > 0 && (
               <ul class="bullets">
                 {ed.notes.map((n) => (
-                  <li>{n}</li>
+                  <li>{n.url ? <a class="doc" href={n.url}>{n.text}</a> : n.text}</li>
                 ))}
               </ul>
             )}
@@ -149,7 +166,24 @@ const personLd = {
             <ul class="certs">
               {group.items.map((c) => (
                 <li>
-                  {c.name} — {c.issuer} · {c.year}
+                  <span class="cname">
+                    {c.url ? <a class="doc" href={c.url}>{c.name}</a> : c.name}
+                    {c.sublinks && (
+                      <>
+                        {' '}
+                        {c.sublinks.map((l, i) => (
+                          <>
+                            {i > 0 && (i === c.sublinks!.length - 1 ? ', and ' : ', ')}
+                            <a class="doc" href={l.url}>{l.label}</a>
+                          </>
+                        ))}
+                      </>
+                    )}
+                  </span>
+                  <span class="csep" aria-hidden="true"> — </span>
+                  <span class="cissuer">{c.issuer}</span>
+                  <span class="csep" aria-hidden="true"> · </span>
+                  <span class="cyear">{c.year}</span>
                 </li>
               ))}
             </ul>
@@ -229,6 +263,39 @@ const personLd = {
     font-size: var(--text--1);
     color: var(--ink-soft);
     line-height: 1.8;
+    list-style: none;
+    padding: 0;
+  }
+
+  .competencies li {
+    display: inline;
+  }
+
+  .competencies li + li::before {
+    content: ' · ';
+  }
+
+  /* mobile: one competency per line (5d B1) */
+  @media (max-width: 480px) {
+    .competencies li {
+      display: block;
+    }
+
+    .competencies li + li::before {
+      content: none;
+    }
+  }
+
+  /* mobile: "Featured project" and the title on separate lines, no dash
+     (5d B2) */
+  @media (max-width: 480px) {
+    .fdash {
+      display: none;
+    }
+
+    .ftitle {
+      display: block;
+    }
   }
 
   .entry {
@@ -307,6 +374,29 @@ const personLd = {
     font-size: var(--text--1);
   }
 
+  /* mobile: title / company / date on three lines, company and date
+     hanging at the title's text start past the marker (5d B3) */
+  @media (max-width: 480px) {
+    .certs {
+      gap: 0.65rem;
+    }
+
+    .certs .csep {
+      display: none;
+    }
+
+    .certs .cname,
+    .certs .cissuer,
+    .certs .cyear {
+      display: block;
+    }
+
+    .certs .cissuer,
+    .certs .cyear {
+      color: var(--ink-soft);
+    }
+  }
+
   /* --- print: a clean document, hard two-page maximum (§5, 5b G4) --- */
   @media print {
     .resume {
@@ -345,8 +435,10 @@ const personLd = {
       color: #333;
     }
 
-    a {
-      color: inherit;
+    /* links persist as clickable annotations, colored with the
+       light-mode link color per the 5d ruling */
+    a[href] {
+      color: #0c6b76;
       text-decoration: none;
     }
 
