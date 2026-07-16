@@ -21,17 +21,29 @@ const selected = (await sortedProjects())[0];
   /* 5c finding 1 — the homepage is one true screen on desktop: header,
      hero, and footer all inside the viewport, no scrolling. The body is
      already a flex column; pin its height and let the hero fill the
-     remaining track. Mobile scrolls naturally. */
+     remaining track. Below the height where the composition genuinely
+     fits, the pin releases and the page scrolls naturally instead of
+     clipping (5d desktop finding). Mobile scrolls naturally. */
   @media (min-width: 761px) {
-    body {
-      height: 100svh;
-      overflow: clip;
-    }
-
     main#main {
       min-height: 0;
       padding: 0;
       max-width: none;
+    }
+  }
+
+  @media (min-width: 761px) and (min-height: 700px) {
+    body {
+      height: 100svh;
+      overflow: clip;
+    }
+  }
+
+  /* 5d mobile finding: the field runs to the footer boundary — no dead
+     band of bare ground under the last panel */
+  @media (max-width: 760px) {
+    main#main {
+      padding-block-end: 0;
     }
   }
 </style>
