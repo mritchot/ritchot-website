@@ -1,5 +1,5 @@
 /* Design tokens — ritchot.me
- * Contrast verified programmatically 14-07-2026 (ratios on the specimen page):
+ * Contrast verified programmatically:
  * ink/ground 15.49 (light) 14.68 (dark) · ink-soft 6.98/7.19 · signal 5.66/9.06
  * · vermilion 4.69/5.02 (≥3 accent floor) · code palette ≥4.68 on surface.
  * Two grounds: light "washi" paper and dark "sumi" ink.
@@ -27,7 +27,7 @@
   --vermilion: #c73b27; /* focus states, nav current-page dot, ≤1 rare accent per viewport */
   --signal: #0c6b76;    /* links */
   --ember: #d95d1e;     /* hero/illustration only */
-  --murasaki: #b23879;  /* hero pigment only — never UI (Maverick ruling, 15-07-2026) */
+  --murasaki: #b23879;  /* hero pigment only — never UI */
 
   /* code palette (on --surface; all pairs ≥4.5:1) */
   --code-keyword: #8d3423;
@@ -47,7 +47,6 @@
   --text-1: 1.25rem;
   --text-2: 1.5625rem;
   --text-3: 1.9531rem;
-  --text-4: 2.4414rem;
 
   --leading-body: 1.65;
   --leading-tight: 1.3;

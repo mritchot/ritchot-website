@@ -2,7 +2,7 @@
 
 const WPM = 230;
 
-export function wordCount(markdown: string): number {
+function wordCount(markdown: string): number {
   const text = markdown
     .replace(/```[\s\S]*?```/g, ' ') // fenced code blocks
     .replace(/`[^`]*`/g, ' ') // inline code

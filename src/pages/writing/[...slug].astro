@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import PostFooter from '../../components/PostFooter.astro';
 import TypeBadge from '../../components/TypeBadge.astro';
 import { sortedWriting, slugOf, urlOf, formatDate, type Writing } from '../../lib/writing';
-import { readingTime, wordCount } from '../../lib/reading-time';
+import { readingTime } from '../../lib/reading-time';
 
 export async function getStaticPaths() {
   const entries = await sortedWriting();
@@ -26,7 +26,6 @@ const index = all.findIndex((e) => e.id === entry.id);
 const newer = index > 0 ? all[index - 1] : undefined;
 const older = index < all.length - 1 ? all[index + 1] : undefined;
 
-const words = wordCount(entry.body ?? '');
 const minutes = readingTime(entry.body ?? '');
 // 5b finding 10: the TOC renders whenever a piece has three or more
 // headings — no word-count threshold.
