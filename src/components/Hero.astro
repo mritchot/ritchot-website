@@ -7,10 +7,9 @@
  * No name in the hero (the wordmark is the identity), no scroll cue; the
  * footer sits one small scroll below the fold.
  *
- * Legibility over live ink (craft call, flagged): soft ground-tint panels
- * under each content zone, plus widened-but-softened sim clearing bands
- * behind them — the panels guarantee contrast, the clearing keeps them
- * airy, and the ink still flows through.
+ * Legibility over live ink: soft ground-tint panels under each content
+ * zone — ratified 5d as sufficient on their own. Pours land anywhere,
+ * including directly behind the panels; no clearing zones, no pour bias.
  *
  * The typographic page remains the permanent state: no-JS, reduced motion,
  * island failure, and lost GL contexts keep the plain panels on the ground.
@@ -49,6 +48,16 @@
 
     /* the hero is where ember lives (light); vermilion trace in dark */
     --hero-accent: var(--ember);
+  }
+
+  /* short desktop viewports: the body pin releases (see index.astro), so
+     the hero takes a viewport-height minimum and the page scrolls — the
+     composition is never clipped (5d desktop finding) */
+  @media (min-width: 761px) and (max-height: 699px) {
+    .hero {
+      height: auto;
+      min-height: calc(100svh - 3.65rem);
+    }
   }
 
   /* mobile scrolls naturally: full-bleed out of main's padded column,
