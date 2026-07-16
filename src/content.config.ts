@@ -18,10 +18,8 @@ const projects = defineCollection({
   loader: glob({ base: './src/content/projects', pattern: '**/*.md' }),
   schema: z.object({
     title: z.string(),
-    role: z.string(),
     period: z.string(),
     stack: z.array(z.string()),
-    status: z.enum(['live', 'archived', 'in-progress']),
     links: z.object({
       live: z.url().optional(),
       repo: z.url().optional(),

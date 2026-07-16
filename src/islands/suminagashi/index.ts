@@ -1,5 +1,5 @@
 /**
- * Suminagashi hero island, D21 revision — real-time ink dissolution.
+ * Suminagashi hero island — real-time ink dissolution.
  * Handwritten WebGL2 stable-fluids sim (no dependencies): a velocity field
  * and a dye field; semi-Lagrangian advection, Jacobi pressure projection,
  * gaussian splats for pours and pointer traces, slow wandering stirrers for
@@ -8,16 +8,17 @@
  * ink over sumi in dark — the difference between ink and neon smoke.
  *
  * Idle loop: autonomous pours every ~2–6 s, uniformly anywhere in the
- * field (5d: the content panels alone carry legibility — no clearing
- * zones, no pour bias), multi-hue from live tokens via a shuffle bag.
- * Taps pour; pointer traces pour ink and impart velocity; both push the
- * scheduler back. On coarse-pointer devices the dye dissolves more
- * slowly — no hover exists to stir the water, so pours carry the life.
+ * field (the content panels alone carry legibility), multi-hue from live
+ * tokens via a shuffle bag. Taps pour; pointer traces pour ink and impart
+ * velocity; both push the scheduler back. On coarse-pointer devices the
+ * dye dissolves more slowly — no hover exists to stir the water, so the
+ * pours carry the life. Theme changes retint the existing dye in a single
+ * frame via a least-squares matrix in density space.
  *
- * Kept from 4a (verified): client-idle mount, ≥400 ms crossfade over the
- * plain ground, DPR ≤ 2, pause on tab-hidden/off-view with recomputing wake(),
- * aria-hidden canvas. There is no poster art (ruling 15-07-2026): no-JS,
- * reduced motion, script failure, missing float-render support, and lost GL
+ * Discipline: mount after load+idle, crossfade in over the plain ground,
+ * DPR ≤ 2, pause when hidden or off-view (wake() recomputes visibility),
+ * adaptive degrade for slow renderers, aria-hidden canvas. No-JS, reduced
+ * motion, script failure, missing float-render support, and lost GL
  * contexts all simply keep the typographic page.
  */
 
@@ -38,24 +39,9 @@ precision highp float;
 in vec2 uv; out vec4 o;
 uniform sampler2D u_src; uniform sampler2D u_vel;
 uniform float u_dt; uniform float u_diss;
-uniform vec4 u_clear;  // ellipse cx, cy, rx, ry (rx<=0 disables)
-uniform vec4 u_clear2; // second clearing zone, same encoding
-uniform float u_clearK;
 void main(){
   vec2 back = uv - u_dt * texture(u_vel, uv).xy;
-  vec4 s = texture(u_src, back);
-  float diss = u_diss;
-  float e = 0.0;
-  if (u_clear.z > 0.0) {
-    vec2 d = (uv - u_clear.xy) / u_clear.zw;
-    e = exp(-dot(d, d));
-  }
-  if (u_clear2.z > 0.0) {
-    vec2 d2 = (uv - u_clear2.xy) / u_clear2.zw;
-    e = max(e, exp(-dot(d2, d2)));
-  }
-  diss = mix(diss, diss * u_clearK, e);
-  o = s * diss;
+  o = texture(u_src, back) * u_diss;
 }`,
   splat: `#version 300 es
 precision highp float;
@@ -446,9 +432,6 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.uniform1i(U(P.advect, 'u_vel'), 1);
     gl!.uniform1f(U(P.advect, 'u_dt'), dt);
     gl!.uniform1f(U(P.advect, 'u_diss'), Math.pow(0.997, dt * 60));
-    gl!.uniform4f(U(P.advect, 'u_clear'), 0, 0, 0, 0);
-    gl!.uniform4f(U(P.advect, 'u_clear2'), 0, 0, 0, 0);
-    gl!.uniform1f(U(P.advect, 'u_clearK'), 1);
     draw(vel1); swapV();
 
     // projection
@@ -482,12 +465,7 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.uniform1i(U(P.advect, 'u_src'), 0);
     gl!.uniform1i(U(P.advect, 'u_vel'), 1);
     gl!.uniform1f(U(P.advect, 'u_dt'), dt);
-    // 5d rider: no clearing zones — the tint panels are ratified as
-    // sufficient legibility on their own; ink lives everywhere equally
     gl!.uniform1f(U(P.advect, 'u_diss'), Math.pow(DYE_DISS, dt * 60));
-    gl!.uniform4f(U(P.advect, 'u_clear'), 0, 0, 0, 0);
-    gl!.uniform4f(U(P.advect, 'u_clear2'), 0, 0, 0, 0);
-    gl!.uniform1f(U(P.advect, 'u_clearK'), 1);
     draw(dye1); swapD();
 
     compositeNow();
