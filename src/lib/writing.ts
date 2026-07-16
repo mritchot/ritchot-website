@@ -19,3 +19,11 @@ export const formatDate = (d: Date): string =>
     year: 'numeric',
     timeZone: 'UTC',
   });
+
+/** Feed content ships with absolute URLs: root-relative href/src values
+ * are resolved against the site origin at generation time — feed readers
+ * handle relative references unreliably. Page HTML is untouched. */
+export function absolutizeHtml(html: string, site: URL | string): string {
+  const origin = String(site).replace(/\/+$/, '');
+  return html.replace(/(href|src)="\/(?!\/)/g, `$1="${origin}/`);
+}

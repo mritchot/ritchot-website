@@ -1,5 +1,5 @@
 import type { APIContext } from 'astro';
-import { sortedWriting, urlOf, type Writing } from '../lib/writing';
+import { absolutizeHtml, sortedWriting, urlOf, type Writing } from '../lib/writing';
 
 const esc = (s: string): string =>
   s
@@ -18,7 +18,7 @@ function entryXml(entry: Writing, site: string): string {
     <updated>${(entry.data.updated ?? entry.data.date).toISOString()}</updated>
     <summary>${esc(entry.data.summary)}</summary>
     <category term="${esc(entry.data.type)}"/>
-    <content type="html">${esc((entry.rendered?.html ?? '').replaceAll('\u00ad', ''))}</content>
+    <content type="html">${esc(absolutizeHtml((entry.rendered?.html ?? '').replaceAll('\u00ad', ''), site))}</content>
   </entry>`;
 }
 
