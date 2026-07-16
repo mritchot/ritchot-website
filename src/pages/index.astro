@@ -18,24 +18,20 @@ const selected = (await sortedProjects())[0];
 </Base>
 
 <style is:global>
-  /* 5c finding 1 — the homepage is one true screen on desktop: header,
-     hero, and footer all inside the viewport, no scrolling. The body is
-     already a flex column; pin its height and let the hero fill the
-     remaining track. Below the height where the composition genuinely
-     fits, the pin releases and the page scrolls naturally instead of
-     clipping (5d desktop finding). Mobile scrolls naturally. */
+  /* 5c finding 1 / 5d follow-up — the homepage is one true screen on
+     desktop WHEN THE COMPOSITION FITS: the body is a min-height-100svh
+     flex column (Base), so main stretches to fill the remaining viewport
+     and the hero fills main. When the viewport is too short for the
+     content, the flex chain simply grows past the viewport and the page
+     scrolls — no height pin, no overflow clip, no threshold; clipping is
+     structurally impossible at any size. Mobile scrolls naturally. */
   @media (min-width: 761px) {
     main#main {
+      display: flex;
+      flex-direction: column;
       min-height: 0;
       padding: 0;
       max-width: none;
-    }
-  }
-
-  @media (min-width: 761px) and (min-height: 700px) {
-    body {
-      height: 100svh;
-      overflow: clip;
     }
   }
 
