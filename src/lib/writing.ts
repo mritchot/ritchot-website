@@ -20,10 +20,14 @@ export const formatDate = (d: Date): string =>
     timeZone: 'UTC',
   });
 
-/** Feed content ships with absolute URLs: root-relative href/src values
- * are resolved against the site origin at generation time — feed readers
- * handle relative references unreliably. Page HTML is untouched. */
-export function absolutizeHtml(html: string, site: URL | string): string {
+/** Feed content ships with absolute URLs: root-relative href/src values are
+ * resolved against the site origin, and fragment-only anchors (e.g. footnote
+ * links like #user-content-fn-1) against the page's own permalink, at
+ * generation time — feed readers handle relative references unreliably.
+ * Page HTML is untouched. */
+export function absolutizeHtml(html: string, site: URL | string, pageUrl?: string): string {
   const origin = String(site).replace(/\/+$/, '');
-  return html.replace(/(href|src)="\/(?!\/)/g, `$1="${origin}/`);
+  let out = html.replace(/(href|src)="\/(?!\/)/g, `$1="${origin}/`);
+  if (pageUrl) out = out.replace(/(href|src)="(#[^"]*)"/g, `$1="${pageUrl}$2"`);
+  return out;
 }
