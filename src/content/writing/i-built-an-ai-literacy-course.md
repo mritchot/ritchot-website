@@ -2,7 +2,7 @@
 title: "I built an AI Literacy course"
 date: 2026-05-21
 type: essay
-summary: "How I expanded my capstone into a four-module, research-grounded AI literacy program on a custom platform in roughly 150 hours, and what that compression says about the future of L&D."
+summary: "How I expanded my capstone into a four-module, research-grounded AI literacy program on a custom platform in roughly 150 hours, and what that compression says about the future of learning and development."
 ---
 In my last piece on this site, I closed with a line about how my goal for 2026 was to build. At the time, I did not know exactly what that would look like. I had just finished a stretch of writing about LLMs, benchmarks, and the state of the field, and I was ready to stop talking about AI tools and start making something with them. That vague aspiration resulted in expanding my master's work into a four-module, research grounded AI literacy program for the corporate workforce, built on a custom coded platform, live now at [ai-literacy.ritchot.me](https://ai-literacy.ritchot.me/).
 
