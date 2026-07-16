@@ -1,6 +1,5 @@
 ---
 title: "AI Literacy for the Modern Workforce"
-role: "Instructional designer and developer"
 period: "2026"
 stack:
   - React
@@ -9,7 +8,6 @@ stack:
   - Tailwind CSS
   - Recharts
   - xAPI event taxonomy
-status: live
 links:
   live: "https://ai-literacy.ritchot.me/"
   repo: "https://github.com/mritchot/ai-literacy-platform"

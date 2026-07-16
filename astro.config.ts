@@ -18,12 +18,7 @@ export default defineConfig({
     // hyphens are baked into the remaining prose text.
     rehypePlugins: [rehypeFigures, rehypeImgDims, rehypeCodeClasses, rehypeSidenotes, rehypeShy],
   },
-  integrations: [
-    sitemap({
-      // The specimen page is a review surface, deleted before launch.
-      filter: (page) => !page.includes('/specimen'),
-    }),
-  ],
+  integrations: [sitemap()],
   build: {
     // The CSP in public/_headers is style-src 'self': inline <style> is blocked,
     // so stylesheets must always be emitted as external files.
@@ -32,7 +27,7 @@ export default defineConfig({
   vite: {
     build: {
       // script-src 'self' likewise blocks inline scripts: small bundled
-      // scripts (the D24 motion script) must never be inlined into HTML.
+      // assets must never be inlined into the HTML.
       assetsInlineLimit: 0,
     },
   },
