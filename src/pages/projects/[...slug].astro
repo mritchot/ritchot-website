@@ -18,7 +18,7 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, period, status, summary, links } = entry.data;
+const { title, period, summary, links } = entry.data;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const projectLd = {
@@ -38,11 +38,7 @@ const projectLd = {
   jsonLd={[projectLd]}
 >
   <article>
-    <p class="kicker">
-      <span class="status" data-status={status}>{status}</span>
-      <span aria-hidden="true">·</span>
-      {period}
-    </p>
+    <p class="kicker">{period}</p>
     <h1>{title}</h1>
     <p class="lede">{summary}</p>
     <p class="quicklinks">
@@ -78,18 +74,6 @@ const projectLd = {
     flex-wrap: wrap;
   }
 
-  .status {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.7rem;
-    border: 1px solid var(--line);
-    padding: 0.1rem 0.45rem;
-  }
-
-  .status[data-status='live'] {
-    color: var(--signal);
-    border-color: currentColor;
-  }
 
   h1 {
     font-size: var(--text-3);
