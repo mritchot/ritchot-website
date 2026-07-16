@@ -7,11 +7,12 @@
  * absorption over the washi ground in light mode, matte screen-blend of pale
  * ink over sumi in dark — the difference between ink and neon smoke.
  *
- * Idle loop: autonomous pours every ~2–6 s, multi-hue from live tokens
- * (sumi dominant; hero-accent and signal cycling). Pointer traces pour ink
- * and impart velocity, and push the scheduler back. Dye dissolves ~2.4×
- * faster inside the overlay ellipse (reads as drier paper) — that plus
- * scheduler avoidance and the existing CSS scrim keeps the name readable.
+ * Idle loop: autonomous pours every ~2–6 s, uniformly anywhere in the
+ * field (5d: the content panels alone carry legibility — no clearing
+ * zones, no pour bias), multi-hue from live tokens via a shuffle bag.
+ * Taps pour; pointer traces pour ink and impart velocity; both push the
+ * scheduler back. On coarse-pointer devices the dye dissolves more
+ * slowly — no hover exists to stir the water, so pours carry the life.
  *
  * Kept from 4a (verified): client-idle mount, ≥400 ms crossfade over the
  * plain ground, DPR ≤ 2, pause on tab-hidden/off-view with recomputing wake(),
@@ -283,6 +284,11 @@ export function mountSuminagashi(host: HTMLElement): void {
   }
 
   // --- fields (sim resolution independent of display resolution) ---
+  // touch devices have no hover trace to keep the water alive, so the
+  // autonomous pours dissolve more slowly there (5d finding 1, mobile)
+  const COARSE = matchMedia('(pointer: coarse)').matches;
+  const DYE_DISS = COARSE ? 0.9992 : 0.998;
+
   let jacobiN = 20;
   let simW = 176;
   let simH = 104;
@@ -354,11 +360,6 @@ export function mountSuminagashi(host: HTMLElement): void {
   let frameEma = 16;
   let degraded = 0;
   let ready = false;
-  // 5b homepage: content columns sit low across the full width and the
-  // identity line top-left; ink thins softly under both (panels carry the
-  // guaranteed contrast, the clearing keeps them airy). uv, y-up.
-  const clearZone: [number, number, number, number] = [0.5, 0.16, 0.6, 0.3];
-  const clearZone2: [number, number, number, number] = [0.16, 0.9, 0.24, 0.08];
   let pointer: { x: number; y: number; t: number } | null = null;
   let nextPourAt = 0;
 
@@ -382,14 +383,6 @@ export function mountSuminagashi(host: HTMLElement): void {
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     aspect = width / Math.max(height, 1);
-    const overlay = host.querySelector('.overlay');
-    if (overlay) {
-      const o = overlay.getBoundingClientRect();
-      clearZone[0] = (o.left + o.width / 2 - rect.left) / rect.width;
-      clearZone[1] = 1 - (o.top + o.height / 2 - rect.top) / rect.height;
-      clearZone[2] = (o.width / rect.width) * 0.75;
-      clearZone[3] = (o.height / rect.height) * 0.9;
-    }
   }
 
   // --- passes ---
@@ -489,10 +482,12 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.uniform1i(U(P.advect, 'u_src'), 0);
     gl!.uniform1i(U(P.advect, 'u_vel'), 1);
     gl!.uniform1f(U(P.advect, 'u_dt'), dt);
-    gl!.uniform1f(U(P.advect, 'u_diss'), Math.pow(0.998, dt * 60));
-    gl!.uniform4f(U(P.advect, 'u_clear'), clearZone[0], clearZone[1], clearZone[2], clearZone[3]);
-    gl!.uniform4f(U(P.advect, 'u_clear2'), clearZone2[0], clearZone2[1], clearZone2[2], clearZone2[3]);
-    gl!.uniform1f(U(P.advect, 'u_clearK'), Math.pow(0.992, dt * 60));
+    // 5d rider: no clearing zones — the tint panels are ratified as
+    // sufficient legibility on their own; ink lives everywhere equally
+    gl!.uniform1f(U(P.advect, 'u_diss'), Math.pow(DYE_DISS, dt * 60));
+    gl!.uniform4f(U(P.advect, 'u_clear'), 0, 0, 0, 0);
+    gl!.uniform4f(U(P.advect, 'u_clear2'), 0, 0, 0, 0);
+    gl!.uniform1f(U(P.advect, 'u_clearK'), 1);
     draw(dye1); swapD();
 
     compositeNow();
@@ -518,12 +513,13 @@ export function mountSuminagashi(host: HTMLElement): void {
     const g = getComputedStyle(host).getPropertyValue('--ground').trim();
     if (groundSeen && g !== groundSeen) refreshPalette();
     groundSeen = g;
-    // pour cores stay in the upper field, clear of the content band;
-    // advection still carries ink everywhere (gl y-up: low y = bottom)
-    let x = Math.random();
-    let y = Math.random();
-    if (y < 0.52) y = 0.52 + Math.random() * 0.42;
-    if (y > 0.82 && x < 0.4) x = 0.4 + Math.random() * 0.55; // identity line corner
+    // pours land anywhere — including directly behind the content panels
+    // (5d finding 1: the panels alone carry legibility)
+    pourAt(Math.random(), Math.random(), now);
+    nextPourAt = now + 1800 + Math.random() * 2800;
+  }
+
+  function pourAt(x: number, y: number, now: number): void {
     const strength = (1 + Math.random()) * 0.065;
     const vec = pickInk();
     const life = 1100 + Math.random() * 1100;
@@ -536,7 +532,6 @@ export function mountSuminagashi(host: HTMLElement): void {
       spin: Math.random() * Math.PI * 2,
       step: 1,
     });
-    nextPourAt = now + 1800 + Math.random() * 2800;
   }
 
   // --- loop ---
@@ -609,8 +604,21 @@ export function mountSuminagashi(host: HTMLElement): void {
     raf = 0;
   }
 
-  // --- interaction: trace pours ink and pushes the scheduler back ---
+  // --- interaction: taps pour, traces pour and stir ---
   let strokeInk = palette.inks[0]!.vec;
+  host.addEventListener(
+    'pointerdown',
+    (e) => {
+      const rect = host.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = 1 - (e.clientY - rect.top) / rect.height;
+      const now = performance.now();
+      pourAt(x, y, now);
+      nextPourAt = Math.max(nextPourAt, now + 2600);
+      wake();
+    },
+    { passive: true },
+  );
   host.addEventListener(
     'pointermove',
     (e) => {
