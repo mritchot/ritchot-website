@@ -3,7 +3,7 @@
 // change, commit the artifact alongside it. Builds first so the PDF always
 // reflects the current YAML; page and PDF cannot drift.
 import { execSync, spawn } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { chromium } from 'playwright';
@@ -55,8 +55,16 @@ try {
   });
   await browser.close();
 
-  // hard gate (5b finding 16): the resume never exceeds two pages
-  const doc = await PDFDocument.load(readFileSync(out));
+  // deliberate document metadata — no machine or user detail
+  const doc = await PDFDocument.load(readFileSync(out), { updateMetadata: false });
+  doc.setTitle('Michael Ritchot — Resume');
+  doc.setAuthor('Michael Ritchot');
+  doc.setSubject('Resume');
+  doc.setProducer('ritchot.me resume pipeline');
+  doc.setCreator('ritchot.me resume pipeline');
+  writeFileSync(out, await doc.save());
+
+  // hard gate: the resume never exceeds two pages
   const pages = doc.getPageCount();
   if (pages > 2) {
     throw new Error(`resume.pdf is ${pages} pages — the hard maximum is 2. Tighten print CSS or content.`);
