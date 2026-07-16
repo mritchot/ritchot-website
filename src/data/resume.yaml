@@ -201,67 +201,92 @@ education:
     school: Western Governors University
     location: Salt Lake City, UT, United States
     year: "2025"
+    url: /docs/ritchot_meddegree.pdf
     notes:
-      - >-
-        Excellence Award in Learning Experience Design — distinction granted
-        to the top 1–2% of graduate students for outstanding academic and
-        project performance.
-      - >-
-        Designed, developed, and evaluated a four-module AI literacy
-        enablement program grounded in original research on tokenization
-        mechanics in large language models, achieving 28% learner
-        performance uplift through iterative, data-informed design
-        methodology.
+      - text: >-
+          Excellence Award in Learning Experience Design — distinction
+          granted to the top 1–2% of graduate students for outstanding
+          academic and project performance.
+      - text: >-
+          Designed, developed, and evaluated a four-module AI literacy
+          enablement program grounded in original research on tokenization
+          mechanics in large language models, achieving 28% learner
+          performance uplift through iterative, data-informed design
+          methodology.
+        url: /docs/capstone.pdf
   - degree: Bachelor of Education
     school: University of Alberta
     location: Edmonton, Alberta, Canada
     year: "2015"
+    url: /docs/ritchot_beddegree.pdf
     notes: []
 
 certifications:
+  # per-item url links the credential name to its certificate document
+  # (localized from the live Bear resume, 15-07-2026); Foundations for
+  # Teachers is deliberately unlinked — the live page pointed it at the
+  # wrong certificate (flagged at the 5d handback).
   - group: AI & Emerging Technology
     items:
       - name: "AI Fluency: Framework & Foundations"
         issuer: Anthropic
         year: "2025"
+        url: /docs/anthropic-fluency_ritchot.pdf
       - name: Teaching the AI Fluency Framework
         issuer: Anthropic
         year: "2025"
+        url: /docs/anthropic-teaching_ritchot.pdf
       - name: AI Capabilities and Limitations
         issuer: Anthropic
         year: "2026"
+        url: /docs/certificate-2936i6ksduki-1775194303-aicapabilities.pdf
       - name: AI Fluency for Educators
         issuer: Anthropic
         year: "2025"
+        url: /docs/anthropic-educators_ritchot.pdf
       - name: AI Fluency for Nonprofits
         issuer: Anthropic
         year: "2025"
+        url: /docs/anthropic-nonprofit_ritchot.pdf
       - name: Claude 101
         issuer: Anthropic
         year: "2026"
+        url: /docs/certificate-cbw3v459xvz4-1775194789-claude101.pdf
       - name: Introduction to Claude Cowork
         issuer: Anthropic
         year: "2026"
+        url: /docs/certificate-q264xijka49h-1775716626-cowork.pdf
       - name: Foundations for Teachers
         issuer: OpenAI
         year: "2025"
-      - name: AI Literacy Certified Level 1, Level 2, and Level 3
+      - name: AI Literacy Certified
         issuer: Flint
         year: "2026"
+        sublinks:
+          - label: Level 1
+            url: /docs/flint_level-1.pdf
+          - label: Level 2
+            url: /docs/flint_level-2.pdf
+          - label: Level 3
+            url: /docs/flint_level-3.pdf
       - name: Google AI Essentials
         issuer: Google
         year: "2024"
+        url: /docs/google-ai-essentials-coursera-ritchot.pdf
       - name: Gemini Certified Educator
         issuer: Google
         year: "2025"
+        url: /docs/gemini-for-education_ritchot.pdf
   - group: Data Analytics & Project Management
     items:
       - name: Google Data Analytics Professional Certificate
         issuer: Coursera/Google
         year: "2024"
+        url: /docs/google-data-analytics-ritchot.pdf
       - name: Google Project Management Certificate
         issuer: Coursera/Google
         year: "2024"
+        url: /docs/google-project-management-coursera-ritchot.pdf
   - group: Professional Credentials
     items:
       - name: Alberta Ministry of Education Professional Certificate

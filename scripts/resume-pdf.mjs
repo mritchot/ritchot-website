@@ -39,6 +39,13 @@ try {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(`http://localhost:${PORT}/resume/`, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
+  // the PDF outlives this render: site-relative links (the /docs/*
+  // credentials) must resolve to production, not the preview server
+  await page.evaluate(() => {
+    for (const a of document.querySelectorAll('a[href^="/"]')) {
+      a.href = new URL(a.getAttribute('href'), 'https://ritchot.me').href;
+    }
+  });
   const out = join(root, 'public/resume.pdf');
   await page.pdf({
     path: out,
