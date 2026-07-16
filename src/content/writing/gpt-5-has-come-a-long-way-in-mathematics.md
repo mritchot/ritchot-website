@@ -11,7 +11,7 @@ summary: "Re-running last year's CEMC test against GPT-5: 98% per-attempt accura
 * Outside K–12, leading experts like Scott Aaronson and Terence Tao are already using large models as genuine mathematical collaborators, while new evidence suggests generative AI is increasing both the quantity and quality of academic publications, especially for early-career and non-native English scholars.
 * Institutional responses have not kept pace: schools and organizations still rely on legacy assessments, vibes, and generic benchmarks (if they are using any at all) instead of systematically “job-interviewing” models on local tasks.
 
-Last December, I wrote an article titled [o1 pro mode still has a long way to go for Mathematics](https://ritchot.me/o1-pro-mode-still-has-a-long-way-to-go-for-mathematics/). At the time, OpenAI’s new “reasoning” models were being heavily marketed as smarter, more careful, and better at logic. In my own tests, the reality in a secondary math context was much less impressive. The model was better than its predecessors, but it still missed enough questions that I could reasonably say my mathematics classroom was largely safe.
+Last December, I wrote an article titled [o1 pro mode still has a long way to go for Mathematics](/writing/o1-pro-mode-still-has-a-long-way-to-go-for-mathematics/). At the time, OpenAI’s new “reasoning” models were being heavily marketed as smarter, more careful, and better at logic. In my own tests, the reality in a secondary math context was much less impressive. The model was better than its predecessors, but it still missed enough questions that I could reasonably say my mathematics classroom was largely safe.
 
 With the [release of GPT-5 in August 2025](https://openai.com/index/introducing-gpt-5/), I wanted to revisit those tests with a new set of questions to see how far LLMs have actually come. The improvement has been substantial. Not even a year later, I can no longer assert that these tools “have a long way to go” in the way I meant back then.
 
@@ -21,7 +21,7 @@ Put differently, under essentially the same problem framework [provided by the U
 
 ## Last Year’s Test
 
-In [my original article](https://ritchot.me/o1-pro-mode-still-has-a-long-way-to-go-for-mathematics/), I had a relatively simple question: how good, really, are these models at the kind of mathematics my students actually do?
+In [my original article](/writing/o1-pro-mode-still-has-a-long-way-to-go-for-mathematics/), I had a relatively simple question: how good, really, are these models at the kind of mathematics my students actually do?
 
 OpenAI’s o1 and o1 pro modes were marketed as “thinking” models that reasoned through problems, especially in mathematics and science. They were multimodal, which meant they could allegedly handle text and images in a more unified way. For an educator previously in the secondary math trenches, this raised obvious questions about assessment, homework, and what it means to do authentic work in a world where any question can be fed into ChatGPT.
 
