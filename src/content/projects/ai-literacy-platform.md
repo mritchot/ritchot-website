@@ -13,7 +13,7 @@ links:
   repo: "https://github.com/mritchot/ai-literacy-platform"
 weight: 1
 hub: ai-literacy
-summary: "A four-module, research-grounded AI literacy program for mid-career professionals — designed, built, and shipped solo in roughly 150 hours on a custom learning platform, with the full needs analysis, evaluation framework, and project records published alongside it."
+summary: "A four-module, research-grounded AI literacy program for mid-career professionals — designed, built, and shipped solo in roughly 210 hours on a custom learning platform, with the full needs analysis, evaluation framework, and project records published alongside it."
 ---
 ## Problem
 
@@ -33,7 +33,7 @@ The build itself ran on a specification–verification loop with AI development 
 
 ## Outcome
 
-The program is live at [ai-literacy.ritchot.me](https://ai-literacy.ritchot.me/) as a v1.0 portfolio edition. Total development ran to roughly 150–160 hours against an industry baseline near 735 hours for comparable interactivity (Chapman's benchmark for simulation-grade content) — a 4.6–4.9× compression consistent with documented ranges for AI-augmented knowledge work, achieved without sacrificing the evidence trail. The complete professional record is published with the course: the needs analysis, the evaluation framework, and the design and project-management records — timeline, responsibility matrix, budget, stakeholder communications, and QA — as interactive walkthroughs and downloadable documents, reframing the solo build as the five-person organizational deployment it models.
+The program is live at [ai-literacy.ritchot.me](https://ai-literacy.ritchot.me/) as a v1.0 portfolio edition. Total development ran to roughly 210 hours against an industry baseline near 735 hours for comparable interactivity (Chapman's benchmark for simulation-grade content) — a 3.5× compression consistent with documented ranges for AI-augmented knowledge work, achieved without sacrificing the evidence trail. The complete professional record is published with the course: the needs analysis, the evaluation framework, and the design and project-management records — timeline, responsibility matrix, budget, stakeholder communications, and QA — as interactive walkthroughs and downloadable documents, reframing the solo build as the five-person organizational deployment it models.
 
 ## Stack and links
 
