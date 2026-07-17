@@ -5,19 +5,20 @@ import EmailSubscribe from '../components/EmailSubscribe.astro';
 
 <Base
   title="Subscribe · ritchot.me"
-  description="Follow new writing by feed reader — full-text RSS and Atom."
+  description="Follow new writing by feed reader — full-text RSS, Atom, and JSON."
 >
   <article class="subscribe prose">
     <h1>Subscribe</h1>
     <!-- All copy below flagged for gate approval (Phase 5 Part D). -->
     <p>
       Everything I publish lands in the site's feed, full text included — no
-      truncation, no teaser paragraphs. Point a feed reader at either URL and
+      truncation, no teaser paragraphs. Point a feed reader at any of the URLs and
       new pieces arrive as I post them:
     </p>
     <ul class="feeds">
       <li><a href="/feed.xml">ritchot.me/feed.xml</a> — RSS</li>
       <li><a href="/atom.xml">ritchot.me/atom.xml</a> — Atom</li>
+      <li><a href="/feed.json">ritchot.me/feed.json</a> — JSON</li>
     </ul>
     <p>
       If you don't have a feed
@@ -25,7 +26,7 @@ import EmailSubscribe from '../components/EmailSubscribe.astro';
       excellent on Mac and iOS, <a href="https://feedbin.com/">Feedbin</a> is
       a polished web reader that works everywhere,
       and <a href="https://miniflux.app/">Miniflux</a> is the minimalist
-      option if you like hosting things yourself. Paste either URL above into
+      option if you like hosting things yourself. Paste any URL above into
       any of them and you're done.
     </p>
     <p class="email-note">

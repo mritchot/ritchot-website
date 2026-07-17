@@ -9,6 +9,10 @@ interface Props {
   noindex?: boolean;
   ogType?: 'website' | 'article';
   ogImage?: string;
+  /** ISO 8601; emitted as article:published_time on article pages. */
+  publishedTime?: string;
+  /** ISO 8601; emitted as article:modified_time on article pages. */
+  modifiedTime?: string;
   jsonLd?: Record<string, unknown>[];
 }
 
@@ -18,6 +22,8 @@ const {
   noindex = false,
   ogType = 'website',
   ogImage = '/og/default.png',
+  publishedTime,
+  modifiedTime,
   jsonLd = [],
 } = Astro.props;
 
@@ -48,18 +54,31 @@ const structuredData = [personLd, ...jsonLd];
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="alternate" type="application/rss+xml" title="ritchot.me" href="/feed.xml" />
     <link rel="alternate" type="application/atom+xml" title="ritchot.me (Atom)" href="/atom.xml" />
+    <link rel="alternate" type="application/feed+json" title="ritchot.me (JSON)" href="/feed.json" />
     <meta property="og:site_name" content="ritchot.me" />
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical.href} />
     <meta property="og:image" content={ogImageUrl.href} />
+    <meta property="og:image:alt" content={title} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    {
+      ogType === 'article' && publishedTime && (
+        <meta property="article:published_time" content={publishedTime} />
+      )
+    }
+    {
+      ogType === 'article' && modifiedTime && (
+        <meta property="article:modified_time" content={modifiedTime} />
+      )
+    }
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     {description && <meta name="twitter:description" content={description} />}
     <meta name="twitter:image" content={ogImageUrl.href} />
+    <meta name="twitter:image:alt" content={title} />
     <link
       rel="preload"
       href="/fonts/source-serif-4-latin-var.woff2"
