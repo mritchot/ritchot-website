@@ -1,11 +1,14 @@
 # resume.yaml — single source of truth for the resume page, its print
 # stylesheet, and public/resume.pdf (`npm run resume:pdf`).
 # Scope defined by the live ritchot.me/resume/ page, cross-checked against
-# the master resume (02_professional) 15-07-2026. Contact policy: email
-# only — no phone, no address.
+# the master resume (02_professional) 15-07-2026. Contact policy: email,
+# links, and city only — no phone, no street address. The email is PDF-only
+# (17-07-2026 ruling): the print stylesheet reveals it, the web page never
+# shows it. Location ships on both.
 name: Michael Ritchot
 contact:
   email: michael@ritchot.me
+  location: Singapore
   linkedin: https://www.linkedin.com/in/mritchot
   github: https://github.com/mritchot
   website: https://ritchot.me

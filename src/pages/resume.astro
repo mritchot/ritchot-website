@@ -1,6 +1,8 @@
 ---
 import { parse } from 'yaml';
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { externalAttrs } from '../lib/rehype-external-links';
 import raw from '../data/resume.yaml?raw';
 
 interface Link {
@@ -39,7 +41,13 @@ interface CertGroup {
 }
 interface Resume {
   name: string;
-  contact: { email: string; linkedin: string; github: string; website: string };
+  contact: {
+    email: string;
+    location: string;
+    linkedin: string;
+    github: string;
+    website: string;
+  };
   summary: string;
   competencies: string[];
   featured: { title: string; links: Link[]; bullets: string[] };
@@ -71,11 +79,24 @@ const personLd = {
       <!-- name is print-only on the web view: the site header carries it -->
       <h1 class="name">{name}</h1>
       <p class="contact">
-        <a href={contact.linkedin}>LinkedIn</a>
+        <span class="item"><Icon name="pin" />{contact.location}</span>
         <span aria-hidden="true">·</span>
-        <a href={contact.github}>GitHub</a>
+        <!-- email is print-only: the web page has never carried it -->
+        <span class="item print-only">
+          <Icon name="envelope" /><a href={`mailto:${contact.email}`}>{contact.email}</a>
+        </span>
+        <span aria-hidden="true" class="print-only">·</span>
+        <span class="item">
+          <Icon name="linkedin" /><a href={contact.linkedin} {...externalAttrs(contact.linkedin)}>LinkedIn</a>
+        </span>
         <span aria-hidden="true">·</span>
-        <a href={contact.website}>Website</a>
+        <span class="item">
+          <Icon name="github" /><a href={contact.github} {...externalAttrs(contact.github)}>GitHub</a>
+        </span>
+        <span aria-hidden="true">·</span>
+        <span class="item">
+          <Icon name="globe" /><a href={contact.website} {...externalAttrs(contact.website)}>Website</a>
+        </span>
       </p>
       <p class="download">
         <a href="/resume.pdf">Download PDF ↓</a>
@@ -103,7 +124,7 @@ const personLd = {
         {featured.bullets.map((b) => <li>{b}</li>)}
       </ul>
       <p class="featured-links">
-        {featured.links.map((l) => <a href={l.url}>{l.label} ↗</a>)}
+        {featured.links.map((l) => <a href={l.url} {...externalAttrs(l.url)}>{l.label} ↗</a>)}
       </p>
     </section>
 
@@ -218,6 +239,17 @@ const personLd = {
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
+  }
+
+  /* icon sits beside its label, baseline-ish, and never wraps away from it */
+  .contact .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4ch;
+  }
+
+  .contact .print-only {
+    display: none;
   }
 
   .download {
@@ -444,6 +476,11 @@ const personLd = {
 
     .contact {
       margin-block-start: 0.35rem;
+    }
+
+    /* the email returns in print (17-07-2026 ruling) */
+    .contact .print-only {
+      display: inline-flex;
     }
 
     section {
