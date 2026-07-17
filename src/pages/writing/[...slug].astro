@@ -52,6 +52,8 @@ const articleLd = {
   description={entry.data.summary}
   ogType="article"
   ogImage={`/og/writing/${slugOf(entry)}.png`}
+  publishedTime={entry.data.date.toISOString()}
+  modifiedTime={(entry.data.updated ?? entry.data.date).toISOString()}
   jsonLd={[articleLd]}
 >
   <article>

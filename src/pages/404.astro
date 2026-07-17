@@ -4,4 +4,21 @@ import Base from '../layouts/Base.astro';
 
 <Base title="404 · ritchot.me">
   <h1>404</h1>
+  <p class="kaomoji">¯\_(ツ)_/¯</p>
+  <p>There doesn't seem to be anything here!</p>
 </Base>
+
+<style>
+  h1 {
+    margin-block-end: 1rem;
+  }
+
+  /* mono keeps the arms level; ツ has no glyph in either site face and
+     falls back to a system font by design (no new fonts ship for it) */
+  .kaomoji {
+    font-family: var(--font-mono);
+    font-size: var(--text-2);
+    color: var(--ink-soft);
+    margin-block-end: 1rem;
+  }
+</style>
