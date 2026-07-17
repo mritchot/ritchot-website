@@ -117,4 +117,11 @@ const social = [
     color: var(--ink);
   }
 
+  /* Astro collapses the line-leading whitespace between these inline elements,
+     so the mid-dots carry their own spacing. ch tracks the mono character
+     width the footer is set in. */
+  nav span[aria-hidden] {
+    margin-inline: 0.5ch;
+  }
+
 </style>
