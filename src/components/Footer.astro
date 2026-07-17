@@ -1,55 +1,39 @@
 ---
-const year = new Date().getFullYear();
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+
+// Copyright range: earliest published piece through the current build year.
+// UTC to match the collection's date handling (formatDate pins timeZone: UTC),
+// so a frontmatter date never slips a year in a negative-offset timezone.
+const entries = await getCollection('writing');
+const firstYear = Math.min(...entries.map((e) => e.data.date.getUTCFullYear()));
+const buildYear = new Date().getFullYear();
+const years = firstYear === buildYear ? `${firstYear}` : `${firstYear}–${buildYear}`;
 
 // self-hosted inline marks (5b finding 4): official simple paths on a
 // 24×24 viewBox, filled with currentColor — no icon font, no CDN
 const social = [
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/mritchot',
-    path: 'M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.72C24 .77 23.2 0 22.22 0z',
-  },
-  {
-    label: 'GitHub',
-    href: 'https://github.com/mritchot',
-    path: 'M12 .3a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.49 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.21.7.82.58A12 12 0 0 0 12 .3z',
-  },
-  {
-    label: 'X',
-    href: 'https://x.com/MichaelRitchot',
-    path: 'M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.08 4.13H5.12z',
-  },
-];
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mritchot', icon: 'linkedin' },
+  { label: 'GitHub', href: 'https://github.com/mritchot', icon: 'github' },
+  { label: 'X', href: 'https://x.com/MichaelRitchot', icon: 'x' },
+] as const;
 ---
 
 <footer>
   <div class="inner">
-    <div class="row">
-      <p class="sig">
-        Michael Ritchot
-        <span class="social">
-          {
-            social.map(({ label, href, path }) => (
-              <a href={href} aria-label={label}>
-                <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
-                  <path d={path} />
-                </svg>
-              </a>
-            ))
-          }
-        </span>
-      </p>
-      <nav aria-label="Feeds and subscription">
-        <a href="/feed.xml">RSS</a>
-        <span aria-hidden="true">·</span>
-        <a href="/atom.xml">Atom</a>
-        <span aria-hidden="true">·</span>
-        <a href="/feed.json">JSON</a>
-        <span aria-hidden="true">·</span>
-        <a href="/subscribe">Subscribe</a>
-      </nav>
-    </div>
-    <p class="rights">© {year} Michael Ritchot. Writing all rights reserved; site code MIT.</p>
+    <p class="left">
+      <a href="/subscribe">Subscribe</a>
+      <span class="social">
+        {
+          social.map(({ label, href, icon }) => (
+            <a href={href} aria-label={label} target="_blank" rel="noopener noreferrer">
+              <Icon name={icon} />
+            </a>
+          ))
+        }
+      </span>
+    </p>
+    <p class="rights">© {years} Michael Ritchot. Site code MIT.</p>
   </div>
 </footer>
 
@@ -61,33 +45,31 @@ const social = [
     color: var(--ink-soft);
   }
 
-  /* compact (5c finding 4): two tight rows — it shares the single-screen
+  /* compact (5c finding 4): one tight row — it shares the single-screen
      homepage with the hero */
   .inner {
     max-width: 52rem;
     margin-inline: auto;
     padding: 0.9rem 1.25rem 1rem;
-    display: grid;
-    gap: 0.4rem;
-  }
-
-  .row {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
-    gap: 1rem;
     flex-wrap: wrap;
+    gap: 0.5rem 1rem;
   }
 
-  /* typographic signature (D16 final): the name set small in the serif */
-  .sig {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: var(--text--1);
-    color: var(--ink-soft);
+  .left {
     display: flex;
     align-items: center;
     gap: 0.9rem;
+  }
+
+  .left > a {
+    color: var(--ink-soft);
+  }
+
+  .left > a:hover {
+    color: var(--ink);
   }
 
   .rights {
@@ -108,20 +90,4 @@ const social = [
   .social a:hover {
     color: var(--ink);
   }
-
-  nav a {
-    color: var(--ink-soft);
-  }
-
-  nav a:hover {
-    color: var(--ink);
-  }
-
-  /* Astro collapses the line-leading whitespace between these inline elements,
-     so the mid-dots carry their own spacing. ch tracks the mono character
-     width the footer is set in. */
-  nav span[aria-hidden] {
-    margin-inline: 0.5ch;
-  }
-
 </style>

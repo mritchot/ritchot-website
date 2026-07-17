@@ -1,0 +1,26 @@
+---
+/** Inline 24×24 currentColor icon. Decorative by default: callers that need
+ * an accessible name put it on the surrounding link. */
+import { icons, type IconDef, type IconName } from '../lib/icons';
+
+interface Props {
+  name: IconName;
+  size?: number;
+}
+
+const { name, size = 15 } = Astro.props;
+const icon: IconDef = icons[name];
+---
+
+<svg
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill={icon.stroke ? 'none' : 'currentColor'}
+  stroke={icon.stroke ? 'currentColor' : undefined}
+  stroke-width={icon.stroke ? 1.7 : undefined}
+  stroke-linecap={icon.stroke ? 'round' : undefined}
+  aria-hidden="true"
+>
+  <path d={icon.d} fill-rule={icon.fillRule} />
+</svg>

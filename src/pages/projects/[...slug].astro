@@ -3,6 +3,7 @@ import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import HubCollections from '../../components/HubCollections.astro';
 import { sortedProjects, slugOf, type Project } from '../../lib/projects';
+import { externalAttrs } from '../../lib/rehype-external-links';
 
 export async function getStaticPaths() {
   const entries = await sortedProjects();
@@ -42,8 +43,8 @@ const projectLd = {
     <h1>{title}</h1>
     <p class="lede">{summary}</p>
     <p class="quicklinks">
-      {links.live && <a href={links.live}>Visit the live project ↗</a>}
-      {links.repo && <a href={links.repo}>Source ↗</a>}
+      {links.live && <a href={links.live} {...externalAttrs(links.live)}>Visit the live project ↗</a>}
+      {links.repo && <a href={links.repo} {...externalAttrs(links.repo)}>Source ↗</a>}
     </p>
     <div class="prose">
       <Content />

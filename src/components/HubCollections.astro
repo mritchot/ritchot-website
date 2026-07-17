@@ -5,17 +5,18 @@
  * lives in src/data/ai-literacy-hub.ts.
  */
 import { links, writing, documents } from '../data/ai-literacy-hub';
+import { externalAttrs } from '../lib/rehype-external-links';
 ---
 
 <div class="hub-collections">
   <p class="label"><strong>Links</strong></p>
   <ul>
-    {links.map((l) => <li><a href={l.url}>{l.label}</a></li>)}
+    {links.map((l) => <li><a href={l.url} {...externalAttrs(l.url)}>{l.label}</a></li>)}
   </ul>
 
   <p class="label"><strong>Writing</strong></p>
   <ul>
-    {writing.map((l) => <li><a href={l.url}>{l.label}</a></li>)}
+    {writing.map((l) => <li><a href={l.url} {...externalAttrs(l.url)}>{l.label}</a></li>)}
   </ul>
 
   <p class="label"><strong>Documents</strong></p>
@@ -28,7 +29,7 @@ import { links, writing, documents } from '../data/ai-literacy-hub';
         <ul>
           {group.items.map((l) => (
             <li>
-              <a href={l.url}>{l.label}</a>
+              <a href={l.url} {...externalAttrs(l.url)}>{l.label}</a>
             </li>
           ))}
         </ul>
