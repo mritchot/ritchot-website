@@ -18,3 +18,9 @@
 
 /feed.json
   Content-Type: application/feed+json; charset=utf-8
+
+# /docs/ holds resume attachments and article supporting material. Each is
+# linked from an indexed HTML page that frames it; the PDF itself is a worse
+# search result than the page that cites it. Access is unaffected.
+/docs/*
+  X-Robots-Tag: noindex
