@@ -9,5 +9,23 @@
 /blog /writing/ 301
 /blog/ /writing/ 301
 
-# --- Phase 3 slug map: migrated Bear URLs that change shape land here. ---
-# Identity mappings (slug preserved) need no entry.
+# --- Phase 3 slug map: migrated Bear URLs. ---
+# Bear served posts at /<slug>/; this site serves them at /writing/<slug>/.
+# The path shape changed for every post, so every slug needs an entry.
+# Both slashed and unslashed forms — Google has both in its index.
+/ai-knowing-the-gods-we-have-created /writing/ai-knowing-the-gods-we-have-created/ 301
+/ai-knowing-the-gods-we-have-created/ /writing/ai-knowing-the-gods-we-have-created/ 301
+/going-public /writing/going-public/ 301
+/going-public/ /writing/going-public/ 301
+/gpt-5-has-come-a-long-way-in-mathematics /writing/gpt-5-has-come-a-long-way-in-mathematics/ 301
+/gpt-5-has-come-a-long-way-in-mathematics/ /writing/gpt-5-has-come-a-long-way-in-mathematics/ 301
+/i-built-an-ai-literacy-course /writing/i-built-an-ai-literacy-course/ 301
+/i-built-an-ai-literacy-course/ /writing/i-built-an-ai-literacy-course/ 301
+/o1-pro-mode-still-has-a-long-way-to-go-for-mathematics /writing/o1-pro-mode-still-has-a-long-way-to-go-for-mathematics/ 301
+/o1-pro-mode-still-has-a-long-way-to-go-for-mathematics/ /writing/o1-pro-mode-still-has-a-long-way-to-go-for-mathematics/ 301
+/on-writing-and-an-mit-study /writing/on-writing-and-an-mit-study/ 301
+/on-writing-and-an-mit-study/ /writing/on-writing-and-an-mit-study/ 301
+/reflections-and-the-state-of-llms-in-2025 /writing/reflections-and-the-state-of-llms-in-2025/ 301
+/reflections-and-the-state-of-llms-in-2025/ /writing/reflections-and-the-state-of-llms-in-2025/ 301
+/some-thoughts-on-emergent-technology-and-the-future-of-education /writing/some-thoughts-on-emergent-technology-and-the-future-of-education/ 301
+/some-thoughts-on-emergent-technology-and-the-future-of-education/ /writing/some-thoughts-on-emergent-technology-and-the-future-of-education/ 301
