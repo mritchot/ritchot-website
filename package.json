@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/sitemap-lastmod-date-only.mjs && node scripts/assert-no-webp.mjs",
+    "build": "node scripts/page-dates.mjs --check && astro build && node scripts/sitemap-lastmod-date-only.mjs && node scripts/assert-no-webp.mjs",
+    "page-dates": "node scripts/page-dates.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "resume:pdf": "node scripts/resume-pdf.mjs"

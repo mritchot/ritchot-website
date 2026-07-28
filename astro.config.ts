@@ -1,4 +1,3 @@
-import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
@@ -25,21 +24,6 @@ const isoDay = (value: unknown): string | undefined => {
   if (value == null || typeof value === 'boolean') return undefined;
   const d = value instanceof Date ? value : new Date(String(value));
   return Number.isNaN(d.valueOf()) ? undefined : d.toISOString().slice(0, 10);
-};
-
-/** Author date of a path's last commit. Empty output — a shallow CI clone, or
- *  an untracked file — yields undefined, never a fabricated fallback. */
-const gitDay = (path: string): string | undefined => {
-  try {
-    const out = execFileSync('git', ['log', '-1', '--format=%aI', '--', path], {
-      cwd: root('.'),
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim();
-    return out ? isoDay(out) : undefined;
-  } catch {
-    return undefined;
-  }
 };
 
 const frontmatter = (path: string): Record<string, unknown> => {
@@ -79,25 +63,21 @@ const writingDays = markdownIn('src/content/writing').map((file) => {
   return day;
 });
 
-// Projects: git author date of the .md. Honest here, unlike the writing
-// archive — these files were authored in this repo, not migrated into it.
-const projectDays = markdownIn('src/content/projects').map((file) => {
-  const day = gitDay(`src/content/projects/${file}`);
-  record(`/projects/${file.replace(/\.md$/, '')}/`, day);
-  return day;
-});
-
-// Collection indexes move when their newest entry does.
+// The /writing/ index moves when its newest entry does.
 record('/writing/', newest(writingDays));
-record('/projects/', newest(projectDays));
 
-// Static pages were genuinely authored in-repo, so git is the real signal.
-record('/', gitDay('src/pages/index.astro'));
-record('/about/', gitDay('src/pages/about.astro'));
-record('/subscribe/', gitDay('src/pages/subscribe.astro'));
-record('/ai-courses/', gitDay('src/pages/ai-courses.astro'));
-// /resume/ renders src/data/resume.yaml through the page: either can change it.
-record('/resume/', newest([gitDay('src/pages/resume.astro'), gitDay('src/data/resume.yaml')]));
+// Everything else — the static pages, /projects/ and the case studies — has no
+// frontmatter date, so its date comes from the git history of the file backing
+// it. Those are baked into page-dates.json at authoring time rather than read
+// here: the deploy builds from a --depth=1 clone, where `git log` reports the
+// tip commit's date for every path, which would stamp all of them with the
+// deploy date on every deploy. `npm run page-dates` regenerates the file and
+// the build fails if it goes stale. See scripts/page-dates.mjs.
+for (const [route, day] of Object.entries(
+  JSON.parse(readFileSync(root('src/data/page-dates.json'), 'utf8')) as Record<string, string>,
+)) {
+  record(route, day);
+}
 
 export default defineConfig({
   site: 'https://ritchot.me',
