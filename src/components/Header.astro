@@ -1,14 +1,20 @@
 ---
+// Trailing slashes match the canonical form Base.astro and the sitemap emit:
+// linking to the unslashed path made every page on the site link through a 301.
 const nav = [
-  { href: '/writing', label: 'Writing' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/resume', label: 'Resume' },
-  { href: '/about', label: 'About' },
+  { href: '/writing/', label: 'Writing' },
+  { href: '/projects/', label: 'Projects' },
+  { href: '/resume/', label: 'Resume' },
+  { href: '/about/', label: 'About' },
 ];
 
 const path = Astro.url.pathname;
-const isCurrent = (href: string) =>
-  path === href || path === `${href}/` || path.startsWith(`${href}/`);
+// Normalized so the comparisons hold whichever form `href` takes; without it a
+// slashed href compares against a double slash and nested routes never match.
+const isCurrent = (href: string) => {
+  const base = href.replace(/\/$/, '');
+  return path === base || path === `${base}/` || path.startsWith(`${base}/`);
+};
 ---
 
 <header>
