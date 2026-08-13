@@ -19,8 +19,9 @@ summary: >-
   Translates complex AI and emerging technology concepts into accessible,
   high-impact capability building initiatives for diverse professional
   audiences. Designed, developed, and independently deployed a four-module
-  AI literacy enablement program grounded in 10 peer-reviewed studies,
-  achieving 28% learner performance uplift through evidence-based
+  AI literacy enablement program grounded in industry workforce reports
+  and peer-reviewed research, achieving 28% learner performance uplift
+  through evidence-based
   instructional design and a Kirkpatrick Levels 1–4 evaluation framework.
   Combines instructional design expertise, hands-on generative AI fluency,
   and change management experience with a track record of driving
@@ -54,10 +55,9 @@ featured:
   bullets:
     - >-
       Conducted a structured needs analysis using action mapping and learner
-      persona development, grounded in 10 peer-reviewed studies including
-      Anthropic Economic Index workforce research and WEF Future of Jobs 2025
-      data, to define capability gaps and performance objectives for a
-      mid-career professional audience.
+      persona development, grounded in industry workforce reports and
+      peer-reviewed research, to define capability gaps and performance
+      objectives for a mid-career professional audience.
     - >-
       Designed a four-module, 37-section learning program with 12 practice
       activities, pre/post competency assessments, and adaptive sequencing —
@@ -211,11 +211,11 @@ education:
           granted to the top 1–2% of graduate students for outstanding
           academic and project performance.
       - text: >-
-          Designed, developed, and evaluated a four-module AI literacy
-          enablement program grounded in original research on tokenization
-          mechanics in large language models, achieving 28% learner
-          performance uplift through iterative, data-informed design
-          methodology.
+          Designed, developed, and evaluated a four-module enablement
+          program grounded in original research on teaching AI literacy
+          through the mechanics of large language models, achieving 28%
+          learner performance uplift through iterative, data-informed
+          design methodology.
         url: /docs/capstone.pdf
   - degree: Bachelor of Education
     school: University of Alberta
