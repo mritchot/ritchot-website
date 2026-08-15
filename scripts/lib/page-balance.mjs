@@ -1,11 +1,35 @@
 /** Page-balance measurement, shared verbatim with ritchot-website.
  *
  * MIRROR. The canonical copy is rescv-pdf-generator/src/page-balance.mjs.
- * The two files must stay byte-identical: each repo's test asserts this file's
- * SHA-256 against a recorded constant, so an edit on one side fails the other
- * side's test rather than drifting silently. Change here first, copy across,
- * update both constants in the same session.
+ * This header is the only part that differs between the two files, which is
+ * why it sits above the marker below and is excluded from the hash.
  */
+
+// === shared region: byte-identical in both repos ===
+//
+// Both repos hash everything from the marker line above and compare it to the
+// SAME recorded constant. That gives one checkable property: if both checks
+// pass against the same constant, the two copies are identical.
+//
+// What it does NOT do is make divergence fail a test. Each repo's constant
+// lives in that repo's own check, so a copy that is internally consistent —
+// old code, old constant — passes on its own. Editing one side and skipping
+// the copy leaves the two repos recording DIFFERENT constants, which is
+// visible on inspection but breaks no build. Closing that properly needs a
+// real shared dependency, not a mirrored file. Treat this as a tripwire that
+// forces the copy to be deliberate.
+
+/** Splits off the bytes both repos must agree on: everything from the marker
+ * to the end of file. Exported so each repo's check hashes the same span
+ * rather than reimplementing the rule. */
+export function sharedRegion(source) {
+  const marker = '// === shared region: byte-identical in both repos ===';
+  const start = source.indexOf(marker);
+  if (start === -1) {
+    throw new Error(`page-balance.mjs: "${marker}" not found — cannot locate the hashed region.`);
+  }
+  return source.slice(start);
+}
 
 /** Root sizes tried for a resume, largest first.
  *
