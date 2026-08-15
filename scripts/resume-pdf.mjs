@@ -15,30 +15,40 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { chromium } from 'playwright';
 import { PDFDocument } from 'pdf-lib';
-import { RESUME_SIZES, MAX_TRAILING_GAP, injectMarkers, trailingGaps } from './lib/page-balance.mjs';
+import {
+  RESUME_SIZES,
+  MAX_TRAILING_GAP,
+  injectMarkers,
+  trailingGaps,
+  sharedRegion,
+} from './lib/page-balance.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = 4322;
 
-/** SHA-256 of scripts/lib/page-balance.mjs as this repo holds it.
+/** SHA-256 of page-balance.mjs's shared region — everything below its header.
  *
- * That file mirrors rescv-pdf-generator/src/page-balance.mjs, which is
- * canonical. The two differ only in one header line naming which copy is
- * which, so each repo records its own hash. Editing the shared logic changes
- * this hash and stops this script before it does any work, which is the point:
- * copying across is a required step, not something to remember. */
-const PAGE_BALANCE_SHA = '94a28afeeb45849ab251713a0e223c4b4a80becdb8e5920b9374e4e2c36d74cb';
+ * This file mirrors rescv-pdf-generator/src/page-balance.mjs, which is
+ * canonical and records THIS SAME constant. Only the header differs between
+ * the copies, and it sits outside the hashed span, so one number serves both.
+ * If both repos pass against the same value, the two copies are identical.
+ *
+ * A repo cannot see the other drift: editing one side and skipping the copy
+ * leaves each side internally consistent and passing, with the two recorded
+ * constants no longer equal. That is visible on inspection, not at build time.
+ * Change the canonical file first, copy across, update both constants. */
+const PAGE_BALANCE_SHA = 'f9e81975baafc06d4b79d5cc8fa570a400cc301a47ab6f3cfea2e98cffe0624e';
 const CANONICAL = 'rescv-pdf-generator/src/page-balance.mjs';
 
 const balanceSha = createHash('sha256')
-  .update(readFileSync(join(root, 'scripts/lib/page-balance.mjs')))
+  .update(sharedRegion(readFileSync(join(root, 'scripts/lib/page-balance.mjs'), 'utf8')))
   .digest('hex');
 if (balanceSha !== PAGE_BALANCE_SHA) {
   throw new Error(
-    `scripts/lib/page-balance.mjs hashes to ${balanceSha.slice(0, 12)}, expected ` +
+    `scripts/lib/page-balance.mjs shared region hashes to ${balanceSha.slice(0, 12)}, expected ` +
       `${PAGE_BALANCE_SHA.slice(0, 12)}. The shared measurement module changed. Reconcile it ` +
-      `against ${CANONICAL}, then update PAGE_BALANCE_SHA in BOTH repos' checks in the same ` +
-      `session — they hold separate constants and neither can see the other drift.`,
+      `against ${CANONICAL}, then set PAGE_BALANCE_SHA to the new value in BOTH repos in the ` +
+      `same session — they must record the same number.`,
   );
 }
 
