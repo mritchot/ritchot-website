@@ -18,11 +18,13 @@ summary: >-
   designing and delivering learning programs across four countries.
   Translates complex AI and emerging technology concepts into accessible,
   high-impact capability building initiatives for diverse professional
-  audiences. Designed, developed, and independently deployed a four-module
-  AI literacy enablement program grounded in industry workforce reports
-  and peer-reviewed research, achieving 28% learner performance uplift
-  through evidence-based
-  instructional design and a Kirkpatrick Levels 1–4 evaluation framework.
+  audiences. Designed and evaluated an asynchronous e-learning module
+  teaching AI literacy through large language model mechanics, improving
+  assessment scores 28 points pre-to-post (62% to 90%) under a Design-Based
+  Research methodology. Extended that work into a four-module enablement
+  program, grounded in industry workforce reports and peer-reviewed
+  research, deployed on a custom-engineered platform under a Kirkpatrick
+  Levels 1–4 evaluation framework.
   Combines instructional design expertise, hands-on generative AI fluency,
   and change management experience with a track record of driving
   technology adoption, building scalable learning solutions, and embedding
@@ -65,9 +67,10 @@ featured:
       (Delegation, Description, Discernment, Diligence) as an organizing
       taxonomy.
     - >-
-      Built a Kirkpatrick Levels 1–4 evaluation framework including reaction
-      surveys, knowledge assessments with 28% pre-to-post performance uplift,
-      behavioral transfer indicators, and organizational impact metrics.
+      Built a Kirkpatrick Levels 1–4 evaluation framework: a reaction-survey
+      item bank, a ten-item parallel-form pre/post assessment, twelve
+      behavioral transfer indicators on 30/60/90-day intervals, and a
+      Phillips-methodology ROI model.
     - >-
       Engineered and deployed a custom learning platform (React, TypeScript,
       Tailwind CSS) featuring client-side BPE tokenization, real
@@ -219,11 +222,10 @@ education:
           granted to the top 1–2% of graduate students for outstanding
           academic and project performance.
       - text: >-
-          Designed, developed, and evaluated a four-module enablement
-          program grounded in original research on teaching AI literacy
-          through the mechanics of large language models, achieving 28%
-          learner performance uplift through iterative, data-informed
-          design methodology.
+          Designed and evaluated an asynchronous e-learning module teaching
+          AI literacy through large language model mechanics, improving
+          secondary student assessment scores 28 points pre-to-post
+          (62% to 90%).
         url: /docs/capstone.pdf
   - degree: Bachelor of Education
     school: University of Alberta
