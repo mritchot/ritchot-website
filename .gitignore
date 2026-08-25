@@ -18,6 +18,7 @@ TODOARCHIVE.md
 
 # local planning artifacts — never in the tracked tree
 cc-prompts/
+.claude/
 
 # OS / editor
 .DS_Store
