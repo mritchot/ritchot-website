@@ -19,7 +19,8 @@ const root = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 /** YYYY-MM-DD in UTC, or undefined when the value is unusable. UTC throughout:
  *  a bare frontmatter date is midnight UTC, and formatting it in a negative
- *  offset slips it a day — the same reason Footer.astro pins timeZone: 'UTC'. */
+ *  offset slips it a day — the same reason formatDate in src/lib/writing.ts
+ *  pins timeZone: 'UTC'. */
 const isoDay = (value: unknown): string | undefined => {
   if (value == null || typeof value === 'boolean') return undefined;
   const d = value instanceof Date ? value : new Date(String(value));

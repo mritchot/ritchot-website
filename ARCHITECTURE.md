@@ -24,8 +24,9 @@ two audiences — readers and hiring managers.
 ## Stack
 
 - **Astro** (TypeScript strict, `output: 'static'`). No UI-framework
-  runtime — the two interactive islands are dependency-free vanilla
-  TypeScript.
+  runtime — the two interactive islands are first-party vanilla
+  TypeScript (pretext-justify bundles one MIT measurement library at
+  build; suminagashi has no dependencies).
 - **Plain CSS** with custom-property design tokens
   (`src/styles/tokens.css`).
 - **Shiki** at build time for syntax highlighting, emitted as classes —
@@ -71,12 +72,13 @@ Full-content RSS (`/feed.xml`) and Atom (`/atom.xml`) with autodiscovery
 links; the legacy feed path 301-redirects. Email is deliberately dormant:
 a subscribe partial exists in the codebase (markup, styles, states) but
 renders nothing until an endpoint constant is configured — activation is
-one constant, zero markup changes.
+one constant plus a `form-action` CSP allowance in `public/_headers`
+(the deployed policy blocks every form submit), zero markup changes.
 
 ## Islands
 
-Two islands, both first-party, dependency-free at runtime, and removable
-without breakage. Every failure path — no JS, reduced motion, missing
+Two islands, both first-party (no CDN or third-party requests at
+runtime) and removable without breakage. Every failure path — no JS, reduced motion, missing
 platform support, script error — leaves a fully working typographic page.
 
 1. **`suminagashi`** (homepage): a hand-written WebGL2 stable-fluids ink

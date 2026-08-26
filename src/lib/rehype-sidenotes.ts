@@ -10,16 +10,22 @@ type Parent = Root | Element;
 
 const isElement = (n: { type: string }): n is Element => n.type === 'element';
 
+/** Deep-copy `nodes` without any backref anchors. GFM nests the arrow inside
+ * the definition's last paragraph, so a top-level filter alone would ship it
+ * in the sidenote copy of any multi-paragraph footnote. The originals stay
+ * untouched — the endnote section keeps its arrows. */
+function dropBackrefs(nodes: ElementContent[]): ElementContent[] {
+  return nodes
+    .filter((c) => !(isElement(c) && c.properties?.dataFootnoteBackref !== undefined))
+    .map((c) => (isElement(c) ? { ...c, children: dropBackrefs(c.children) } : c));
+}
+
 function footnoteInline(li: Element): ElementContent[] {
-  // Drop the backref arrow; unwrap a single leading paragraph to inline content.
-  const kept = li.children.filter(
-    (c) => !(isElement(c) && c.properties?.dataFootnoteBackref !== undefined),
-  );
+  // Unwrap a single-paragraph definition to inline content.
+  const kept = dropBackrefs(li.children);
   const first = kept.find(isElement);
   if (kept.length >= 1 && first && first.tagName === 'p' && kept.filter(isElement).length === 1) {
-    return first.children.filter(
-      (c) => !(isElement(c) && c.properties?.dataFootnoteBackref !== undefined),
-    );
+    return first.children;
   }
   return kept;
 }

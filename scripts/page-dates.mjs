@@ -11,14 +11,20 @@
 //
 //   node scripts/page-dates.mjs           regenerate the file
 //   node scripts/page-dates.mjs --check   fail if it is stale (runs in build)
-import { execFileSync } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { promisify } from 'node:util';
 
 const OUT = 'src/data/page-dates.json';
 
-const git = (args) => {
+const execFileP = promisify(execFile);
+
+// One spawn per backing file; they run concurrently, so the build gate costs
+// one git round-trip of wall time instead of ~10 sequential ones.
+const git = async (args) => {
   try {
-    return execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    const { stdout } = await execFileP('git', args, { encoding: 'utf8' });
+    return stdout.trim();
   } catch {
     return '';
   }
@@ -26,8 +32,8 @@ const git = (args) => {
 
 /** YYYY-MM-DD in UTC — matches Footer.astro, so a date never slips in a
  *  negative-offset timezone. */
-const dayOf = (path) => {
-  const iso = git(['log', '-1', '--format=%aI', '--', path]);
+const dayOf = async (path) => {
+  const iso = await git(['log', '-1', '--format=%aI', '--', path]);
   if (!iso) return undefined;
   const d = new Date(iso);
   return Number.isNaN(d.valueOf()) ? undefined : d.toISOString().slice(0, 10);
@@ -35,29 +41,39 @@ const dayOf = (path) => {
 
 const newest = (days) => days.filter(Boolean).sort().at(-1);
 
-function derive() {
+async function derive() {
   const map = {};
   const set = (route, day) => {
     if (day) map[route] = day;
   };
 
-  set('/', dayOf('src/pages/index.astro'));
-  set('/about/', dayOf('src/pages/about.astro'));
-  set('/ai-courses/', dayOf('src/pages/ai-courses.astro'));
-  set('/subscribe/', dayOf('src/pages/subscribe.astro'));
+  const projectFiles = readdirSync('src/content/projects')
+    .filter((f) => f.endsWith('.md'))
+    .sort();
+
+  const [home, about, aiCourses, subscribe, resumePage, resumeYaml, ...projectDays] =
+    await Promise.all([
+      dayOf('src/pages/index.astro'),
+      dayOf('src/pages/about.astro'),
+      dayOf('src/pages/ai-courses.astro'),
+      dayOf('src/pages/subscribe.astro'),
+      dayOf('src/pages/resume.astro'),
+      dayOf('src/data/resume.yaml'),
+      ...projectFiles.map((file) => dayOf(`src/content/projects/${file}`)),
+    ]);
+
+  set('/', home);
+  set('/about/', about);
+  set('/ai-courses/', aiCourses);
+  set('/subscribe/', subscribe);
   // /resume/ renders src/data/resume.yaml through the page: either can change it.
-  set('/resume/', newest([dayOf('src/pages/resume.astro'), dayOf('src/data/resume.yaml')]));
+  set('/resume/', newest([resumePage, resumeYaml]));
 
   // Projects were authored in this repo, so git is the honest signal for them —
   // unlike the writing archive, which predates the repo and uses frontmatter.
-  const projectDays = readdirSync('src/content/projects')
-    .filter((f) => f.endsWith('.md'))
-    .sort()
-    .map((file) => {
-      const day = dayOf(`src/content/projects/${file}`);
-      set(`/projects/${file.replace(/\.md$/, '')}/`, day);
-      return day;
-    });
+  projectFiles.forEach((file, i) => {
+    set(`/projects/${file.replace(/\.md$/, '')}/`, projectDays[i]);
+  });
   set('/projects/', newest(projectDays));
 
   // Sorted keys keep the committed diff readable.
@@ -69,12 +85,18 @@ const check = process.argv.includes('--check');
 
 // A shallow clone cannot answer the question, so there is nothing to verify
 // against — the committed file is authoritative there, which is the whole point.
-if (git(['rev-parse', '--is-shallow-repository']) === 'true') {
+// The same holds with no repository at all (a tarball or exported checkout),
+// where deriving would produce {} and --check would demand committing it.
+if ((await git(['rev-parse', '--is-inside-work-tree'])) !== 'true') {
+  console.log('page-dates: no git repository — using committed dates, skipping check');
+  process.exit(0);
+}
+if ((await git(['rev-parse', '--is-shallow-repository'])) === 'true') {
   console.log('page-dates: shallow clone — using committed dates, skipping check');
   process.exit(0);
 }
 
-const derived = serialize(derive());
+const derived = serialize(await derive());
 
 if (check) {
   const current = (() => {

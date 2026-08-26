@@ -3,7 +3,7 @@
  * The CSP (style-src 'self') forbids the inline style attributes Shiki's HTML
  * renderer emits, so tokens map to semantic classes colored by the --code-*
  * design tokens (dual-mode via prefers-color-scheme, zero runtime JS).
- * Consumed by the rehype plugin (markdown code fences) and .astro pages.
+ * Consumed by rehype-code-classes (markdown code fences).
  */
 import { createHighlighter, type Highlighter } from 'shiki';
 
@@ -50,7 +50,7 @@ function classFor(scopes: readonly string[]): string | null {
   return null;
 }
 
-export function escapeHtml(s: string): string {
+function escapeHtml(s: string): string {
   return s
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')

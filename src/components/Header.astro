@@ -13,7 +13,7 @@ const path = Astro.url.pathname;
 // slashed href compares against a double slash and nested routes never match.
 const isCurrent = (href: string) => {
   const base = href.replace(/\/$/, '');
-  return path === base || path === `${base}/` || path.startsWith(`${base}/`);
+  return path === base || path.startsWith(`${base}/`);
 };
 ---
 

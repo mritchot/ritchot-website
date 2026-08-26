@@ -17,13 +17,19 @@
     return t === 'light' || t === 'dark' ? t : 'system';
   }
 
-  function apply(mode) {
+  /* persist only on a user toggle: the pre-paint call re-applies what is
+     already stored, and a synchronous write is not free at that moment */
+  function apply(mode, persist) {
+    if (mode === 'system') {
+      delete root.dataset.theme;
+    } else {
+      root.dataset.theme = mode;
+    }
+    if (!persist) return;
     try {
       if (mode === 'system') {
-        delete root.dataset.theme;
         localStorage.removeItem(KEY);
       } else {
-        root.dataset.theme = mode;
         localStorage.setItem(KEY, mode);
       }
     } catch (e) {
@@ -31,7 +37,7 @@
     }
   }
 
-  apply(stored());
+  apply(stored(), false);
 
   /* header control: cycle system → light → dark */
   var GLYPH = { system: '◐', light: '○', dark: '●' };
@@ -49,7 +55,7 @@
     var mode = stored();
     function set(m) {
       mode = m;
-      apply(m);
+      apply(m, true);
       btn.textContent = GLYPH[m];
       btn.setAttribute('aria-label', label(m));
       btn.title = label(m);
