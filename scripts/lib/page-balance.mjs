@@ -1,6 +1,6 @@
-/** Page-balance measurement, shared verbatim with ritchot-website.
+/** Page-balance measurement, shared verbatim with rescv-pdf-generator.
  *
- * MIRROR. The canonical copy is rescv-pdf-generator/src/page-balance.mjs.
+ * MIRROR COPY. The canonical file is rescv-pdf-generator/src/page-balance.mjs.
  * This header is the only part that differs between the two files, which is
  * why it sits above the marker below and is excluded from the hash.
  */
@@ -63,6 +63,15 @@ export const RESUME_SIZES = [8.5, 8.4, 8.3, 8.2, 8.1, 8, 7.9, 7.8, 7.7, 7.6, 7.5
  * that fits the page limit is used anyway — balance never blocks a write. */
 export const MAX_TRAILING_GAP = 0.1;
 
+/** Page geometry both producers print with, so the site's resume, a rescv
+ * resume, and its cover letter sit on one grid. A4 portrait; the height
+ * constant below pairs with it. */
+export const GEOMETRY = {
+  format: 'A4',
+  margin: { top: '11mm', bottom: '12mm', left: '13mm', right: '13mm' },
+  printBackground: false,
+};
+
 const PT_PER_MM = 2.8346;
 
 /** '11mm' | '13px' | 11 → points */
@@ -73,7 +82,9 @@ function toPoints(value) {
   return parseFloat(n) * scale;
 }
 
-/** A4 portrait height in points. Both documents only ever print A4. */
+/** A4 portrait height in points as Chromium's PDF writer emits it (MediaBox
+ * 842.88 — not ISO's nominal 841.89pt; do not "correct" it, every gap fraction
+ * shifts). Both documents only ever print A4. */
 const A4_HEIGHT = 842.88;
 
 /** Wraps the last word of every block that can finish a page in a marker link.
@@ -143,3 +154,92 @@ export function trailingGaps(pdf, pageOpts) {
     return Math.max(0, (lowest - bottom) / contentHeight);
   });
 }
+
+/** The fitting policy both PDF producers share: walk candidate sizes largest
+ * first, keep the largest that fits the page limit AND leaves no oversized
+ * hole at the foot of a non-final page; when none balances, the largest that
+ * merely fits stands in. Fit is a gate, balance a preference — the pick is
+ * null only when nothing fits at all.
+ *
+ * Stateful so a driver can stop rendering the moment the winner is known:
+ * `consider` returns true when no later (smaller) size can beat what it holds.
+ *
+ * @param {{maxPages: number, balance: number}} opts
+ * @returns {{consider(size: number, pages: number, gaps: number[]): boolean,
+ *            result(): {pick: {size: number, gap: number}|null,
+ *                       balanced: boolean,
+ *                       smallest: {size: number, pages: number}|null}}}
+ */
+export function fittingPick({ maxPages, balance }) {
+  let smallest = null;
+  let chosen = null;
+  let fallback = null;
+  return {
+    consider(size, pages, gaps) {
+      smallest = { size, pages };
+      if (pages > maxPages) return false;
+      // the final page is allowed to run short; only a hole mid-document counts
+      const nonFinal = gaps.slice(0, -1);
+      const gap = nonFinal.length ? Math.max(...nonFinal) : 0;
+      // first fitting size seen is the largest, and stands in if none balances
+      if (fallback === null) fallback = { size, gap };
+      if (gap <= balance) {
+        chosen = { size, gap };
+        return true;
+      }
+      return false;
+    },
+    result() {
+      return { pick: chosen ?? fallback, balanced: chosen !== null, smallest };
+    },
+  };
+}
+
+/** Marker annotations present in a document. The shipped artifact must count
+ * zero: markers exist only in the instrumented measurement renders, and a
+ * clean reprint that still carries one was not clean.
+ *
+ * @param {PDFDocument} pdf
+ * @returns {number}
+ */
+export function countMarkerAnnotations(pdf) {
+  let n = 0;
+  for (const page of pdf.getPages()) {
+    const annots = page.node.Annots();
+    if (!annots) continue;
+    for (let i = 0; i < annots.size(); i += 1) {
+      const annot = annots.lookup(i);
+      const action = annot?.lookup?.(annot.context.obj('A'));
+      const uri = action?.lookup?.(annot.context.obj('URI'));
+      const href = uri?.decodeText ? uri.decodeText() : uri?.asString?.();
+      if (href?.includes('marker.invalid')) n += 1;
+    }
+  }
+  return n;
+}
+
+/** Measures one sample string's advance width at weights 400 and 700, in the
+ * page context, through the same shaping stack the render uses.
+ *
+ * A broken font stack can drop a variable font's weight axis and print every
+ * bold glyph at regular weight — silently, on a zero exit, invisible to text
+ * extraction. Equal widths at the two weights are that failure's geometric
+ * signature: healthy instancing of Source Serif 4 measures bold about 4%
+ * wider. Callers refuse the render when bold/regular falls below
+ * WEIGHT_PROBE_MIN.
+ *
+ * Runs in the page context. */
+export function probeBoldWidths() {
+  const ctx = document.createElement('canvas').getContext('2d');
+  const sample = 'Hamburgefonstiv Experience 2026';
+  ctx.font = '400 32px "Source Serif 4"';
+  const regular = ctx.measureText(sample).width;
+  ctx.font = '700 32px "Source Serif 4"';
+  const bold = ctx.measureText(sample).width;
+  return { regular, bold };
+}
+
+/** Minimum bold/regular width ratio a render must show before it is trusted
+ * with bold text. Healthy environments measure about 1.04; a dropped weight
+ * axis measures exactly 1.0. */
+export const WEIGHT_PROBE_MIN = 1.01;
