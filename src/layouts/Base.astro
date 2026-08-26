@@ -46,7 +46,7 @@ const structuredData = [personLd, ...jsonLd];
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <!-- D23: sets data-theme from localStorage before first paint (no FOUC).
-         Synchronous by design; ~0.4 KB. External file per the CSP. -->
+         Synchronous by design; ~0.9 KB gzipped. External file per the CSP. -->
     <script src="/theme.js" is:inline></script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {description && <meta name="description" content={description} />}
@@ -87,8 +87,13 @@ const structuredData = [personLd, ...jsonLd];
       crossorigin
     />
     {
+      /* < is <-escaped so no string value can close the script element early */
       structuredData.map((data) => (
-        <script type="application/ld+json" is:inline set:html={JSON.stringify(data)} />
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify(data).replaceAll('<', '\\u003c')}
+        />
       ))
     }
   </head>

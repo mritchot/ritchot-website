@@ -1,7 +1,10 @@
 ---
 /**
  * Dormant email-subscription partial (§3.6). Renders NOTHING until
- * ENDPOINT is set — activation is one constant, zero markup changes:
+ * ENDPOINT is set — activation is this constant plus one CSP change, zero
+ * markup changes. The deployed policy (public/_headers) sends
+ * form-action 'none', which blocks every submit; activation must also
+ * allow the chosen endpoint there.
  *  - Buttondown: form action = their API endpoint, enable RSS-to-email
  *    against /feed.xml, disable tracking pixels (option A);
  *  - self-built: point at a Worker POST /api/subscribe route (option B).

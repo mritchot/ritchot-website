@@ -25,7 +25,7 @@
  * Printing restores every paragraph to the baseline first.
  */
 import { prepareWithSegments } from '@chenglou/pretext';
-import { breakParagraph, type GlueRef, type Item, type ShyRef } from './kp';
+import { breakParagraph, type Item, type ShyRef } from './kp';
 
 const SHY = '­';
 const WS = /[\t\n\r\f ]/;
@@ -347,7 +347,7 @@ function enhance(cand: Candidate): void {
   ) {
     return skip('content');
   }
-  // eslint-disable-next-line no-misleading-character-class -- RTL guard
+  // RTL guard: Hebrew/Arabic ranges and directional control marks
   if (/[֐-ࣿ‏‫‮]/.test(p.textContent ?? '')) {
     return skip('rtl');
   }

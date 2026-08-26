@@ -70,7 +70,10 @@ const STYLE_ID = 'resume-size-override';
  * measure its own leftovers. The reload also means the override tag can never
  * stack — it is created once per load and rewritten in place if it survives. */
 async function prepare(page, url, size) {
-  await page.goto(url, { waitUntil: 'networkidle' });
+  // 'load' suffices for a fully local static page; the fonts.ready gate below
+  // covers the one late-arriving layout input. 'networkidle' added a ~500ms
+  // idle floor to each of up to 11 ladder reloads.
+  await page.goto(url, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
 
   await page.evaluate(
@@ -121,7 +124,7 @@ try {
   const url = `http://localhost:${PORT}/resume/`;
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  // belt to motion.ts's beforeprint reveal: the D24 script no-ops entirely
+  // measurement must not race any motion; emulate reduced-motion as a belt
   await page.emulateMedia({ reducedMotion: 'reduce' });
 
   // fit: largest size that holds two pages AND fills the foot of page one.
@@ -132,7 +135,13 @@ try {
 
   for (const size of RESUME_SIZES) {
     await prepare(page, url, size);
-    await page.evaluate(injectMarkers);
+    const markers = await page.evaluate(injectMarkers);
+    if (markers === 0) {
+      throw new Error(
+        'injectMarkers matched no blocks — the selectors in page-balance.mjs ' +
+          'drifted from resume.astro, and the balance fit would silently no-op.',
+      );
+    }
 
     const buffer = await page.pdf(GEOMETRY);
     const pdf = await PDFDocument.load(buffer, { updateMetadata: false });

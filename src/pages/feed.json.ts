@@ -1,5 +1,5 @@
 import type { APIContext } from 'astro';
-import { absolutizeHtml, sortedWriting, urlOf, type Writing } from '../lib/writing';
+import { feedHtml, renderedHtml, sortedWriting, urlOf, type Writing } from '../lib/writing';
 
 /** JSON Feed 1.1 — https://jsonfeed.org/version/1.1 */
 interface FeedAuthor {
@@ -36,9 +36,9 @@ function feedItem(entry: Writing, site: string): FeedItem {
     url,
     title: entry.data.title,
     summary: entry.data.summary,
-    // Same treatment as the XML feeds: soft hyphens are a page-rendering
-    // concern, and readers handle relative references unreliably.
-    content_html: absolutizeHtml((entry.rendered?.html ?? '').replaceAll('\u00ad', ''), site, url),
+    // Same treatment as the XML feeds: feedHtml strips the page-only markup
+    // and absolutizes references.
+    content_html: feedHtml(renderedHtml(entry), site, url),
     date_published: entry.data.date.toISOString(),
     date_modified: (entry.data.updated ?? entry.data.date).toISOString(),
     tags: [entry.data.type],
