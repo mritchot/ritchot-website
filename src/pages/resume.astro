@@ -478,6 +478,13 @@ const personLd = {
       margin-block-start: 0.35rem;
     }
 
+    /* sized against the contact line's own type, so the header keeps its
+       proportions at whatever root size the PDF fit settles on */
+    .contact svg {
+      inline-size: 1.65em;
+      block-size: 1.65em;
+    }
+
     /* the email returns in print (17-07-2026 ruling) */
     .contact .print-only {
       display: inline-flex;
@@ -542,6 +549,11 @@ const personLd = {
       margin-block-start: 0.25rem;
       gap: 0.1rem;
       font-size: 0.76rem;
+    }
+
+    /* same borrowed serif as .bullets, so both lists carry one disc style */
+    .certs li::marker {
+      font-family: Georgia, 'Times New Roman', serif;
     }
 
     .featured-links {

@@ -10,7 +10,7 @@
     "dev": "astro dev",
     "build": "node scripts/page-dates.mjs --check && astro check && astro build && node scripts/sitemap-lastmod-date-only.mjs && node scripts/assert-no-webp.mjs",
     "page-dates": "node scripts/page-dates.mjs",
-    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test 'test/*.test.mjs'",
+    "test": "node scripts/run-tests.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "resume:pdf": "node scripts/resume-pdf.mjs"
