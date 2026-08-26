@@ -10,6 +10,7 @@
 
 ## Notable writing
 
+- [I built an AI Literacy course](https://ritchot.me/writing/i-built-an-ai-literacy-course/) — expanding a capstone into a four-module AI literacy program in roughly 210 hours, and what that compression says about the future of learning and development.
 - [reflections, and the state of LLMs at the end of 2025](https://ritchot.me/writing/reflections-and-the-state-of-llms-in-2025/) — a year-end look at LLMs becoming ordinary software, and why 2026 is for building instead of benchmarking.
 - [GPT-5 has come a long way in Mathematics](https://ritchot.me/writing/gpt-5-has-come-a-long-way-in-mathematics/) — re-running last year's CEMC test against GPT-5: 98% per-attempt accuracy ends the era of unreliable AI mathematics.
 - [on writing, and an MIT study](https://ritchot.me/writing/on-writing-and-an-mit-study/) — the MIT "Your Brain on ChatGPT" study is being misread: what it actually shows, and where its methodology wobbles.
@@ -19,6 +20,7 @@
 ## Projects
 
 - [AI Literacy for the Modern Workforce](https://ritchot.me/projects/ai-literacy-platform/) — a four-module, research-grounded AI literacy program on a custom-built platform, live at [ai-literacy.ritchot.me](https://ai-literacy.ritchot.me/).
+- [JP-Startpage](https://ritchot.me/projects/jp-startpage/) — a keyboard-first browser startpage styled as a pseudo-Japanese terminal, shipped as a Manifest V3 extension for Chrome and Firefox.
 
 ## Implementation
 

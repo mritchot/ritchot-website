@@ -238,8 +238,7 @@ section.footnotes li + li {
   }
 }
 
-/* --- theme toggle (D23) — element is built by /theme.js, so styles live
-       here rather than in the scoped header component --- */
+/* --- theme toggle (D23) — statically rendered by Header, wired by /theme.js --- */
 
 .theme-toggle {
   font-family: var(--font-mono);

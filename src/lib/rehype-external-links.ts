@@ -13,7 +13,7 @@ import type { Element, Root, RootContent } from 'hast';
 /** Matches astro.config.ts `site`. */
 const SITE_ORIGIN = 'https://ritchot.me';
 
-/** Shared with the components that hand-write anchors (footer, about, resume,
+/** Shared with the components that build anchors from data (resume, project
  * quicklinks, hub collections) so one rule governs the whole site. */
 export function isExternalHref(href: string): boolean {
   if (!/^https?:\/\//i.test(href)) return false;

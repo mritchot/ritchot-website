@@ -128,7 +128,7 @@ function absorbance(c: [number, number, number], dark: boolean): [number, number
   const f = (x: number): number =>
     dark ? -Math.log(1 - clamp01(x) * 0.92) : -Math.log(Math.max(x, 0.03));
   // in light mode a channel the ink reflects fully should not absorb at all
-  return dark ? [f(c[0]), f(c[1]), f(c[2])] : [f(c[0]), f(c[1]), f(c[2])];
+  return [f(c[0]), f(c[1]), f(c[2])];
 }
 
 type Vec3 = [number, number, number];
@@ -228,7 +228,7 @@ export function mountSuminagashi(host: HTMLElement): void {
     h: number;
   }
 
-  function field(w: number, h: number, internal: number, format: number): Field {
+  function field(w: number, h: number, internal: number): Field {
     const tex = gl!.createTexture()!;
     gl!.bindTexture(gl!.TEXTURE_2D, tex);
     gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MIN_FILTER, gl!.LINEAR);
@@ -242,6 +242,11 @@ export function mountSuminagashi(host: HTMLElement): void {
     return { tex, fbo, w, h };
   }
 
+  function drop(f: Field): void {
+    gl!.deleteTexture(f.tex);
+    gl!.deleteFramebuffer(f.fbo);
+  }
+
   const P = {
     advect: program(FRAG.advect),
     splat: program(FRAG.splat),
@@ -251,7 +256,22 @@ export function mountSuminagashi(host: HTMLElement): void {
     composite: program(FRAG.composite),
     retint: program(FRAG.retint),
   };
-  const U = (p: WebGLProgram, n: string): WebGLUniformLocation | null => gl!.getUniformLocation(p, n);
+  // uniform locations are fixed after link: resolve each (program, name) once,
+  // not per frame
+  const uloc = new Map<WebGLProgram, Map<string, WebGLUniformLocation | null>>();
+  const U = (p: WebGLProgram, n: string): WebGLUniformLocation | null => {
+    let locs = uloc.get(p);
+    if (!locs) {
+      locs = new Map();
+      uloc.set(p, locs);
+    }
+    let loc = locs.get(n);
+    if (loc === undefined) {
+      loc = gl!.getUniformLocation(p, n);
+      locs.set(n, loc);
+    }
+    return loc;
+  };
 
   function draw(target: Field | null): void {
     if (target) {
@@ -280,13 +300,13 @@ export function mountSuminagashi(host: HTMLElement): void {
   let simH = 104;
   let dyeW = 416;
   let dyeH = 248;
-  let vel0 = field(simW, simH, gl.RG16F, gl.RG);
-  let vel1 = field(simW, simH, gl.RG16F, gl.RG);
-  let prs0 = field(simW, simH, gl.R16F, gl.RED);
-  let prs1 = field(simW, simH, gl.R16F, gl.RED);
-  let div = field(simW, simH, gl.R16F, gl.RED);
-  let dye0 = field(dyeW, dyeH, gl.RGBA16F, gl.RGBA);
-  let dye1 = field(dyeW, dyeH, gl.RGBA16F, gl.RGBA);
+  let vel0 = field(simW, simH, gl.RG16F);
+  let vel1 = field(simW, simH, gl.RG16F);
+  let prs0 = field(simW, simH, gl.R16F);
+  let prs1 = field(simW, simH, gl.R16F);
+  let div = field(simW, simH, gl.R16F);
+  let dye0 = field(dyeW, dyeH, gl.RGBA16F);
+  let dye1 = field(dyeW, dyeH, gl.RGBA16F);
 
   const swapV = (): void => { const t = vel0; vel0 = vel1; vel1 = t; };
   const swapP = (): void => { const t = prs0; prs0 = prs1; prs1 = t; };
@@ -341,6 +361,7 @@ export function mountSuminagashi(host: HTMLElement): void {
   let aspect = 1;
   let raf = 0;
   let active = true;
+  let dead = false; // set on context loss: the sim never restarts
   let onScreen = true;
   let last = 0;
   let frameEma = 16;
@@ -445,10 +466,13 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.clearColor(0, 0, 0, 1); gl!.clear(gl!.COLOR_BUFFER_BIT);
     gl!.useProgram(P.pressure);
     gl!.uniform2f(U(P.pressure, 'u_texel'), 1 / simW, 1 / simH);
+    // sampler indices and the div texture are loop-invariant; only the
+    // ping-ponged pressure source rebinds per iteration
+    gl!.uniform1i(U(P.pressure, 'u_prs'), 0);
+    gl!.uniform1i(U(P.pressure, 'u_div'), 1);
+    bind(1, div.tex);
     for (let i = 0; i < jacobiN; i++) {
-      bind(0, prs0.tex); bind(1, div.tex);
-      gl!.uniform1i(U(P.pressure, 'u_prs'), 0);
-      gl!.uniform1i(U(P.pressure, 'u_div'), 1);
+      bind(0, prs0.tex);
       draw(prs1); swapP();
     }
 
@@ -459,7 +483,7 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.uniform2f(U(P.gradient, 'u_texel'), 1 / simW, 1 / simH);
     draw(vel1); swapV();
 
-    // dye advection + dissolution (faster inside the overlay clearing zone)
+    // dye advection + dissolution
     gl!.useProgram(P.advect);
     bind(0, dye0.tex); bind(1, vel0.tex);
     gl!.uniform1i(U(P.advect, 'u_src'), 0);
@@ -543,8 +567,8 @@ export function mountSuminagashi(host: HTMLElement): void {
     jacobiN = degraded >= 2 ? 8 : 12;
     dyeW = Math.max(104, dyeW >> 1);
     dyeH = Math.max(62, dyeH >> 1);
-    const nd0 = field(dyeW, dyeH, gl!.RGBA16F, gl!.RGBA);
-    const nd1 = field(dyeW, dyeH, gl!.RGBA16F, gl!.RGBA);
+    const nd0 = field(dyeW, dyeH, gl!.RGBA16F);
+    const nd1 = field(dyeW, dyeH, gl!.RGBA16F);
     // carry the current dye across
     gl!.useProgram(P.splat);
     bind(0, dye0.tex);
@@ -554,20 +578,25 @@ export function mountSuminagashi(host: HTMLElement): void {
     gl!.uniform1f(U(P.splat, 'u_radius'), 1);
     gl!.uniform1f(U(P.splat, 'u_aspect'), 1);
     draw(nd0);
+    // free the replaced GPU allocations now — GC of the JS wrappers is too
+    // late for exactly the machines that reach this path
+    drop(dye0); drop(dye1);
     dye0 = nd0; dye1 = nd1;
     if (degraded >= 2) {
       // velocity re-establishes from the stirrers within a couple of pours
+      for (const f of [vel0, vel1, prs0, prs1, div]) drop(f);
       simW = Math.max(88, simW >> 1);
       simH = Math.max(52, simH >> 1);
-      vel0 = field(simW, simH, gl!.RG16F, gl!.RG);
-      vel1 = field(simW, simH, gl!.RG16F, gl!.RG);
-      prs0 = field(simW, simH, gl!.R16F, gl!.RED);
-      prs1 = field(simW, simH, gl!.R16F, gl!.RED);
-      div = field(simW, simH, gl!.R16F, gl!.RED);
+      vel0 = field(simW, simH, gl!.RG16F);
+      vel1 = field(simW, simH, gl!.RG16F);
+      prs0 = field(simW, simH, gl!.R16F);
+      prs1 = field(simW, simH, gl!.R16F);
+      div = field(simW, simH, gl!.R16F);
     }
   }
 
   function wake(): void {
+    if (dead) return;
     if (document.visibilityState === 'visible' && onScreen) {
       active = true;
       if (!raf) {
@@ -587,6 +616,7 @@ export function mountSuminagashi(host: HTMLElement): void {
   host.addEventListener(
     'pointerdown',
     (e) => {
+      if (dead) return;
       const rect = host.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1 - (e.clientY - rect.top) / rect.height;
@@ -600,6 +630,7 @@ export function mountSuminagashi(host: HTMLElement): void {
   host.addEventListener(
     'pointermove',
     (e) => {
+      if (dead) return;
       const rect = host.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1 - (e.clientY - rect.top) / rect.height;
@@ -624,7 +655,7 @@ export function mountSuminagashi(host: HTMLElement): void {
     { passive: true },
   );
 
-  // --- control panel: quiet mono chrome, exists only when the sim runs ---
+  // --- dye reset: degenerate-fit fallback for refreshPalette's retint ---
   function clearDye(): void {
     for (const f of [dye0, dye1]) {
       gl!.bindFramebuffer(gl!.FRAMEBUFFER, f.fbo);
@@ -640,7 +671,8 @@ export function mountSuminagashi(host: HTMLElement): void {
     else { active = false; sleep(); }
   });
   const io = new IntersectionObserver((entries) => {
-    onScreen = entries[0]?.isIntersecting ?? true;
+    // batched transitions arrive oldest-first; only the last reflects now
+    onScreen = entries.at(-1)?.isIntersecting ?? true;
     if (onScreen && document.visibilityState === 'visible') wake();
     else { active = false; sleep(); }
   });
@@ -649,6 +681,7 @@ export function mountSuminagashi(host: HTMLElement): void {
   new ResizeObserver(() => resize()).observe(host);
 
   function refreshPalette(): void {
+    if (dead) return;
     const prev = palette;
     palette = readPalette();
     strokeInk = palette.inks[0]!.vec;
@@ -690,6 +723,9 @@ export function mountSuminagashi(host: HTMLElement): void {
 
   canvas.addEventListener('webglcontextlost', (e) => {
     e.preventDefault();
+    dead = true; // every wake path checks this: no restart against a lost context
+    active = false;
+    io.disconnect();
     sleep();
     canvas.remove(); // the plain page is the failure state
   });
@@ -698,7 +734,6 @@ export function mountSuminagashi(host: HTMLElement): void {
   resize();
   host.appendChild(canvas);
   const t0 = performance.now();
-  nextPourAt = t0 + 350; // first pour almost immediately; crossfade begins on it
   // seed the field with two quick pours so the reveal is already alive
   schedulePour(t0);
   activePours[0]!.x = 0.42; activePours[0]!.y = 0.55;

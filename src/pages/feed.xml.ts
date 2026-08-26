@@ -1,6 +1,6 @@
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
-import { absolutizeHtml, sortedWriting, urlOf } from '../lib/writing';
+import { feedHtml, renderedHtml, sortedWriting, urlOf } from '../lib/writing';
 
 export async function GET(context: APIContext): Promise<Response> {
   const entries = await sortedWriting();
@@ -18,13 +18,9 @@ export async function GET(context: APIContext): Promise<Response> {
       description: entry.data.summary,
       pubDate: entry.data.date,
       link: urlOf(entry),
-      // Full content (rendered at build by the content layer), per D2/§3.5.
-      // Baked soft hyphens are a page-rendering concern; feeds get clean text.
-      content: absolutizeHtml(
-        (entry.rendered?.html ?? '').replaceAll('\u00ad', ''),
-        context.site!,
-        new URL(urlOf(entry), context.site!).href,
-      ),
+      // Full content (rendered at build by the content layer), per D2/§3.5;
+      // feedHtml strips the page-only markup and absolutizes references.
+      content: feedHtml(renderedHtml(entry), context.site!, new URL(urlOf(entry), context.site!).href),
       categories: [entry.data.type],
     })),
   });

@@ -1,12 +1,6 @@
 import type { APIContext } from 'astro';
-import { absolutizeHtml, sortedWriting, urlOf, type Writing } from '../lib/writing';
-
-const esc = (s: string): string =>
-  s
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;');
+import { escapeXml as esc } from '../lib/feed-html';
+import { feedHtml, renderedHtml, sortedWriting, urlOf, type Writing } from '../lib/writing';
 
 function entryXml(entry: Writing, site: string): string {
   const url = new URL(urlOf(entry), site).href;
@@ -18,7 +12,7 @@ function entryXml(entry: Writing, site: string): string {
     <updated>${(entry.data.updated ?? entry.data.date).toISOString()}</updated>
     <summary>${esc(entry.data.summary)}</summary>
     <category term="${esc(entry.data.type)}"/>
-    <content type="html">${esc(absolutizeHtml((entry.rendered?.html ?? '').replaceAll('\u00ad', ''), site, url))}</content>
+    <content type="html">${esc(feedHtml(renderedHtml(entry), site, url))}</content>
   </entry>`;
 }
 
