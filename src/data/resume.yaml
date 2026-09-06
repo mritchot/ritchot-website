@@ -15,7 +15,7 @@ contact:
   website: https://ritchot.me
 
 summary: >-
-  International educator with over 10 years of classroom experience across
+  International educator with 11 years of classroom experience across
   four countries, spanning MYP Design, Mathematics, Computer Science, and
   Sciences. Built a parallel track in educational technology leadership:
   digital learning ecosystems, emergent technology integration, and staff
@@ -107,8 +107,7 @@ experience:
           rubrics from a single design specification with Claude Cowork.
           EAL vocabulary scaffolding runs throughout, improving curricular
           progression and assessment coverage. Configured a Flint AI tutor
-          to enforce the units' own assessment and academic integrity
-          policy.
+          as a Socratic guide for students.
       - >-
           Designed a cross-departmental AI literacy lesson for the IB
           Sports and Exercise Science team, translating principles from
@@ -145,10 +144,14 @@ experience:
           standards, achieving standardized scores 11–17% above the
           assessment average.
       - >-
-          Developed 13 interdisciplinary MYP investigations for Grades 8
-          and 9, including designing task-specific assessment rubrics
-          based on MYP Mathematics Criteria, and training on the usage of
-          generative AI tools to assist with rubric creation.
+          Overhauled the Middle School Mathematics program to follow both
+          Alberta and IB standards, and developed 13 interdisciplinary MYP
+          Mathematics investigations for Grades 8 and 9, including
+          designing task-specific assessment rubrics based on MYP
+          Mathematics Criteria, and training on the usage of generative AI
+          tools to assist with rubric creation. One investigation had
+          students generate design ideas with AI tools and 3D-print scale
+          architectural models.
       - >-
           Developed and revised internal assessments for Grades 7 through
           9 (MYP 2 through 4), including blueprint maps and mark schemes.
@@ -165,7 +168,8 @@ experience:
           and provided new avenues for authentic emergent technology use
           for learning.
       - >-
-          Consolidated and reorganized Secondary Mathematics resources,
+          Consolidated and reorganized Secondary Mathematics resources
+          into a shared system that grew into a Google Workspace redesign,
           creating comprehensive informational documentation. This
           initiative enhanced both synchronous and asynchronous
           collaboration among teachers, improved transparency between
@@ -202,6 +206,9 @@ experience:
     location: Sokcho, South Korea
     period: August 2016 – July 2018
     bullets:
+      - >-
+          Built the Middle School Computer Science curriculum, defining
+          the scope, sequence, and assessment for Grades 7 – 9.
       - >-
           Taught and designed courses in Grade 7 – 9 Mathematics, Computer
           Science, Sciences, and Physical Education, following British
