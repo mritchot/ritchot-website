@@ -1,0 +1,17 @@
+{
+  // The collector is type-checked apart from the Astro app: it needs the
+  // Workers runtime globals, which conflict with the DOM lib astro check uses.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "types": ["@cloudflare/workers-types"],
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
+  },
+  "include": ["./**/*.ts"]
+}

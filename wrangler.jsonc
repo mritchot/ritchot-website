@@ -3,9 +3,34 @@
   "name": "ritchot-website",
   // Newest date supported by the workerd bundled with the pinned wrangler.
   "compatibility_date": "2026-07-08",
-  // Pure static site: no Worker script — Workers serves dist/ as assets.
+  // The edge collector (src/worker/): serves dist/ through the assets binding
+  // unchanged and records page, feed, and document GETs to D1 in the
+  // background. Schema and dashboard live in the ritchot-stats repo.
+  "main": "src/worker/index.ts",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
-  }
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // The Worker runs first so it can see page, feed, and document requests.
+    // Hashed build output, images, fonts, OG images, and the two per-page
+    // fetches are served straight from assets and never invoke it.
+    "run_worker_first": ["/*", "!/_astro/*", "!/images/*", "!/fonts/*", "!/og/*", "!/theme.js", "!/favicon.svg"]
+  },
+  "vars": {
+    // Rows are recorded only for this hostname, so a preview deployment on
+    // workers.dev never writes into the production table.
+    "SITE_HOST": "ritchot.me"
+  },
+  "d1_databases": [
+    {
+      "binding": "STATS",
+      "database_name": "ritchot-stats",
+      // Paste the id printed by `wrangler d1 create ritchot-stats` (run from
+      // the ritchot-stats repo, which owns the migrations) before merging.
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+    }
+  ]
+  // Secret, set in the dashboard or with `wrangler secret put VISITOR_SALT`:
+  // a long random string mixed into the daily visitor hash. Without it the
+  // Worker serves normally and records nothing.
 }

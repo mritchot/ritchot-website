@@ -8,12 +8,13 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/page-dates.mjs --check && astro check && astro build && node scripts/sitemap-lastmod-date-only.mjs && node scripts/assert-no-webp.mjs",
+    "build": "node scripts/page-dates.mjs --check && astro check && npm run check:worker && astro build && node scripts/sitemap-lastmod-date-only.mjs && node scripts/assert-no-webp.mjs",
     "page-dates": "node scripts/page-dates.mjs",
     "test": "node scripts/run-tests.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "resume:pdf": "node scripts/resume-pdf.mjs"
+    "resume:pdf": "node scripts/resume-pdf.mjs",
+    "check:worker": "tsc -p src/worker/tsconfig.json"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@cloudflare/workers-types": "^5.20260907.1",
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@fontsource/source-serif-4": "^5.2.9",
     "@resvg/resvg-js": "^2.6.2",

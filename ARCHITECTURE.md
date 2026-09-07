@@ -134,8 +134,12 @@ metric-compatible fallbacks.
 
 Strict CSP (`default-src 'none'`, self-only script/style/img/font,
 no inline anything), no cookies, no third-party requests of any kind.
-One localStorage key stores the theme override. Analytics are edge-side
-request metrics at the host; the pages ship zero measurement bytes.
+One localStorage key stores the theme override. Analytics are first-party
+and edge-side: a Worker in front of the static assets records successful
+page, feed, and document requests to D1 (path, referring host, browser
+family, country, and a visitor hash salted per UTC day; no address is ever
+stored) and serves the response unchanged. The pages ship zero measurement
+bytes.
 
 ## Licensing
 
