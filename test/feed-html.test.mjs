@@ -21,6 +21,18 @@ test('strips a sidenote copy whose content spans lines and elements', () => {
   assert.equal(feedHtml(html, SITE, PAGE), '<p>xy</p>');
 });
 
+test('strips every sidenote copy in a paragraph, not only the first', () => {
+  const html =
+    '<p>a<small class="sidenote"><sup>1</sup> one</small>b<small class="sidenote"><sup>2</sup> two</small>c</p>';
+  assert.equal(feedHtml(html, SITE, PAGE), '<p>abc</p>');
+});
+
+test('strips a multi-paragraph copy carrying block spans', () => {
+  const html =
+    '<p>x<small class="sidenote"><sup>1</sup> <span class="sidenote-p">a</span><span class="sidenote-p">b</span></small>y</p>';
+  assert.equal(feedHtml(html, SITE, PAGE), '<p>xy</p>');
+});
+
 test('leaves small elements without the sidenote class alone', () => {
   const html = '<p><small>fine print</small></p>';
   assert.equal(feedHtml(html, SITE, PAGE), html);

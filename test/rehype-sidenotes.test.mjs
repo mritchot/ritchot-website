@@ -1,5 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { raw } from 'hast-util-raw';
+import { toHtml } from 'hast-util-to-html';
 import rehypeSidenotes from '../src/lib/rehype-sidenotes.ts';
 
 // Minimal GFM output shape, per mdast-util-to-hast: the backref anchor sits
@@ -59,10 +61,45 @@ test('a single-paragraph definition unwraps to inline content', () => {
   assert.ok(!JSON.stringify(sidenotesIn(tree)[0]).includes('"tagName":"p"'));
 });
 
-test('a multi-paragraph definition keeps its paragraphs in the copy', () => {
+test('a multi-paragraph definition keeps its breaks as block spans, never a nested <p>', () => {
   const tree = fixture();
   rehypeSidenotes()(tree);
-  assert.ok(JSON.stringify(sidenotesIn(tree)[1]).includes('"tagName":"p"'));
+  const copy = sidenotesIn(tree)[1];
+  const spans = copy.children.filter((c) => c.tagName === 'span');
+  assert.equal(spans.length, 2);
+  assert.ok(spans.every((s) => s.properties.className.includes('sidenote-p')));
+  assert.ok(!JSON.stringify(copy).includes('"tagName":"p"'));
+});
+
+test('the host paragraph survives HTML tree construction in one piece', () => {
+  // Astro runs rehype-raw after this plugin. A <p> inside the copy would end
+  // the host paragraph there and strand the prose after the reference.
+  const tree = fixture();
+  rehypeSidenotes()(tree);
+  const html = toHtml(raw(tree));
+  assert.ok(html.startsWith('<p>Sentence<sup>'), html);
+  assert.ok(html.includes('</small>.</p><section'), html);
+  assert.equal((html.match(/<p>/g) ?? []).length, 4, html);
+  assert.doesNotMatch(html, /<p><\/p>/);
+});
+
+test('backref arrows get the text-presentation selector, and only once', () => {
+  const tree = fixture();
+  tree.children[1].children[0].children[0].children[0].children[1].children[0].value = '↩\uFE0E';
+  rehypeSidenotes()(tree);
+  const arrows = [];
+  (function walk(n) {
+    if (n.properties?.dataFootnoteBackref !== undefined) arrows.push(n.children[0].value);
+    (n.children || []).forEach(walk);
+  })(tree.children[1]);
+  assert.deepEqual(arrows, ['↩\uFE0E', '↩\uFE0E']);
+});
+
+test('a reference to an undefined footnote inserts no copy', () => {
+  const tree = fixture();
+  tree.children[0].children.push(ref(9));
+  rehypeSidenotes()(tree);
+  assert.equal(sidenotesIn(tree).length, 2);
 });
 
 test('a document without footnotes is untouched', () => {

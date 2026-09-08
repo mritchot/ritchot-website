@@ -209,6 +209,16 @@ section.footnotes li + li {
   margin-inline-end: 0.15em;
 }
 
+/* a multi-paragraph note keeps its breaks as block spans: the copy lives
+   inside the paragraph that carries the reference, where a <p> cannot nest */
+.sidenote .sidenote-p {
+  display: block;
+}
+
+.sidenote .sidenote-p + .sidenote-p {
+  margin-block-start: 0.5em;
+}
+
 @media (min-width: 1200px) {
   .sidenote {
     display: block;

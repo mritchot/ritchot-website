@@ -20,14 +20,23 @@ function dropBackrefs(nodes: ElementContent[]): ElementContent[] {
     .map((c) => (isElement(c) ? { ...c, children: dropBackrefs(c.children) } : c));
 }
 
+/** Content for the inline copy. A single-paragraph definition unwraps to its
+ * inline children. A multi-block definition keeps its paragraphs, but as
+ * block-styled <span>s: the copy sits inside the paragraph that carries the
+ * reference, and rehype-raw (which Astro runs after this plugin) closes that
+ * paragraph at any nested <p>, stranding the prose after the reference. */
 function footnoteInline(li: Element): ElementContent[] {
-  // Unwrap a single-paragraph definition to inline content.
   const kept = dropBackrefs(li.children);
-  const first = kept.find(isElement);
-  if (kept.length >= 1 && first && first.tagName === 'p' && kept.filter(isElement).length === 1) {
+  const blocks = kept.filter(isElement);
+  const first = blocks[0];
+  if (first && first.tagName === 'p' && blocks.length === 1) {
     return first.children;
   }
-  return kept;
+  return kept.map((c) =>
+    isElement(c) && c.tagName === 'p'
+      ? { ...c, tagName: 'span', properties: { ...c.properties, className: ['sidenote-p'] } }
+      : c,
+  );
 }
 
 export default function rehypeSidenotes() {

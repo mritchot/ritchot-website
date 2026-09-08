@@ -8,7 +8,7 @@ two audiences — readers and hiring managers.
 
 1. **Efficiency.** Tiny, optimized pages. Static HTML by default;
    JavaScript is the exception, never the rule.
-2. **Simplicity.** One framework, one host, one repo. No CMS, no database,
+2. **Simplicity.** One framework, one host, one repo. No CMS, no content database,
    no build farm of services.
 3. **Ownership.** Content is markdown in git. Assets are self-hosted —
    fonts, images, documents. The only runtime third party is the host.
@@ -143,5 +143,6 @@ bytes.
 
 ## Licensing
 
-Code: MIT. Content under `src/content/**` and documents under
-`public/docs/`: © Michael Ritchot, all rights reserved.
+Code: MIT. Content under `src/content/**` and the documents I authored
+under `public/docs/`: © Michael Ritchot, all rights reserved. Third-party
+documents mirrored under `public/docs/` remain © their authors.
