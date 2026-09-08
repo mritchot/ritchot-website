@@ -26,6 +26,10 @@
 
 Static site built with Astro. Every page works with JavaScript disabled.
 
+## AI diligence
+
+Built with Anthropic's Claude under my direction; the writing is mine. Details in [DILIGENCE.md](DILIGENCE.md).
+
 ## License
 
 Code is MIT (see [LICENSE](LICENSE)). Original written content is © Michael Ritchot, all rights reserved.
