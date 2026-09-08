@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
 import { parse as parseYaml } from 'yaml';
 import rehypeCodeClasses from './src/lib/rehype-code-classes';
@@ -87,18 +88,22 @@ export default defineConfig({
     // Built-in Shiki emits inline style attributes; the CSP forbids them.
     // rehypeCodeClasses re-highlights fences with class-based output.
     syntaxHighlight: false,
+    // The remark/rehype pipeline stays the processor: Astro 7.3 defaults to
+    // Sätteri, which runs none of the plugins below.
     // external links first, so the sidenote copies cloned from footnote
     // definitions inherit target/rel; then figures (structure), code classes,
     // and sidenotes; rehypeShy runs last so the sidenote copies exist (and are
     // skipped) before soft hyphens are baked into the remaining prose text.
-    rehypePlugins: [
-      rehypeExternalLinks,
-      rehypeFigures,
-      rehypeImgDims,
-      rehypeCodeClasses,
-      rehypeSidenotes,
-      rehypeShy,
-    ],
+    processor: unified({
+      rehypePlugins: [
+        rehypeExternalLinks,
+        rehypeFigures,
+        rehypeImgDims,
+        rehypeCodeClasses,
+        rehypeSidenotes,
+        rehypeShy,
+      ],
+    }),
   },
   integrations: [
     sitemap({
