@@ -27,7 +27,7 @@
       "database_name": "ritchot-stats",
       // Paste the id printed by `wrangler d1 create ritchot-stats` (run from
       // the ritchot-stats repo, which owns the migrations) before merging.
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+      "database_id": "8b4450e2-029b-4532-8ab9-ca5593348376"
     }
   ]
   // Secret, set in the dashboard or with `wrangler secret put VISITOR_SALT`:
