@@ -37,3 +37,9 @@
 # Search Console still showed this URL 404ing on 30-07-2026.
 /the-needs-analysis-for-my-ai-literacy-course /writing/i-built-an-ai-literacy-course/ 301
 /the-needs-analysis-for-my-ai-literacy-course/ /writing/i-built-an-ai-literacy-course/ 301
+
+# --- Retired document mirrors (08-09-2026): three third-party PDFs now point
+# at their publishers. Same document at the source; the article links there too.
+/docs/04761v1.pdf https://arxiv.org/pdf/2503.04761v1 301
+/docs/productivity-report_03-1.pdf https://www-cdn.anthropic.com/e5645986a7ce8fbcc48fa6d2fc67753c87642c30.pdf 301
+/docs/2_ai_fluency_summary_one-pager.pdf https://www-cdn.anthropic.com/b383cf6baddbfc72fdf8b0ed533a518e2872d531.pdf 301
