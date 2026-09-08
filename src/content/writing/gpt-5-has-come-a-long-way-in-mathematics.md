@@ -81,7 +81,7 @@ The headline numbers bear repeating, because they are why this follow-up exists 
 * 392 out of 400 individual attempts were correct.
 * That is a success rate of 98 percent, or roughly one failure out of every fifty attempts.
 
-In practice, only two questions ever produced wrong answers. As before, they were questions that likely stumped the image model used by GPT-5. One involved [calculating the area of different spaces in a rectangular park](/docs/potwb-25-g-n-02-s-2519.pdf); the other involved [“writing a program” (think pseudocode) to direct a robot through a visual maze](/docs/potwb-25-c-g-08-s-70409.pdf).
+In practice, only two questions ever produced wrong answers. As before, they were questions that likely stumped the image model used by GPT-5. One involved [calculating the area of different spaces in a rectangular park](https://cemc.uwaterloo.ca/sites/default/files/documents/2025/POTWB-25-G-N-02-S-2519.pdf); the other involved [“writing a program” (think pseudocode) to direct a robot through a visual maze](https://cemc.uwaterloo.ca/sites/default/files/documents/2025/POTWB-25-C-G-08-S-70409.pdf).
 
 If you care about what students can do in real classrooms, this shift matters more than the jump from, say, 74 percent to 80 percent. Last year, letting an LLM do your math homework was like using an unreliable calculator that gives you the wrong answer about one time in four. This year, it is more like a calculator that flickers once every few dozen questions.
 
