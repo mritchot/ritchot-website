@@ -6,8 +6,11 @@ import Icon from './Icon.astro';
 // UTC to match the collection's date handling (formatDate pins timeZone: UTC),
 // so a frontmatter date never slips a year in a negative-offset timezone.
 const entries = await getCollection('writing');
-const firstYear = Math.min(...entries.map((e) => e.data.date.getUTCFullYear()));
 const buildYear = new Date().getFullYear();
+// Math.min of nothing is Infinity: an empty collection falls back to the build year.
+const firstYear = entries.length
+  ? Math.min(...entries.map((e) => e.data.date.getUTCFullYear()))
+  : buildYear;
 const years = firstYear === buildYear ? `${firstYear}` : `${firstYear}–${buildYear}`;
 
 // self-hosted inline marks (5b finding 4): official simple paths on a

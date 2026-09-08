@@ -29,6 +29,8 @@
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@fontsource/source-serif-4": "^5.2.9",
     "@resvg/resvg-js": "^2.6.2",
+    "hast-util-raw": "^9.1.0",
+    "hast-util-to-html": "^9.0.5",
     "hyphen": "^1.14.1",
     "pdf-lib": "^1.17.1",
     "playwright": "^1.61.1",

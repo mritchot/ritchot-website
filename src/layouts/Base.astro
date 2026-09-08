@@ -87,7 +87,7 @@ const structuredData = [personLd, ...jsonLd];
       crossorigin
     />
     {
-      /* < is <-escaped so no string value can close the script element early */
+      /* < becomes \u003c so no string value can close the script element early */
       structuredData.map((data) => (
         <script
           type="application/ld+json"

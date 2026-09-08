@@ -13,6 +13,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const tests = readdirSync(join(root, 'test'))
   .filter((f) => f.endsWith('.test.mjs'))
   .map((f) => join('test', f));
+if (tests.length === 0) {
+  console.error('run-tests: no *.test.mjs files under test/; refusing to pass an empty suite.');
+  process.exit(1);
+}
 
 const result = spawnSync(
   process.execPath,

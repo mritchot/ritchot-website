@@ -1,6 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { browserOf, classify, isBot, referrerHost, visitorHash } from '../src/worker/lib.ts';
+import {
+  browserOf,
+  classify,
+  isBot,
+  isPrefetch,
+  normalizePath,
+  referrerHost,
+  utcDay,
+  visitorHash,
+} from '../src/worker/lib.ts';
 
 const CHROME =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36';
@@ -51,4 +60,37 @@ test('visitorHash: stable within a day, rotates across days, 16 hex chars', asyn
   assert.equal(a, b);
   assert.notEqual(a, c);
   assert.match(a, /^[0-9a-f]{16}$/);
+});
+
+test('isPrefetch: speculative loads by either header, nothing else', () => {
+  assert.equal(isPrefetch(new Headers({ 'sec-purpose': 'prefetch' })), true);
+  assert.equal(isPrefetch(new Headers({ 'sec-purpose': 'prefetch;anonymous-client-ip' })), true);
+  assert.equal(isPrefetch(new Headers({ 'sec-purpose': 'prerender' })), true);
+  assert.equal(isPrefetch(new Headers({ purpose: 'prefetch' })), true);
+  assert.equal(isPrefetch(new Headers()), false);
+});
+
+test('browserOf: user-agent fallbacks and the client-hint edge cases', () => {
+  assert.equal(browserOf(null, null), 'Other');
+  assert.equal(browserOf(`${CHROME} OPR/120.0.0.0`, null), 'Opera');
+  assert.equal(browserOf(`${CHROME} EdgA/140.0.0.0`, null), 'Edge');
+  const IOS = 'Mozilla/5.0 (iPhone; CPU iPhone OS 19_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)';
+  assert.equal(browserOf(`${IOS} FxiOS/143.0 Mobile/15E148 Safari/605.1.15`, null), 'Firefox');
+  assert.equal(browserOf(`${IOS} Mobile/15E148 DuckDuckGo/7 Safari/605.1.15`, null), 'DuckDuckGo');
+  assert.equal(browserOf('Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 (KHTML, like Gecko) Safari/605.1.15', null), 'Other');
+  // a hint naming only the placeholder brand falls through to the user agent
+  assert.equal(browserOf(FIREFOX, '"Not=A?Brand";v="24"'), 'Firefox');
+  assert.equal(browserOf(CHROME, '"Vivaldi";v="7", "Chromium";v="140"'), 'Vivaldi');
+  assert.equal(browserOf(CHROME, `"${'A'.repeat(40)}";v="1"`).length, 32);
+});
+
+test('referrerHost: lowercases, drops the port, caps the host at 253 characters', () => {
+  assert.equal(referrerHost('https://News.Ycombinator.com:8443/item?id=1', 'ritchot.me'), 'news.ycombinator.com');
+  assert.equal(referrerHost(`https://${'a.'.repeat(150)}com/`, 'ritchot.me').length, 253);
+});
+
+test('normalizePath caps at 512 characters; utcDay is the UTC calendar day', () => {
+  assert.equal(normalizePath(`/${'x'.repeat(600)}`).length, 512);
+  assert.equal(normalizePath('/writing/a/'), '/writing/a/');
+  assert.equal(utcDay(new Date('2026-09-07T23:59:59.999Z')), '2026-09-07');
 });
