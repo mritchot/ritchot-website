@@ -10,7 +10,7 @@
 
 ## Notable writing
 
-- [fun things with my smart mirror](https://ritchot.me/writing/fun-things-with-my-smart-mirror/) — turning the dead intercom mirror in my rented apartment into the display I wanted, and where AI tools stop and the wanting starts.
+- [fun things with my smart mirror](https://ritchot.me/writing/fun-things-with-my-smart-mirror/) — turning the dead intercom mirror in my rented apartment into the display I wanted.
 - [I built an AI Literacy course](https://ritchot.me/writing/i-built-an-ai-literacy-course/) — expanding a capstone into a four-module AI literacy program in roughly 210 hours, and what that compression says about the future of learning and development.
 - [reflections, and the state of LLMs at the end of 2025](https://ritchot.me/writing/reflections-and-the-state-of-llms-in-2025/) — a year-end look at LLMs becoming ordinary software, and why 2026 is for building instead of benchmarking.
 - [GPT-5 has come a long way in Mathematics](https://ritchot.me/writing/gpt-5-has-come-a-long-way-in-mathematics/) — re-running last year's CEMC test against GPT-5: 98% per-attempt accuracy ends the era of unreliable AI mathematics.
