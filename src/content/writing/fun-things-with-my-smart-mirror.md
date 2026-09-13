@@ -79,4 +79,4 @@ Benedict Evans wrote last week about [AI, tools and transformation](https://www.
 
 The models are extraordinary at the part I am worst at, the volume, and no help at all with the part I care about, the wanting. Evans's open question is whether the transformation comes from handing everyone a model or from the new things a few people build with one. I do not know. For me the change is smaller and better: I can now take on a project like this whenever the fancy hits me, and finish it before the fancy leaves.
 
-Update, 13 September 2026: the launcher's code is on [GitHub](https://github.com/mritchot/smart-mirror).
+Update, 13 September 2026: the launcher's code is on [GitHub](https://github.com/mritchot/vercon-smart-mirror).
