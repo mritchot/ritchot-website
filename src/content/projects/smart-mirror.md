@@ -8,7 +8,7 @@ stack:
   - iCal
   - Open-Meteo API
 links:
-  repo: "https://github.com/mritchot/smart-mirror"
+  repo: "https://github.com/mritchot/vercon-smart-mirror"
 weight: 3
 summary: "A Kotlin launcher that turned the dead intercom mirror in my rented apartment into a clock, weather, and calendar display that still takes the lobby's calls."
 ---
@@ -20,4 +20,4 @@ The small features are the ones I use most. Presence checks for my phone on the 
 
 Claude wrote most of the code under my direction; I set the behavior and tested every build on the glass.
 
-Read how it came together in [fun things with my smart mirror](/writing/fun-things-with-my-smart-mirror/), or the code at [GitHub](https://github.com/mritchot/smart-mirror).
+Read how it came together in [fun things with my smart mirror](/writing/fun-things-with-my-smart-mirror/), or the code at [GitHub](https://github.com/mritchot/vercon-smart-mirror).
