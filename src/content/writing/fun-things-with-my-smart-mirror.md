@@ -3,6 +3,7 @@ title: "fun things with my smart mirror"
 date: 2026-09-10
 type: essay
 summary: "The intercom mirror in my rented apartment sat unplugged for a year. Fable and I turned it into the display I wanted."
+updated: 2026-09-13
 ---
 When I moved into my new apartment, one of the things I was curious about was the [Vercon Smart Intercom Mirror](https://verconsmartmirror.com/product/smart-intercom-mirror/). It touted a full smart home environment, ties to the intercom, etc. I generally never bought into smart home systems (there is a [joke](https://x.com/PPathole/status/1116670170980859905) here somewhere about a software engineer and keeping an axe for his toaster) but I decided hey, I'm renting the place, this could be cool to try out.
 
@@ -77,3 +78,5 @@ The first night the mirror slept properly, but the app restarted itself every fi
 Benedict Evans wrote last week about [AI, tools and transformation](https://www.ben-evans.com/benedictevans/2026/9/3/ai-tools-and-transformation), and this project is really the epitome of his argument. Tools are cheaper to build than they have ever been. But most people are not tool builders, and most people do not instinctively look for a different way to do *anything*. The hard part is "knowing that you need a tool for this in the first place", and then knowing what it should do. I knew both. I had lived with the dead glass for a year and had the design in my head. I also had enough Android in my history to judge what Fable handed back. Take any of the three away and the mirror is still unplugged.
 
 The models are extraordinary at the part I am worst at, the volume, and no help at all with the part I care about, the wanting. Evans's open question is whether the transformation comes from handing everyone a model or from the new things a few people build with one. I do not know. For me the change is smaller and better: I can now take on a project like this whenever the fancy hits me, and finish it before the fancy leaves.
+
+Update, 13 September 2026: the launcher's code is on [GitHub](https://github.com/mritchot/smart-mirror).
