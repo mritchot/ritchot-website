@@ -13,6 +13,7 @@ dist/
 
 # local governance files — never in the tracked tree (repo goes public at launch)
 CLAUDE.md
+AGENTS.md
 MEMORY.md
 MEMORYARCHIVE.md
 TODO.md
