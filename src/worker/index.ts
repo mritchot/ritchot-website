@@ -37,7 +37,7 @@ interface Row {
 
 /** Must match the `schema` row in the database's meta table, which the
  *  ritchot-stats migrations own. A mismatch stops recording, never serving. */
-const SCHEMA = '1';
+const SCHEMA = '2';
 let schemaOk: boolean | undefined;
 
 export default {
