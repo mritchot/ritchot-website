@@ -4,6 +4,8 @@ import {
   browserOf,
   classify,
   isBot,
+  isHosting,
+  isNavigation,
   isPrefetch,
   normalizePath,
   referrerHost,
@@ -68,6 +70,31 @@ test('isPrefetch: speculative loads by either header, nothing else', () => {
   assert.equal(isPrefetch(new Headers({ 'sec-purpose': 'prerender' })), true);
   assert.equal(isPrefetch(new Headers({ purpose: 'prefetch' })), true);
   assert.equal(isPrefetch(new Headers()), false);
+});
+
+test('isNavigation: a browser opening a page, not a library or a subresource fetch', () => {
+  const nav = { 'accept-language': 'en-SG,en;q=0.9', 'sec-fetch-dest': 'document', 'sec-fetch-mode': 'navigate' };
+  assert.equal(isNavigation(new Headers(nav), CHROME), true);
+  assert.equal(isNavigation(new Headers(nav), FIREFOX), true);
+  // a Chrome or Firefox user agent without Sec-Fetch headers is a script posing as one
+  assert.equal(isNavigation(new Headers({ 'accept-language': 'en' }), CHROME), false);
+  assert.equal(isNavigation(new Headers({ 'accept-language': 'en' }), FIREFOX), false);
+  // Safari before 16.4 sends none
+  assert.equal(isNavigation(new Headers({ 'accept-language': 'en' }), SAFARI), true);
+  assert.equal(isNavigation(new Headers({ ...nav, 'accept-language': '' }), CHROME), false);
+  assert.equal(isNavigation(new Headers({ 'sec-fetch-dest': 'document' }), CHROME), false);
+  assert.equal(isNavigation(new Headers({ ...nav, 'sec-fetch-dest': 'empty' }), CHROME), false);
+});
+
+test('isHosting: cloud and hosting networks yes, home, mobile, and relay networks no', () => {
+  for (const org of ['Google LLC', 'Amazon Technologies Inc.', 'Hetzner Online GmbH', 'Huawei-Cloud-SG', 'HostPapa', 'Meta Platforms Ireland Limited', 'Microsoft Corporation', 'DigitalOcean, LLC']) {
+    assert.equal(isHosting(org), true, org);
+  }
+  for (const org of ['M1 Ltd', 'Via Fibra Internet Banda Larga EIRELI', 'Google Fiber Inc.', 'Cloudflare, Inc.', 'Akamai Technologies, Inc.', 'Comcast Cable Communications, LLC']) {
+    assert.equal(isHosting(org), false, org);
+  }
+  assert.equal(isHosting(undefined), false);
+  assert.equal(isHosting(42), false);
 });
 
 test('browserOf: user-agent fallbacks and the client-hint edge cases', () => {

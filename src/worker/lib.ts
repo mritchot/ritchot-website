@@ -15,15 +15,40 @@ export function classify(pathname: string, contentType: string | null): Kind | n
 }
 
 // Declared crawlers, previewers, HTTP libraries, and monitors. Verified-bot
-// data is not exposed to Workers on the Free plan, so the user agent is the
-// only signal; feed readers are matched here too, which is why feed rows skip
-// this check.
+// data is not exposed to Workers on the Free plan, so declared bots are
+// matched by user agent; isNavigation and isHosting below catch the ones that
+// pose as browsers. Feed readers are matched here too, which is why feed rows
+// skip these checks.
 const BOT =
   /bot|crawl|spider|slurp|scrap|fetch|headless|phantom|python|curl\/|wget|httpclient|java\/|go-http|okhttp|libwww|monitor|uptime|pingdom|lighthouse|pagespeed|preview|externalhit|whatsapp|telegram|discord|slack|embedly|pinterest|ahrefs|semrush|mj12|dotbot|petalbot|bytespider|gptbot|claude|anthropic|openai|perplexity|ccbot|applebot|amazonbot|dataforseo|feed|rss|yandex|baidu|ia_archiver|archive\.org/i;
 
 export function isBot(ua: string | null): boolean {
   if (!ua || ua.length < 20) return true;
   return BOT.test(ua);
+}
+
+// Cloud and web-hosting networks, matched on Cloudflare's AS organization
+// name. Readers almost never browse from one; crawlers and scanners that
+// pose as browsers mostly do. Cloudflare, Akamai, and Fastly stay off the
+// list because iCloud Private Relay and WARP carry real readers through
+// them, and consumer VPN hosts stay off for the same reason.
+const HOSTING =
+  /amazon|google(?! fiber)|microsoft|oracle|alibaba|tencent|huawei.?cloud|digitalocean|linode|vultr|choopa|hetzner|ovh|contabo|scaleway|leaseweb|ionos|hostinger|hostpapa|godaddy|kamatera|meta platforms|facebook|zenlayer|colocrossing|hostwinds|netcup|bytedance/i;
+
+export function isHosting(asOrganization: unknown): boolean {
+  return typeof asOrganization === 'string' && HOSTING.test(asOrganization);
+}
+
+/** Whether the request carries what a browser sends when a reader opens a
+ *  page: an Accept-Language header and Sec-Fetch-Dest "document". Safari
+ *  before 16.4 sends no Sec-Fetch headers, so their absence counts against
+ *  a request only when the user agent claims Chrome or Firefox, which have
+ *  sent them since 2020 and 2021. */
+export function isNavigation(headers: Headers, ua: string): boolean {
+  if (!headers.get('accept-language')) return false;
+  const dest = headers.get('sec-fetch-dest');
+  if (dest) return dest === 'document';
+  return !/Chrome\/|Firefox\//.test(ua);
 }
 
 export function isPrefetch(headers: Headers): boolean {

@@ -7,6 +7,8 @@ import {
   browserOf,
   classify,
   isBot,
+  isHosting,
+  isNavigation,
   isPrefetch,
   normalizePath,
   referrerHost,
@@ -60,10 +62,14 @@ function record(request: Request, response: Response, env: Env): Promise<void> |
   const kind = classify(url.pathname, response.headers.get('content-type'));
   if (!kind) return null;
   const ua = request.headers.get('user-agent');
-  if (kind !== 'feed' && isBot(ua)) return null;
+  const cf = request.cf as { country?: unknown; asOrganization?: unknown } | undefined;
+  // Feed readers are counted as they come; pages and documents only when
+  // the request looks like a reader in a browser.
+  if (kind !== 'feed') {
+    if (isBot(ua) || !isNavigation(request.headers, ua ?? '') || isHosting(cf?.asOrganization)) return null;
+  }
   if (isPrefetch(request.headers)) return null;
 
-  const cf = request.cf as { country?: unknown } | undefined;
   const now = new Date();
   const row: Row = {
     ts: Math.floor(now.valueOf() / 1000),
