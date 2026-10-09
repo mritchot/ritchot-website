@@ -4,7 +4,7 @@
 
 export type Kind = 'page' | 'feed' | 'doc';
 
-const FEEDS = new Set(['/feed.xml', '/atom.xml', '/feed.json']);
+const FEEDS = new Set(['/feed.xml', '/atom.xml']);
 
 /** What a successful GET at this path counts as; null means do not count. */
 export function classify(pathname: string, contentType: string | null): Kind | null {

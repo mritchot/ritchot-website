@@ -8,16 +8,13 @@
   Cache-Control: public, max-age=31536000, immutable
 
 # The static build discards endpoint Response headers, so feeds would otherwise
-# serve by extension (application/xml, application/json). These restore the
+# serve by extension (application/xml). These restore the
 # standards-correct types.
 /feed.xml
   Content-Type: application/rss+xml; charset=utf-8
 
 /atom.xml
   Content-Type: application/atom+xml; charset=utf-8
-
-/feed.json
-  Content-Type: application/feed+json; charset=utf-8
 
 # /docs/ holds resume attachments and article supporting material. Each is
 # linked from an indexed HTML page that frames it; the PDF itself is a worse
