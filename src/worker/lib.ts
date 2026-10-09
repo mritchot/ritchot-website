@@ -17,8 +17,8 @@ export function classify(pathname: string, contentType: string | null): Kind | n
 // Declared crawlers, previewers, HTTP libraries, and monitors. Verified-bot
 // data is not exposed to Workers on the Free plan, so declared bots are
 // matched by user agent; isNavigation and isHosting below catch the ones that
-// pose as browsers. Feed readers are matched here too, which is why feed rows
-// skip these checks.
+// pose as browsers, and isStaleChrome the ones that pin an old version. Feed
+// readers are matched here too, which is why feed rows skip these checks.
 const BOT =
   /bot|crawl|spider|slurp|scrap|fetch|headless|phantom|python|curl\/|wget|httpclient|java\/|go-http|okhttp|libwww|monitor|uptime|pingdom|lighthouse|pagespeed|preview|externalhit|whatsapp|telegram|discord|slack|embedly|pinterest|ahrefs|semrush|mj12|dotbot|petalbot|bytespider|gptbot|claude|anthropic|openai|perplexity|ccbot|applebot|amazonbot|dataforseo|feed|rss|yandex|baidu|ia_archiver|archive\.org/i;
 
@@ -49,6 +49,28 @@ export function isNavigation(headers: Headers, ua: string): boolean {
   const dest = headers.get('sec-fetch-dest');
   if (dest) return dest === 'document';
   return !/Chrome\/|Firefox\//.test(ua);
+}
+
+/** Estimated Google Chrome major version on a date. Chrome 133 shipped on
+ *  4 February 2025 and a new major follows about every four weeks; counting
+ *  30 days per release keeps the estimate at or a little below the real one. */
+export function chromeMajorOn(date: Date): number {
+  return 133 + Math.floor((date.valueOf() - Date.UTC(2025, 1, 4)) / (30 * 86400000));
+}
+
+/** Releases a Chrome user agent may trail the estimate before it counts as
+ *  stale: about ten months. */
+const STALE_LAG = 10;
+
+/** Whether a Google Chrome user agent, desktop or Android, claims a version
+ *  more than STALE_LAG releases old. Chrome updates itself, so readers that
+ *  far behind are rare; scrapers that pin an old user-agent string are not.
+ *  The pattern ends at "Safari/537.36", which leaves out Edge and Opera, and
+ *  the Chromium browsers that trail Chrome's releases are skipped by name. */
+export function isStaleChrome(ua: string, now: Date): boolean {
+  const m = /Chrome\/(\d+)[\d.]* (?:Mobile )?Safari\/537\.36$/.exec(ua);
+  if (!m || /SamsungBrowser|UCBrowser|QQBrowser|MiuiBrowser|HuaweiBrowser|YaBrowser|; wv\)/.test(ua)) return false;
+  return Number(m[1]) < chromeMajorOn(now) - STALE_LAG;
 }
 
 export function isPrefetch(headers: Headers): boolean {

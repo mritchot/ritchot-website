@@ -10,6 +10,7 @@ import {
   isHosting,
   isNavigation,
   isPrefetch,
+  isStaleChrome,
   normalizePath,
   referrerHost,
   utcDay,
@@ -63,14 +64,15 @@ function record(request: Request, response: Response, env: Env): Promise<void> |
   if (!kind) return null;
   const ua = request.headers.get('user-agent');
   const cf = request.cf as { country?: unknown; asOrganization?: unknown } | undefined;
+  const now = new Date();
   // Feed readers are counted as they come; pages and documents only when
-  // the request looks like a reader in a browser.
+  // the request looks like a reader in a current browser.
   if (kind !== 'feed') {
     if (isBot(ua) || !isNavigation(request.headers, ua ?? '') || isHosting(cf?.asOrganization)) return null;
+    if (isStaleChrome(ua ?? '', now)) return null;
   }
   if (isPrefetch(request.headers)) return null;
 
-  const now = new Date();
   const row: Row = {
     ts: Math.floor(now.valueOf() / 1000),
     day: utcDay(now),

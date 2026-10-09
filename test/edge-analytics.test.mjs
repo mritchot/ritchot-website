@@ -7,6 +7,8 @@ import {
   isHosting,
   isNavigation,
   isPrefetch,
+  isStaleChrome,
+  chromeMajorOn,
   normalizePath,
   referrerHost,
   utcDay,
@@ -95,6 +97,31 @@ test('isHosting: cloud and hosting networks yes, home, mobile, and relay network
   }
   assert.equal(isHosting(undefined), false);
   assert.equal(isHosting(42), false);
+});
+
+test('chromeMajorOn: anchored at Chrome 133, one release per 30 days', () => {
+  assert.equal(chromeMajorOn(new Date('2025-02-04T00:00:00Z')), 133);
+  assert.equal(chromeMajorOn(new Date('2025-03-05T23:59:59Z')), 133);
+  assert.equal(chromeMajorOn(new Date('2025-03-06T00:00:00Z')), 134);
+  assert.equal(chromeMajorOn(new Date('2026-10-09T00:00:00Z')), 153);
+});
+
+test('isStaleChrome: an old pinned Chrome yes; current Chrome and lagging Chromium browsers no', () => {
+  const at = new Date('2026-10-09T00:00:00Z');
+  const chrome = (v, tail = 'Safari/537.36') =>
+    `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${v}.0.0.0 ${tail}`;
+  assert.equal(isStaleChrome(chrome(133), at), true);
+  assert.equal(isStaleChrome(chrome(142), at), true);
+  assert.equal(isStaleChrome(chrome(143), at), false);
+  assert.equal(isStaleChrome(chrome(152), at), false);
+  assert.equal(isStaleChrome(chrome(133, 'Mobile Safari/537.36'), at), true);
+  // Edge and Opera name themselves after Safari/537.36; Samsung Internet and WebView trail Chrome
+  assert.equal(isStaleChrome(chrome(133, 'Safari/537.36 Edg/133.0.0.0'), at), false);
+  assert.equal(isStaleChrome(chrome(133, 'Safari/537.36 OPR/118.0.0.0'), at), false);
+  assert.equal(isStaleChrome(`Mozilla/5.0 (Linux; Android 14; SM-S921B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/28.0 Chrome/130.0.0.0 Mobile Safari/537.36`, at), false);
+  assert.equal(isStaleChrome(`Mozilla/5.0 (Linux; Android 14; Pixel 8; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/130.0.0.0 Mobile Safari/537.36`, at), false);
+  assert.equal(isStaleChrome(FIREFOX, at), false);
+  assert.equal(isStaleChrome(SAFARI, at), false);
 });
 
 test('browserOf: user-agent fallbacks and the client-hint edge cases', () => {
