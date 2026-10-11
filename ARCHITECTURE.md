@@ -77,7 +77,7 @@ one constant plus a `form-action` CSP allowance in `public/_headers`
 
 ## Islands
 
-Two islands, both first-party (no CDN or third-party requests at
+Three islands, all first-party (no CDN or third-party requests at
 runtime) and removable without breakage. Every failure path — no JS, reduced motion, missing
 platform support, script error — leaves a fully working typographic page.
 
@@ -107,6 +107,10 @@ platform support, script error — leaves a fully working typographic page.
    disagreement restores that paragraph's pristine baseline. Requires
    `Intl.Segmenter`; skips silently otherwise — the CSS baseline
    (justify + baked soft hyphens) is a permanent, acceptable state.
+3. **`hit`** (every page): the analytics beacon. After the reader's first
+   scroll, tap, key press, or pointer movement, it posts the page path and
+   the referring page to `/hit`. Browsers that report automation send
+   nothing. About 400 bytes, loaded as a module; the page never waits on it.
 
 ## Theme
 
@@ -134,12 +138,13 @@ metric-compatible fallbacks.
 
 Strict CSP (`default-src 'none'`, self-only script/style/img/font,
 no inline anything), no cookies, no third-party requests of any kind.
-One localStorage key stores the theme override. Analytics are first-party
-and edge-side: a Worker in front of the static assets records successful
-page, feed, and document requests to D1 (path, referring host, browser
-family, country, and a visitor hash salted per UTC day; no address is ever
-stored) and serves the response unchanged. The pages ship zero measurement
-bytes.
+One localStorage key stores the theme override. Analytics are first-party.
+A page view counts when the `hit` island reports it, once per visitor, page,
+and UTC day; a page fetched without any interaction is never counted. A
+Worker in front of the static assets records those views, plus feed and
+document requests, to D1 (path, referring host, browser family, country, and
+a visitor hash salted per UTC day; no address is ever stored) and serves
+every response unchanged.
 
 ## Licensing
 

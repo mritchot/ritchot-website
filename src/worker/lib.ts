@@ -73,6 +73,17 @@ export function isStaleChrome(ua: string, now: Date): boolean {
   return Number(m[1]) < chromeMajorOn(now) - STALE_LAG;
 }
 
+/** The path and referrer a page's beacon posts to /hit, or null when the
+ *  body is not one. The path must be a site path of at most 512 characters
+ *  with no query, fragment, or whitespace. */
+export function parseHit(body: string): { path: string; referrer: string | null } | null {
+  if (body.length > 4096) return null;
+  const params = new URLSearchParams(body);
+  const path = params.get('p') ?? '';
+  if (!path.startsWith('/') || path.startsWith('//') || path.length > 512 || /[?#\s]/.test(path)) return null;
+  return { path, referrer: params.get('r') || null };
+}
+
 export function isPrefetch(headers: Headers): boolean {
   const purpose = headers.get('sec-purpose') ?? headers.get('purpose') ?? '';
   return /prefetch|prerender/i.test(purpose);

@@ -10,6 +10,7 @@ import {
   isStaleChrome,
   chromeMajorOn,
   normalizePath,
+  parseHit,
   referrerHost,
   utcDay,
   visitorHash,
@@ -72,6 +73,18 @@ test('isPrefetch: speculative loads by either header, nothing else', () => {
   assert.equal(isPrefetch(new Headers({ 'sec-purpose': 'prerender' })), true);
   assert.equal(isPrefetch(new Headers({ purpose: 'prefetch' })), true);
   assert.equal(isPrefetch(new Headers()), false);
+});
+
+test('parseHit: a site path and the referrer, else null', () => {
+  assert.deepEqual(parseHit('p=%2Fwriting%2Fa-post%2F&r=https%3A%2F%2Fwww.google.com%2F'), {
+    path: '/writing/a-post/',
+    referrer: 'https://www.google.com/',
+  });
+  assert.deepEqual(parseHit('p=%2F&r='), { path: '/', referrer: null });
+  for (const bad of ['', 'r=x', 'p=writing', 'p=%2F%2Fevil.example%2F', 'p=%2Fa%3Fb', 'p=%2Fa%23b', 'p=%2Fa%20b', `p=%2F${'a'.repeat(600)}`]) {
+    assert.equal(parseHit(bad), null, bad);
+  }
+  assert.equal(parseHit(`p=%2F&r=${'x'.repeat(5000)}`), null);
 });
 
 test('isNavigation: a browser opening a page, not a library or a subresource fetch', () => {

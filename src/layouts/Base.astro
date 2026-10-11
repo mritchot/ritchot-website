@@ -103,6 +103,12 @@ const structuredData = [personLd, ...jsonLd];
       <slot />
     </main>
     <Footer />
+    <script>
+      // Analytics beacon (11-10-2026): counts the view after the reader's
+      // first interaction. The page never depends on it.
+      import hit from '../islands/hit/index';
+      hit();
+    </script>
   </body>
 </html>
 
