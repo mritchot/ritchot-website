@@ -89,7 +89,7 @@ test('isNavigation: a browser opening a page, not a library or a subresource fet
 });
 
 test('isHosting: cloud and hosting networks yes, home, mobile, and relay networks no', () => {
-  for (const org of ['Google LLC', 'Amazon Technologies Inc.', 'Hetzner Online GmbH', 'Huawei-Cloud-SG', 'HostPapa', 'Meta Platforms Ireland Limited', 'Microsoft Corporation', 'DigitalOcean, LLC']) {
+  for (const org of ['Google LLC', 'Amazon Technologies Inc.', 'Hetzner Online GmbH', 'Huawei-Cloud-SG', 'Huawei Public Cloud Service (Huawei Software Technologies Ltd.Co)', 'HostPapa', 'Meta Platforms Ireland Limited', 'Microsoft Corporation', 'DigitalOcean, LLC']) {
     assert.equal(isHosting(org), true, org);
   }
   for (const org of ['M1 Ltd', 'Via Fibra Internet Banda Larga EIRELI', 'Google Fiber Inc.', 'Cloudflare, Inc.', 'Akamai Technologies, Inc.', 'Comcast Cable Communications, LLC']) {

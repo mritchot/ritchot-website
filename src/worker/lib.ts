@@ -33,7 +33,7 @@ export function isBot(ua: string | null): boolean {
 // list because iCloud Private Relay and WARP carry real readers through
 // them, and consumer VPN hosts stay off for the same reason.
 const HOSTING =
-  /amazon|google(?! fiber)|microsoft|oracle|alibaba|tencent|huawei.?cloud|digitalocean|linode|vultr|choopa|hetzner|ovh|contabo|scaleway|leaseweb|ionos|hostinger|hostpapa|godaddy|kamatera|meta platforms|facebook|zenlayer|colocrossing|hostwinds|netcup|bytedance/i;
+  /amazon|google(?! fiber)|microsoft|oracle|alibaba|tencent|huawei|digitalocean|linode|vultr|choopa|hetzner|ovh|contabo|scaleway|leaseweb|ionos|hostinger|hostpapa|godaddy|kamatera|meta platforms|facebook|zenlayer|colocrossing|hostwinds|netcup|bytedance/i;
 
 export function isHosting(asOrganization: unknown): boolean {
   return typeof asOrganization === 'string' && HOSTING.test(asOrganization);
