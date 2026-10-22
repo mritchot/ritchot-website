@@ -105,6 +105,13 @@ a {
   margin-block-start: 1em;
 }
 
+/* A thematic break, e.g. between a dated update note and the original post. */
+.prose hr {
+  border: 0;
+  border-block-start: 1px solid var(--line);
+  margin-block: 2em;
+}
+
 /* --- code (build-time Shiki, class-based: no inline styles under the CSP) --- */
 
 code {
