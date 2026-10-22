@@ -47,8 +47,7 @@ two audiences — readers and hiring managers.
   host). Reading time is computed at build.
 - `src/content/projects/` — case studies: `title`, `period`, `stack[]`,
   `links`, `weight`, `summary`, and an optional `hub` flag that renders a
-  shared link-collection module (the same data drives `/ai-courses/`, so
-  the two pages cannot drift).
+  link-collection module.
 - `src/data/resume.yaml` — the single source for the resume page, its
   print stylesheet, and `public/resume.pdf`. `npm run resume:pdf`
   regenerates the PDF locally (Playwright print-to-PDF), asserts a hard

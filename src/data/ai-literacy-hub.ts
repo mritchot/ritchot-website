@@ -1,7 +1,6 @@
 /**
- * Shared hub collections for the AI-literacy program (5c finding 17):
- * one module drives both /ai-courses/ and the case-study page at
- * /projects/ai-literacy-platform/, so the two can never drift.
+ * Hub collections for the AI-literacy program, rendered on the case-study
+ * page at /projects/ai-literacy-platform/.
  */
 export interface HubLink {
   label: string;

@@ -51,11 +51,10 @@ async function derive() {
     .filter((f) => f.endsWith('.md'))
     .sort();
 
-  const [home, about, aiCourses, subscribe, resumePage, resumeYaml, ...projectDays] =
+  const [home, about, subscribe, resumePage, resumeYaml, ...projectDays] =
     await Promise.all([
       dayOf('src/pages/index.astro'),
       dayOf('src/pages/about.astro'),
-      dayOf('src/pages/ai-courses.astro'),
       dayOf('src/pages/subscribe.astro'),
       dayOf('src/pages/resume.astro'),
       dayOf('src/data/resume.yaml'),
@@ -64,7 +63,6 @@ async function derive() {
 
   set('/', home);
   set('/about/', about);
-  set('/ai-courses/', aiCourses);
   set('/subscribe/', subscribe);
   // /resume/ renders src/data/resume.yaml through the page: either can change it.
   set('/resume/', newest([resumePage, resumeYaml]));
