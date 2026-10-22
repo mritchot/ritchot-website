@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {
   browserOf,
   classify,
+  classifyCourse,
+  isCoursePath,
   isBot,
   isHosting,
   isNavigation,
@@ -28,6 +30,16 @@ test('classify: feeds and documents by path, pages by content type, else nothing
   assert.equal(classify('/resume.pdf', 'application/pdf'), 'doc');
   assert.equal(classify('/writing/a-post/', 'text/html; charset=utf-8'), 'page');
   assert.equal(classify('/theme.js', 'text/javascript'), null);
+});
+
+test('course paths: the app document is a page, its PDFs are documents', () => {
+  assert.equal(isCoursePath('/courses/ai-literacy'), true);
+  assert.equal(isCoursePath('/courses/ai-literacy/reference/r1.pdf'), true);
+  assert.equal(isCoursePath('/courses/ai-literacy-old/'), false);
+  assert.equal(classifyCourse('/courses/ai-literacy/', 'text/html; charset=utf-8'), 'page');
+  assert.equal(classifyCourse('/courses/ai-literacy/evaluation/level-4-results.pdf', 'application/pdf'), 'doc');
+  assert.equal(classifyCourse('/courses/ai-literacy/favicon.svg', 'image/svg+xml'), null);
+  assert.equal(classifyCourse('/courses/ai-literacy/404', 'text/html'), null);
 });
 
 test('isBot: declared crawlers and libraries yes, real browsers no', () => {

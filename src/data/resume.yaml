@@ -53,7 +53,7 @@ featured:
   title: AI Literacy for the Modern Workforce
   links:
     - label: View the full program
-      url: https://ai-literacy.ritchot.me/
+      url: https://ritchot.me/courses/ai-literacy/
     - label: View the source code
       url: https://github.com/mritchot/ai-literacy-platform
   bullets:

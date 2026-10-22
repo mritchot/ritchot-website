@@ -3,12 +3,16 @@
  *  beacon (src/islands/hit/) after the reader's first interaction; feed and
  *  document GETs are recorded as they are served. Rows go to the shared
  *  `ritchot-stats` D1 database in the background. No cookie is set and no
- *  address is stored. Schema and dashboard live in the ritchot-stats repo. */
+ *  address is stored. Schema and dashboard live in the ritchot-stats repo.
+ *  Requests under /courses/ai-literacy/ go to the course's own Worker through
+ *  the COURSE binding; its app document and PDFs are counted here. */
 import {
   browserOf,
   classify,
+  classifyCourse,
   isBot,
   isHosting,
+  isCoursePath,
   isNavigation,
   isPrefetch,
   isStaleChrome,
@@ -22,6 +26,7 @@ import {
 
 interface Env {
   ASSETS: Fetcher;
+  COURSE?: Fetcher;
   STATS?: D1Database;
   VISITOR_SALT?: string;
   SITE_HOST?: string;
@@ -46,7 +51,12 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === '/hit') return hit(request, url, env, ctx);
-    const response = await env.ASSETS.fetch(request);
+    const course = isCoursePath(url.pathname);
+    const response = course
+      ? env.COURSE
+        ? await env.COURSE.fetch(request)
+        : new Response('Not found', { status: 404 })
+      : await env.ASSETS.fetch(request);
     try {
       const job = record(request, response, env);
       if (job) ctx.waitUntil(job);
@@ -110,9 +120,13 @@ function record(request: Request, response: Response, env: Env): Promise<void> |
   const host = env.SITE_HOST ?? 'ritchot.me';
   // Preview deployments on workers.dev must not write production rows.
   if (url.hostname !== host) return null;
-  const kind = classify(url.pathname, response.headers.get('content-type'));
-  // Page views are counted by /hit, never from the HTML request.
-  if (!kind || kind === 'page') return null;
+  const course = isCoursePath(url.pathname);
+  const contentType = response.headers.get('content-type');
+  const kind = course ? classifyCourse(url.pathname, contentType) : classify(url.pathname, contentType);
+  // Site page views are counted by /hit, never from the HTML request. The
+  // course has no beacon, so its app document counts here, filtered like a
+  // document request below.
+  if (!kind || (kind === 'page' && !course)) return null;
   const ua = request.headers.get('user-agent');
   const cf = request.cf as { country?: unknown; asOrganization?: unknown } | undefined;
   const now = new Date();
