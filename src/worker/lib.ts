@@ -6,6 +6,22 @@ export type Kind = 'page' | 'feed' | 'doc';
 
 const FEEDS = new Set(['/feed.xml', '/atom.xml']);
 
+/** The AI literacy course, served by its own Worker (ai-literacy) through the
+ *  COURSE service binding. */
+export const COURSE_PREFIX = '/courses/ai-literacy';
+
+export function isCoursePath(pathname: string): boolean {
+  return pathname === COURSE_PREFIX || pathname.startsWith(`${COURSE_PREFIX}/`);
+}
+
+/** The course is one app document plus its PDFs. The app carries no beacon,
+ *  so its HTML request is the page view; documents count as on the site. */
+export function classifyCourse(pathname: string, contentType: string | null): Kind | null {
+  if (pathname.endsWith('.pdf')) return 'doc';
+  if (pathname === `${COURSE_PREFIX}/` && contentType && /^text\/html\b/i.test(contentType)) return 'page';
+  return null;
+}
+
 /** What a successful GET at this path counts as; null means do not count. */
 export function classify(pathname: string, contentType: string | null): Kind | null {
   if (FEEDS.has(pathname)) return 'feed';

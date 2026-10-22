@@ -21,6 +21,10 @@
     // workers.dev never writes into the production table.
     "SITE_HOST": "ritchot.me"
   },
+  // The AI literacy course is its own Worker; requests under
+  // /courses/ai-literacy/ are handed to it here so they are counted like the
+  // rest of the site.
+  "services": [{ "binding": "COURSE", "service": "ai-literacy" }],
   "d1_databases": [
     {
       "binding": "STATS",

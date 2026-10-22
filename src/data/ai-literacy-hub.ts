@@ -14,7 +14,7 @@ export interface HubGroup {
 }
 
 export const links: HubLink[] = [
-  { label: 'Course', url: 'https://ai-literacy.ritchot.me/' },
+  { label: 'Course', url: '/courses/ai-literacy/' },
   { label: 'Source on GitHub', url: 'https://github.com/mritchot/ai-literacy-platform' },
 ];
 
@@ -26,34 +26,34 @@ export const documents: HubGroup[] = [
   {
     title: 'Needs Analysis',
     items: [
-      { label: 'Executive Problem Statement (PDF)', url: 'https://ai-literacy.ritchot.me/needs-analysis/executive-problem-statement.pdf' },
-      { label: 'Capability Gap Analysis (PDF)', url: 'https://ai-literacy.ritchot.me/needs-analysis/capability-gap-analysis.pdf' },
-      { label: 'Learner Persona (PDF)', url: 'https://ai-literacy.ritchot.me/needs-analysis/learner-persona.pdf' },
-      { label: 'Action Map (PDF)', url: 'https://ai-literacy.ritchot.me/needs-analysis/action-map.pdf' },
-      { label: 'Interactive versions in the course', url: 'https://ai-literacy.ritchot.me/#/needs-analysis' },
+      { label: 'Executive Problem Statement (PDF)', url: '/courses/ai-literacy/needs-analysis/executive-problem-statement.pdf' },
+      { label: 'Capability Gap Analysis (PDF)', url: '/courses/ai-literacy/needs-analysis/capability-gap-analysis.pdf' },
+      { label: 'Learner Persona (PDF)', url: '/courses/ai-literacy/needs-analysis/learner-persona.pdf' },
+      { label: 'Action Map (PDF)', url: '/courses/ai-literacy/needs-analysis/action-map.pdf' },
+      { label: 'Interactive versions in the course', url: '/courses/ai-literacy/#/needs-analysis' },
     ],
   },
   {
     title: 'Evaluation Framework',
     items: [
-      { label: 'Level 1: Reaction (PDF)', url: 'https://ai-literacy.ritchot.me/evaluation/level-1-reaction.pdf' },
-      { label: 'Level 2: Learning (PDF)', url: 'https://ai-literacy.ritchot.me/evaluation/level-2-learning.pdf' },
-      { label: 'Level 3: Behavior (PDF)', url: 'https://ai-literacy.ritchot.me/evaluation/level-3-behavior.pdf' },
-      { label: 'Level 4: Results (PDF)', url: 'https://ai-literacy.ritchot.me/evaluation/level-4-results.pdf' },
-      { label: 'Interactive versions in the course', url: 'https://ai-literacy.ritchot.me/#/evaluation' },
+      { label: 'Level 1: Reaction (PDF)', url: '/courses/ai-literacy/evaluation/level-1-reaction.pdf' },
+      { label: 'Level 2: Learning (PDF)', url: '/courses/ai-literacy/evaluation/level-2-learning.pdf' },
+      { label: 'Level 3: Behavior (PDF)', url: '/courses/ai-literacy/evaluation/level-3-behavior.pdf' },
+      { label: 'Level 4: Results (PDF)', url: '/courses/ai-literacy/evaluation/level-4-results.pdf' },
+      { label: 'Interactive versions in the course', url: '/courses/ai-literacy/#/evaluation' },
     ],
   },
   {
     title: 'Behind the Build',
     items: [
-      { label: 'Learning Architecture (PDF)', url: 'https://ai-literacy.ritchot.me/build/learning-architecture.pdf' },
-      { label: 'Technical Architecture (PDF)', url: 'https://ai-literacy.ritchot.me/build/architecture.pdf' },
-      { label: 'Project Timeline (PDF)', url: 'https://ai-literacy.ritchot.me/build/timeline.pdf' },
-      { label: 'Responsibility Matrix / RACI (PDF)', url: 'https://ai-literacy.ritchot.me/build/raci.pdf' },
-      { label: 'Resource & Budget Plan (PDF)', url: 'https://ai-literacy.ritchot.me/build/resources.pdf' },
-      { label: 'Stakeholder Communications (PDF)', url: 'https://ai-literacy.ritchot.me/build/communications.pdf' },
-      { label: 'QA Documentation (PDF)', url: 'https://ai-literacy.ritchot.me/build/quality.pdf' },
-      { label: 'Interactive versions in the course', url: 'https://ai-literacy.ritchot.me/#/build' },
+      { label: 'Learning Architecture (PDF)', url: '/courses/ai-literacy/build/learning-architecture.pdf' },
+      { label: 'Technical Architecture (PDF)', url: '/courses/ai-literacy/build/architecture.pdf' },
+      { label: 'Project Timeline (PDF)', url: '/courses/ai-literacy/build/timeline.pdf' },
+      { label: 'Responsibility Matrix / RACI (PDF)', url: '/courses/ai-literacy/build/raci.pdf' },
+      { label: 'Resource & Budget Plan (PDF)', url: '/courses/ai-literacy/build/resources.pdf' },
+      { label: 'Stakeholder Communications (PDF)', url: '/courses/ai-literacy/build/communications.pdf' },
+      { label: 'QA Documentation (PDF)', url: '/courses/ai-literacy/build/quality.pdf' },
+      { label: 'Interactive versions in the course', url: '/courses/ai-literacy/#/build' },
     ],
   },
 ];

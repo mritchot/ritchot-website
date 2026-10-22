@@ -9,7 +9,7 @@ stack:
   - Recharts
   - xAPI event taxonomy
 links:
-  live: "https://ai-literacy.ritchot.me/"
+  live: "https://ritchot.me/courses/ai-literacy/"
   repo: "https://github.com/mritchot/ai-literacy-platform"
 weight: 1
 hub: ai-literacy

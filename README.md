@@ -20,7 +20,7 @@
 
 ## Projects
 
-- [AI Literacy for the Modern Workforce](https://ritchot.me/projects/ai-literacy-platform/) — a four-module, research-grounded AI literacy program on a custom-built platform, live at [ai-literacy.ritchot.me](https://ai-literacy.ritchot.me/).
+- [AI Literacy for the Modern Workforce](https://ritchot.me/projects/ai-literacy-platform/) — a four-module, research-grounded AI literacy program on a custom-built platform, live at [ritchot.me/courses/ai-literacy](https://ritchot.me/courses/ai-literacy/).
 - [JP-Startpage](https://ritchot.me/projects/jp-startpage/) — a keyboard-first browser startpage styled as a pseudo-Japanese terminal, shipped as a Manifest V3 extension for Chrome and Firefox.
 
 ## Implementation
