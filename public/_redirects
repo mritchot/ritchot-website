@@ -42,6 +42,10 @@
 # Search Console still showed this URL 404ing on 30-07-2026.
 /the-needs-analysis-for-my-ai-literacy-course /writing/i-built-an-ai-literacy-course/ 301
 /the-needs-analysis-for-my-ai-literacy-course/ /writing/i-built-an-ai-literacy-course/ 301
+# The evaluation-framework installment was consolidated the same way. Search
+# Console showed this URL 404ing on 25-08-2026.
+/the-evaluation-framework-for-my-ai-literacy-course /writing/i-built-an-ai-literacy-course/ 301
+/the-evaluation-framework-for-my-ai-literacy-course/ /writing/i-built-an-ai-literacy-course/ 301
 
 # --- Retired document mirrors (08-09-2026): three third-party PDFs now point
 # at their publishers. Same document at the source; the article links there too.
