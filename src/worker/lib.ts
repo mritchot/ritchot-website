@@ -14,12 +14,33 @@ export function isCoursePath(pathname: string): boolean {
   return pathname === COURSE_PREFIX || pathname.startsWith(`${COURSE_PREFIX}/`);
 }
 
-/** The course is one app document plus its PDFs. The app carries no beacon,
- *  so its HTML request is the page view; documents count as on the site. */
-export function classifyCourse(pathname: string, contentType: string | null): Kind | null {
-  if (pathname.endsWith('.pdf')) return 'doc';
-  if (pathname === `${COURSE_PREFIX}/` && contentType && /^text\/html\b/i.test(contentType)) return 'page';
-  return null;
+/** What a successful GET under the course counts as. Its PDFs count as
+ *  documents do on the site; its pages are reported to /hit by the app. */
+export function classifyCourse(pathname: string): Kind | null {
+  return pathname.endsWith('.pdf') ? 'doc' : null;
+}
+
+// Every route in the course's route table, as a hash URL on its app document,
+// plus the document itself for the landing page. Print routes are left out
+// because they render PDFs and never report.
+const COURSE_VIEW = new RegExp(
+  `^${COURSE_PREFIX}/(?:#/(?:${[
+    'module/[1-4](?:/section/\\d{1,2})?',
+    'dashboard',
+    'thank-you',
+    'refresher',
+    'pre-assessment',
+    'post-assessment',
+    'needs-analysis(?:/(?:problem-statement|capability-gap|learner-persona|action-map))?',
+    'evaluation(?:/(?:level-1-reaction|level-2-learning|level-3-behavior|level-4-results))?',
+    'build(?:/(?:learning-architecture|design-system|architecture|timeline|raci|resources|communications|quality))?',
+  ].join('|')}))?$`,
+);
+
+/** Whether a reported path names a course page. A hash route never reaches a
+ *  server, so it cannot be checked by fetching it as a site page is. */
+export function isCourseView(path: string): boolean {
+  return COURSE_VIEW.test(path);
 }
 
 /** What a successful GET at this path counts as; null means do not count. */
@@ -91,12 +112,14 @@ export function isStaleChrome(ua: string, now: Date): boolean {
 
 /** The path and referrer a page's beacon posts to /hit, or null when the
  *  body is not one. The path must be a site path of at most 512 characters
- *  with no query, fragment, or whitespace. */
+ *  with no query, fragment, or whitespace, or a course view, whose route is a
+ *  fragment. */
 export function parseHit(body: string): { path: string; referrer: string | null } | null {
   if (body.length > 4096) return null;
   const params = new URLSearchParams(body);
   const path = params.get('p') ?? '';
-  if (!path.startsWith('/') || path.startsWith('//') || path.length > 512 || /[?#\s]/.test(path)) return null;
+  if (!path.startsWith('/') || path.startsWith('//') || path.length > 512) return null;
+  if (/[?#\s]/.test(path) && !isCourseView(path)) return null;
   return { path, referrer: params.get('r') || null };
 }
 

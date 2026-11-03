@@ -110,6 +110,8 @@ platform support, script error — leaves a fully working typographic page.
    scroll, tap, key press, or pointer movement, it posts the page path and
    the referring page to `/hit`. Browsers that report automation send
    nothing. About 400 bytes, loaded as a module; the page never waits on it.
+   The course at `/courses/ai-literacy/` sends the same report from its own
+   app, once for each route a reader interacts with.
 
 ## Theme
 

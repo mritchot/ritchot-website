@@ -5,7 +5,8 @@
  *  `ritchot-stats` D1 database in the background. No cookie is set and no
  *  address is stored. Schema and dashboard live in the ritchot-stats repo.
  *  Requests under /courses/ai-literacy/ go to the course's own Worker through
- *  the COURSE binding; its app document and PDFs are counted here. */
+ *  the COURSE binding; its PDFs are counted here, and its app reports each
+ *  route to /hit with its own beacon. */
 import {
   browserOf,
   classify,
@@ -13,6 +14,7 @@ import {
   isBot,
   isHosting,
   isCoursePath,
+  isCourseView,
   isNavigation,
   isPrefetch,
   isStaleChrome,
@@ -91,10 +93,11 @@ async function hit(request: Request, url: URL, env: Env, ctx: ExecutionContext):
     if (isBot(ua) || isHosting(cf?.asOrganization) || isStaleChrome(ua ?? '', now)) return done;
     const report = parseHit(await request.text());
     if (!report) return done;
-    // Count only real pages: the path must serve HTML from the assets.
-    const page = await env.ASSETS.fetch(new Request(new URL(report.path, url.origin)));
-    const isPage = page.status === 200 && /^text\/html\b/i.test(page.headers.get('content-type') ?? '');
-    await page.body?.cancel();
+    // Count only real pages: a course path must name a route of the app, whose
+    // hash never reaches a server, and a site path must serve HTML from the assets.
+    const isPage = isCoursePath(report.path)
+      ? isCourseView(report.path)
+      : await servesHtml(env.ASSETS, new URL(report.path, url.origin));
     if (!isPage) return done;
     const row: Row = {
       ts: Math.floor(now.valueOf() / 1000),
@@ -113,6 +116,13 @@ async function hit(request: Request, url: URL, env: Env, ctx: ExecutionContext):
   return done;
 }
 
+async function servesHtml(assets: Fetcher, url: URL): Promise<boolean> {
+  const page = await assets.fetch(new Request(url));
+  const isHtml = page.status === 200 && /^text\/html\b/i.test(page.headers.get('content-type') ?? '');
+  await page.body?.cancel();
+  return isHtml;
+}
+
 function record(request: Request, response: Response, env: Env): Promise<void> | null {
   if (!env.STATS || !env.VISITOR_SALT) return null;
   if (request.method !== 'GET' || response.status !== 200) return null;
@@ -120,13 +130,11 @@ function record(request: Request, response: Response, env: Env): Promise<void> |
   const host = env.SITE_HOST ?? 'ritchot.me';
   // Preview deployments on workers.dev must not write production rows.
   if (url.hostname !== host) return null;
-  const course = isCoursePath(url.pathname);
-  const contentType = response.headers.get('content-type');
-  const kind = course ? classifyCourse(url.pathname, contentType) : classify(url.pathname, contentType);
-  // Site page views are counted by /hit, never from the HTML request. The
-  // course has no beacon, so its app document counts here, filtered like a
-  // document request below.
-  if (!kind || (kind === 'page' && !course)) return null;
+  const kind = isCoursePath(url.pathname)
+    ? classifyCourse(url.pathname)
+    : classify(url.pathname, response.headers.get('content-type'));
+  // Page views are counted by /hit, never from the HTML request.
+  if (!kind || kind === 'page') return null;
   const ua = request.headers.get('user-agent');
   const cf = request.cf as { country?: unknown; asOrganization?: unknown } | undefined;
   const now = new Date();
