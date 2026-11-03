@@ -59,9 +59,11 @@ export function classify(pathname: string, contentType: string | null): Kind | n
 const BOT =
   /bot|crawl|spider|slurp|scrap|fetch|headless|phantom|python|curl\/|wget|httpclient|java\/|go-http|okhttp|libwww|monitor|uptime|pingdom|lighthouse|pagespeed|preview|externalhit|whatsapp|telegram|discord|slack|embedly|pinterest|ahrefs|semrush|mj12|dotbot|petalbot|bytespider|gptbot|claude|anthropic|openai|perplexity|ccbot|applebot|amazonbot|dataforseo|feed|rss|yandex|baidu|ia_archiver|archive\.org/i;
 
-export function isBot(ua: string | null): boolean {
+/** A declared bot by its user agent. A headless Chromium that spoofs its user
+ *  agent still names itself in Sec-CH-UA, so that header is checked as well. */
+export function isBot(ua: string | null, secChUa: string | null): boolean {
   if (!ua || ua.length < 20) return true;
-  return BOT.test(ua);
+  return BOT.test(ua) || /headless/i.test(secChUa ?? '');
 }
 
 // Cloud and web-hosting networks, matched on Cloudflare's AS organization
