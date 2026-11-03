@@ -5,6 +5,7 @@ import {
   classify,
   classifyCourse,
   isCoursePath,
+  isCourseView,
   isBot,
   isHosting,
   isNavigation,
@@ -32,14 +33,48 @@ test('classify: feeds and documents by path, pages by content type, else nothing
   assert.equal(classify('/theme.js', 'text/javascript'), null);
 });
 
-test('course paths: the app document is a page, its PDFs are documents', () => {
+test('course paths: its PDFs are documents, and a GET never counts as a page', () => {
   assert.equal(isCoursePath('/courses/ai-literacy'), true);
   assert.equal(isCoursePath('/courses/ai-literacy/reference/r1.pdf'), true);
   assert.equal(isCoursePath('/courses/ai-literacy-old/'), false);
-  assert.equal(classifyCourse('/courses/ai-literacy/', 'text/html; charset=utf-8'), 'page');
-  assert.equal(classifyCourse('/courses/ai-literacy/evaluation/level-4-results.pdf', 'application/pdf'), 'doc');
-  assert.equal(classifyCourse('/courses/ai-literacy/favicon.svg', 'image/svg+xml'), null);
-  assert.equal(classifyCourse('/courses/ai-literacy/404', 'text/html'), null);
+  assert.equal(classifyCourse('/courses/ai-literacy/'), null);
+  assert.equal(classifyCourse('/courses/ai-literacy/evaluation/level-4-results.pdf'), 'doc');
+  assert.equal(classifyCourse('/courses/ai-literacy/favicon.svg'), null);
+  assert.equal(classifyCourse('/courses/ai-literacy/404'), null);
+});
+
+test('isCourseView: the landing page and every reader route, nothing else', () => {
+  for (const route of [
+    '',
+    '#/module/1',
+    '#/module/4/section/10',
+    '#/dashboard',
+    '#/thank-you',
+    '#/refresher',
+    '#/pre-assessment',
+    '#/post-assessment',
+    '#/needs-analysis',
+    '#/needs-analysis/action-map',
+    '#/evaluation',
+    '#/evaluation/level-4-results',
+    '#/build',
+    '#/build/quality',
+  ]) {
+    assert.equal(isCourseView(`/courses/ai-literacy/${route}`), true, route);
+  }
+  for (const path of [
+    '/courses/ai-literacy',
+    '/courses/ai-literacy/#/',
+    '/courses/ai-literacy/#/module/5',
+    '/courses/ai-literacy/#/module/1/section/abc',
+    '/courses/ai-literacy/#/build/invented',
+    '/courses/ai-literacy/#/print/build/raci',
+    '/courses/ai-literacy/#/refresher?day=30',
+    '/courses/ai-literacy/reference/r1.pdf',
+    '/writing/a-post/#/module/1',
+  ]) {
+    assert.equal(isCourseView(path), false, path);
+  }
 });
 
 test('isBot: declared crawlers and libraries yes, real browsers no', () => {
@@ -93,7 +128,11 @@ test('parseHit: a site path and the referrer, else null', () => {
     referrer: 'https://www.google.com/',
   });
   assert.deepEqual(parseHit('p=%2F&r='), { path: '/', referrer: null });
-  for (const bad of ['', 'r=x', 'p=writing', 'p=%2F%2Fevil.example%2F', 'p=%2Fa%3Fb', 'p=%2Fa%23b', 'p=%2Fa%20b', `p=%2F${'a'.repeat(600)}`]) {
+  assert.deepEqual(parseHit('p=%2Fcourses%2Fai-literacy%2F%23%2Fmodule%2F2&r='), {
+    path: '/courses/ai-literacy/#/module/2',
+    referrer: null,
+  });
+  for (const bad of ['', 'r=x', 'p=writing', 'p=%2F%2Fevil.example%2F', 'p=%2Fa%3Fb', 'p=%2Fa%23b', 'p=%2Fa%20b', `p=%2F${'a'.repeat(600)}`, 'p=%2Fcourses%2Fai-literacy%2F%23%2Finvented']) {
     assert.equal(parseHit(bad), null, bad);
   }
   assert.equal(parseHit(`p=%2F&r=${'x'.repeat(5000)}`), null);
