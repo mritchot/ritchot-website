@@ -78,11 +78,16 @@ test('isCourseView: the landing page and every reader route, nothing else', () =
 });
 
 test('isBot: declared crawlers and libraries yes, real browsers no', () => {
-  assert.equal(isBot('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'), true);
-  assert.equal(isBot('Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2)'), true);
-  assert.equal(isBot('curl/8.7.1'), true);
-  assert.equal(isBot(null), true);
-  for (const ua of [CHROME, SAFARI, FIREFOX]) assert.equal(isBot(ua), false);
+  assert.equal(isBot('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', null), true);
+  assert.equal(isBot('Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2)', null), true);
+  assert.equal(isBot('curl/8.7.1', null), true);
+  assert.equal(isBot(null, null), true);
+  for (const ua of [CHROME, SAFARI, FIREFOX]) assert.equal(isBot(ua, null), false);
+});
+
+test('isBot: a spoofed user agent is caught by a headless brand in Sec-CH-UA', () => {
+  assert.equal(isBot(CHROME, '"HeadlessChrome";v="140", "Chromium";v="140", "Not=A?Brand";v="24"'), true);
+  assert.equal(isBot(CHROME, '"Chromium";v="140", "Not=A?Brand";v="24", "Google Chrome";v="140"'), false);
 });
 
 test('browserOf: client hints win, then the user agent', () => {

@@ -90,7 +90,7 @@ async function hit(request: Request, url: URL, env: Env, ctx: ExecutionContext):
     if (Number(request.headers.get('content-length') ?? 0) > 4096) return done;
     const cf = request.cf as { country?: unknown; asOrganization?: unknown } | undefined;
     const now = new Date();
-    if (isBot(ua) || isHosting(cf?.asOrganization) || isStaleChrome(ua ?? '', now)) return done;
+    if (isBot(ua, request.headers.get('sec-ch-ua')) || isHosting(cf?.asOrganization) || isStaleChrome(ua ?? '', now)) return done;
     const report = parseHit(await request.text());
     if (!report) return done;
     // Count only real pages: a course path must name a route of the app, whose
@@ -141,7 +141,7 @@ function record(request: Request, response: Response, env: Env): Promise<void> |
   // Feed readers are counted as they come; documents only when the request
   // looks like a reader in a current browser.
   if (kind !== 'feed') {
-    if (isBot(ua) || !isNavigation(request.headers, ua ?? '') || isHosting(cf?.asOrganization)) return null;
+    if (isBot(ua, request.headers.get('sec-ch-ua')) || !isNavigation(request.headers, ua ?? '') || isHosting(cf?.asOrganization)) return null;
     if (isStaleChrome(ua ?? '', now)) return null;
   }
   if (isPrefetch(request.headers)) return null;
