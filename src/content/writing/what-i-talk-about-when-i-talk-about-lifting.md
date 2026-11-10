@@ -4,8 +4,6 @@ date: 2026-11-10
 type: essay
 summary: "A knee injury took the gym away for a while, and made me look at how much of my life runs on structure."
 ---
-*NOVEMBER 10, 2026 • SINGAPORE*
-
 It's November in Singapore, so most afternoons end in a thunderstorm. Around four o'clock the sky habitually turns a heavy gray, holds still for a while, and then lets go all at once, as if it has been saving up since morning. The gym is about a twenty-five-minute walk from my apartment. If I leave at the wrong time I arrive soaked. I go anyway.
 
 These days, before I touch a barbell, I spend about fifteen minutes on a primer my physiotherapist gave me. Balance work, step-downs, mobility exercises. A few years ago I would have skipped all of it without a second thought. Now I do it with the seriousness of a man doing his taxes. Then I squat and deadlift again, carefully, with weights I would have called a warm-up not long ago. The bar feels familiar in my hands, the way it does when you run into an old friend after years apart. There's an awkward moment where neither of you is sure what has changed, and then you remember how you used to talk. The songs in my headphones are ones I trained to when I was stronger. Each one brings back a weight I could move then and can't now. I mind that less than I expected.
@@ -26,7 +24,7 @@ The psoas is a different story, even if the rest of the world was on a break wit
 
 The knee is different again. A knee is something you use every day, for nearly everything: getting out of bed, climbing stairs, standing up from a chair. It's also the quintessential old man's injury. It's the one men talk about around a campfire, telling each other about the season or the scholarship or the career that was waiting for them right up until the knee gave out. What could have been, if that pesky knee injury hadn't happened?
 
-* * *
+---
 
 Though I'm not sure I have any real athletic aspirations left, so it's hard to say what the knee has cost me. I lift because I like getting stronger. I lift because it makes me feel good. I lift, these days, toward one fairly general goal.
 
@@ -52,7 +50,7 @@ But after this injury, for some reason, I can't bring myself to open that app an
 
 I've thought about why. The app didn't stop working, and nothing about it changed. I think what happened is that it had already taught me what it had to teach. Years of logging left the numbers somewhere inside me, the way a pianist stops counting the beats of a piece she has played a hundred times. The tool had done its job. I was holding on to it because holding on is what I do.
 
-* * *
+---
 
 I think this is happening because I approach most of my life the way I approach fitness. I didn't see that clearly until the knee took the gym away and I could look at what was left.
 
@@ -83,7 +81,7 @@ I had a job interview recently, and partway through I was asked what it means to
 
 Perhaps what it means to be human is that we can give the machines the structure. They're very good at it, better than I am, and I'm good at it. They'll count the protein in your lunch, plan your week, and work out next Tuesday's squat to the half kilo. They don't get bored, and they don't get tired of it. What they can't do is the other half. The part where you look up from the plan, decide today isn't the day for it, and go sit by the water instead. That part takes the freedom to live in a moment and the judgment to know which moments are worth it. Maybe that's the part that's left for us. I find that oddly comforting.
 
-* * *
+---
 
 I'm not sure what it is about this injury, but for several months now my whole life has been under review. I keep asking whether the structure I've always relied on still holds the value it used to. Or whether, again, the things that brought me success in the past are what's keeping me from a new chapter. From the next level, to borrow the language of the games.
 
@@ -93,6 +91,6 @@ But I think it's time to drop the overbearing structure. I want to keep the plan
 
 It's nearly four o'clock. The sky is starting to turn. I think I'll watch it.
 
-* * *
+---
 
-*The title is borrowed from Haruki Murakami's* What I Talk About When I Talk About Running, *which borrowed its own from Raymond Carver's* What We Talk About When We Talk About Love. *Murakami's book is what got me writing this one.*
+The title is borrowed from Haruki Murakami's *What I Talk About When I Talk About Running*, which borrowed its own from Raymond Carver's *What We Talk About When We Talk About Love*.
