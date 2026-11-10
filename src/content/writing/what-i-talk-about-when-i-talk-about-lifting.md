@@ -1,6 +1,6 @@
 ---
 title: "what I talk about when I talk about lifting"
-date: 2026-11-10
+date: 2026-11-11
 type: essay
 summary: "A knee injury took the gym away for a while, and made me look at how much of my life runs on structure."
 ---
