@@ -1,4 +1,6 @@
 ---
+import { externalAttrs } from '../lib/rehype-external-links';
+
 // Trailing slashes match the canonical form Base.astro and the sitemap emit:
 // linking to the unslashed path made every page on the site link through a 301.
 const nav = [
@@ -7,6 +9,9 @@ const nav = [
   { href: '/resume/', label: 'Resume' },
   { href: '/about/', label: 'About' },
 ];
+
+// ScholaVal, the author's benchmark project on its own domain
+const scholaval = 'https://scholaval.com/';
 
 const path = Astro.url.pathname;
 // Normalized so the comparisons hold whichever form `href` takes; without it a
@@ -19,9 +24,11 @@ const isCurrent = (href: string) => {
 
 <header>
   <nav aria-label="Site">
-    <a class="home" href="/" aria-label="Michael Ritchot">
-      <span class="full" aria-hidden="true">Michael Ritchot</span>
-      <span class="short" aria-hidden="true">M.&nbsp;Ritchot</span>
+    <a class="home" href="/">Michael Ritchot</a>
+    <!-- one link, placed twice: beside the wordmark on narrow screens, after
+         the pages on wide ones. display:none keeps one in the a11y tree. -->
+    <a class="sv sv-narrow" href={scholaval} aria-label="ScholaVal" {...externalAttrs(scholaval)}>
+      Schola<span class="dot">·</span>Val<span class="arrow" aria-hidden="true">↗</span>
     </a>
     <ul>
       {
@@ -33,6 +40,12 @@ const isCurrent = (href: string) => {
           </li>
         ))
       }
+      <li class="rule" aria-hidden="true"></li>
+      <li class="sv-wide">
+        <a class="sv" href={scholaval} aria-label="ScholaVal" {...externalAttrs(scholaval)}>
+          Schola<span class="dot">·</span>Val<span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </li>
       <li>
         <!-- D23 toggle: statically reserved (no layout shift), invisible
              until /theme.js wires it; with JS off it never appears. -->
@@ -69,27 +82,48 @@ const isCurrent = (href: string) => {
     white-space: nowrap;
   }
 
-  /* the full name wraps below ~560px next to the nav links: swap to the
-     short mark there. The <480px stacked layout gets the full name back. */
-  .short {
-    display: none;
-  }
-
-  @media (min-width: 481px) and (max-width: 600px) {
-    .full {
-      display: none;
-    }
-
-    .short {
-      display: inline;
-    }
-  }
-
   ul {
     display: flex;
+    align-items: baseline;
     gap: 1.1rem;
     list-style: none;
     padding: 0;
+  }
+
+  /* ScholaVal: its wordmark in mono capitals, set apart by a thin rule */
+  /* nav-qualified so it outranks the ul a rules */
+  nav .sv {
+    color: var(--ink);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  nav .sv:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .sv .dot {
+    color: var(--vermilion);
+  }
+
+  .sv .arrow {
+    margin-inline-start: 0.25em;
+    letter-spacing: 0;
+    font-size: 0.85em;
+    color: var(--ink-soft);
+  }
+
+  .rule {
+    align-self: stretch;
+    inline-size: 1px;
+    background: var(--line);
+  }
+
+  .sv-narrow {
+    display: none;
   }
 
   ul a {
@@ -121,14 +155,28 @@ const isCurrent = (href: string) => {
     background: var(--vermilion);
   }
 
-  /* small screens: wordmark row over nav row (ruling, 14-07-2026) —
-     still no hamburger, no JS; nav keeps its size and single row */
-  @media (max-width: 480px) {
+  /* narrower screens: wordmark and ScholaVal on one row, the pages on the
+     row below (ruling, 14-07-2026, extended 19-11-2026 when the ScholaVal
+     link made one row too wide below 760px) — no hamburger, no JS */
+  @media (max-width: 760px) {
     nav {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.55rem;
+      flex-wrap: wrap;
+      gap: 0.55rem 1rem;
       padding-block: 0.8rem;
+    }
+
+    .sv-narrow {
+      display: inline;
+      margin-inline-start: auto;
+    }
+
+    .rule,
+    .sv-wide {
+      display: none;
+    }
+
+    ul {
+      flex-basis: 100%;
     }
   }
 </style>
