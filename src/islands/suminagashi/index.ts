@@ -333,7 +333,7 @@ export function mountSuminagashi(host: HTMLElement): void {
       inks: [
         pigment('--ink'),
         pigment('--hero-accent'),
-        pigment(dark ? '--ember' : '--vermilion'),
+        pigment(dark ? '--ai' : '--vermilion'),
         pigment('--signal'),
         pigment('--murasaki'),
       ],

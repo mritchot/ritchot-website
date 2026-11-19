@@ -1,7 +1,7 @@
 /* Design tokens — ritchot.me
  * Contrast verified programmatically:
  * ink/ground 15.49 (light) 14.68 (dark) · ink-soft 6.98/7.19 · signal 5.66/9.06
- * · vermilion 4.69/5.02 (≥3 accent floor) · code palette ≥4.68 on surface.
+ * · vermilion 4.69/5.02 (≥3 accent floor) · ai 5.62/7.31 · code palette ≥4.68 on surface.
  * Two grounds: light "washi" paper and dark "sumi" ink.
  *
  * Mode resolution (D23, manual toggle): dark applies via
@@ -26,7 +26,7 @@
   /* accents */
   --vermilion: #c73b27; /* focus states, nav current-page dot, ≤1 rare accent per viewport */
   --signal: #0c6b76;    /* links */
-  --ember: #d95d1e;     /* hero/illustration only */
+  --ai: #2f5fb3;        /* 藍 indigo: hero/illustration only */
   --murasaki: #b23879;  /* hero pigment only — never UI */
 
   /* code palette (on --surface; all pairs ≥4.5:1) */
@@ -75,7 +75,7 @@
 
     --vermilion: #e05543;
     --signal: #4cc3d0;
-    --ember: #e8763a;
+    --ai: #78a0f0;
     --murasaki: #e061a6;
 
     --code-keyword: #e57a68;
@@ -100,7 +100,7 @@
 
   --vermilion: #e05543;
   --signal: #4cc3d0;
-  --ember: #e8763a;
+  --ai: #78a0f0;
   --murasaki: #e061a6;
 
   --code-keyword: #e57a68;
