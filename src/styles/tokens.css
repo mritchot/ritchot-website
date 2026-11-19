@@ -24,9 +24,9 @@
   --line: #d9d3c7;
 
   /* accents */
-  --vermilion: #c73b27; /* focus states, nav current-page dot, ≤1 rare accent per viewport */
+  --vermilion: #c73b27; /* focus states, ≤1 rare accent per viewport */
   --signal: #0c6b76;    /* links */
-  --ai: #2f5fb3;        /* 藍 indigo: hero/illustration only */
+  --ai: #2f5fb3;        /* 藍 indigo: hero, nav current-page dot, ScholaVal mark */
   --murasaki: #b23879;  /* hero pigment only — never UI */
 
   /* code palette (on --surface; all pairs ≥4.5:1) */

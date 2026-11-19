@@ -90,7 +90,10 @@ platform support, script error — leaves a fully working typographic page.
    in density space, so the composition survives the flip. It mounts
    after load + idle, pauses when hidden or off-screen, caps device-pixel
    ratio at 2, and steps resolution and solver iterations down on slow
-   renderers. Content sits on ground-tinted panels that guarantee
+   renderers. The final pass draws the field as text: each character cell
+   reads the dye once and shows a symbol from a small ramp (space through
+   `@`) in that cell's pigment, from a glyph texture drawn once from the
+   site's mono face. Content sits on ground-tinted panels that guarantee
    legibility over any pour.
 
 2. **`pretext-justify`** (writing pages): upgrades CSS justification to

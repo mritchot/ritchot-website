@@ -15,6 +15,12 @@
  * pours carry the life. Theme changes retint the existing dye in a single
  * frame via a least-squares matrix in density space.
  *
+ * Display: the composite pass draws the field as text. Each fragment finds
+ * its character cell, reads the dye once at the cell's centre, and keeps
+ * the pixel of a symbol (space . : - = + * # % @, by ink density) taken
+ * from a glyph texture drawn once from the site's mono face. The symbol
+ * carries the cell's own pigment colour. No readback, no extra canvas.
+ *
  * Discipline: mount after load+idle, crossfade in over the plain ground,
  * DPR ≤ 2, pause when hidden or off-view (wake() recomputes visibility),
  * adaptive degrade for slow renderers, aria-hidden canvas. No-JS, reduced
@@ -91,17 +97,25 @@ void main(){
   composite: `#version 300 es
 precision highp float;
 in vec2 uv; out vec4 o;
-uniform sampler2D u_dye;
+uniform sampler2D u_dye; uniform sampler2D u_glyphs;
 uniform vec3 u_ground; uniform int u_dark;
+uniform vec2 u_cell; uniform vec2 u_res; uniform float u_count;
 float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+vec3 pigment(vec3 D){
+  return u_dark == 1 ? 1.0 - (1.0 - u_ground) * exp(-D) : u_ground * exp(-D);
+}
 void main(){
-  vec3 D = max(texture(u_dye, uv).rgb, 0.0);
-  vec3 col;
-  if (u_dark == 1) {
-    col = 1.0 - (1.0 - u_ground) * exp(-D);
-  } else {
-    col = u_ground * exp(-D);
-  }
+  // the dye is read once per character cell, at the cell's centre
+  vec2 cell = floor(gl_FragCoord.xy / u_cell);
+  vec3 ink = pigment(max(texture(u_dye, (cell + 0.5) * u_cell / u_res).rgb, 0.0));
+  vec3 d = abs(ink - u_ground);
+  float amount = clamp(max(d.r, max(d.g, d.b)) * 1.3, 0.0, 1.0);
+  // ramp position: 0 is a blank cell; any visible ink gets at least a dot
+  float g = amount < 0.06 ? 0.0 : max(1.0, floor(amount * (u_count - 1.0) + 0.5));
+  vec2 f = fract(gl_FragCoord.xy / u_cell);
+  float mask = texture(u_glyphs, vec2((g + f.x) / u_count, 1.0 - f.y)).a;
+  // the symbol carries the cell's ink, deepened so thin washes still read
+  vec3 col = mix(u_ground, clamp(u_ground + (ink - u_ground) * 1.7, 0.0, 1.0), mask);
   col += (hash(gl_FragCoord.xy * 0.7) - 0.5) * 0.012; // paper grain, matte
   o = vec4(col, 1.0);
 }`,
@@ -390,6 +404,35 @@ export function mountSuminagashi(host: HTMLElement): void {
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     aspect = width / Math.max(height, 1);
+    buildGlyphs(dpr);
+  }
+
+  // --- glyphs: the ramp drawn once into a texture, one cell per symbol, at
+  // device pixels so each fragment maps to exactly one texel ---
+  const RAMP = ' .:-=+*#%@';
+  const glyphTex = gl.createTexture()!;
+  let cellW = 1;
+  let cellH = 1;
+  function buildGlyphs(dpr: number): void {
+    const fontPx = Math.min(12, Math.max(9, width / 130));
+    cellW = Math.max(4, Math.round(fontPx * 0.6 * dpr));
+    cellH = Math.max(8, Math.round(fontPx * 1.2 * dpr));
+    const c = document.createElement('canvas');
+    c.width = cellW * RAMP.length;
+    c.height = cellH;
+    const x = c.getContext('2d');
+    if (!x) return;
+    x.font = `400 ${fontPx * dpr}px 'IBM Plex Mono', ui-monospace, Menlo, monospace`;
+    x.textAlign = 'center';
+    x.textBaseline = 'middle';
+    x.fillStyle = '#fff';
+    for (let i = 0; i < RAMP.length; i++) x.fillText(RAMP[i]!, (i + 0.5) * cellW, cellH / 2);
+    gl!.bindTexture(gl!.TEXTURE_2D, glyphTex);
+    gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MIN_FILTER, gl!.NEAREST);
+    gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_MAG_FILTER, gl!.NEAREST);
+    gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_S, gl!.CLAMP_TO_EDGE);
+    gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_T, gl!.CLAMP_TO_EDGE);
+    gl!.texImage2D(gl!.TEXTURE_2D, 0, gl!.RGBA, gl!.RGBA, gl!.UNSIGNED_BYTE, c);
   }
 
   // --- passes ---
@@ -501,9 +544,14 @@ export function mountSuminagashi(host: HTMLElement): void {
     if (canvas.width === 0 || canvas.height === 0) return;
     gl!.useProgram(P.composite);
     bind(0, dye0.tex);
+    bind(1, glyphTex);
     gl!.uniform1i(U(P.composite, 'u_dye'), 0);
+    gl!.uniform1i(U(P.composite, 'u_glyphs'), 1);
     gl!.uniform3f(U(P.composite, 'u_ground'), palette.ground[0], palette.ground[1], palette.ground[2]);
     gl!.uniform1i(U(P.composite, 'u_dark'), palette.dark ? 1 : 0);
+    gl!.uniform2f(U(P.composite, 'u_cell'), cellW, cellH);
+    gl!.uniform2f(U(P.composite, 'u_res'), canvas.width, canvas.height);
+    gl!.uniform1f(U(P.composite, 'u_count'), RAMP.length);
     draw(null);
   }
 
@@ -732,6 +780,11 @@ export function mountSuminagashi(host: HTMLElement): void {
 
   // --- go ---
   resize();
+  // the glyphs are drawn from the site's mono face; redraw them if it was
+  // still loading at mount
+  if (!document.fonts.check("12px 'IBM Plex Mono'")) {
+    document.fonts.load("12px 'IBM Plex Mono'").then(() => { if (!dead) resize(); }, () => {});
+  }
   host.appendChild(canvas);
   const t0 = performance.now();
   // seed the field with two quick pours so the reveal is already alive
