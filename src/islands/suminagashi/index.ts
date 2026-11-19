@@ -414,7 +414,8 @@ export function mountSuminagashi(host: HTMLElement): void {
   let cellW = 1;
   let cellH = 1;
   function buildGlyphs(dpr: number): void {
-    const fontPx = Math.min(12, Math.max(9, width / 130));
+    // one fine grid at every width, the density ScholaVal's hero uses
+    const fontPx = 7;
     cellW = Math.max(4, Math.round(fontPx * 0.6 * dpr));
     cellH = Math.max(8, Math.round(fontPx * 1.2 * dpr));
     const c = document.createElement('canvas');
